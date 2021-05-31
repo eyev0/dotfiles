@@ -57,7 +57,7 @@ map('', 'L', [[$]], { noremap = true, silent = true })
 map('n', 'dJ', [[i<CR><Esc>k$]], { noremap = true, silent = true })
 -- yank and select whole file
 map('n', '<leader>Y', [[gg"+yG]], { silent = true })
-map('n', '<leader>V', [[ggvG]], { silent = true })
+map('n', '<leader>V', [[ggVG]], { silent = true })
 -- paste at the end of current line
 map('n', '<leader>P', [[$p]], { silent = true })
 map('n', 'Y', [[y$]], { silent = true })

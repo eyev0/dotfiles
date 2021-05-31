@@ -6,7 +6,7 @@ nvim_lsp.tsserver.setup {
     if client.config.flags then
       client.config.flags.allow_incremental_sync = true
     end
-    client.resolved_capabilities.document_formatting = true
+    client.resolved_capabilities.document_formatting = false
 
     local ts_utils = require("nvim-lsp-ts-utils")
     -- defaults

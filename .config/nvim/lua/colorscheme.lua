@@ -20,7 +20,8 @@ vim.o.background = O.background
 vim.g.gruvbox_contrast_light = O.contrast
 vim.g.gruvbox_contrast_dark = O.contrast
 -- tokyonight
-vim.g.tokyonight_style = "storm"
+-- storm or night
+vim.g.tokyonight_style = "night"
 vim.g.tokyonight_italic_functions = true
 
 vim.cmd("colorscheme "..O.colorscheme)
