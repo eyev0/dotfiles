@@ -50,10 +50,10 @@ vim.o.sidescrolloff = 3
 vim.wo.relativenumber = true
 vim.wo.number = true
 -- vim.cmd[[set signcolumn=auto:1-3]]
-vim.cmd[[set signcolumn=yes:2]]
+vim.cmd[[set signcolumn=yes:1]]
 vim.wo.colorcolumn = "80"
 vim.o.showmode = false
-vim.o.clipboard = "unnamedplus"
+vim.opt.clipboard:prepend{"unnamedplus"}
 vim.o.termguicolors = true
 vim.cmd[[set shortmess+=c]]
 vim.cmd[[set iskeyword+=-]]
@@ -98,24 +98,6 @@ vim.g.firenvim_config = {
 vim.g.qs_max_chars = 150
 vim.g.qs_lazy_highlight = 1
 vim.g.qs_highlight_on_keys = {'f', 'F', 't', 'T'}
--- ALE, use only for fixing
-vim.g.ale_disable_lsp = 1
--- vim.g.ale_linters = {}
-vim.g.ale_linters_explicit = 1
-vim.g.ale_lint_on_text_changed = 'never'
-vim.g.ale_fixers = {
-  ['python'] = {'black', 'isort', 'trim_whitespace'},
-  ['xml'] = {'xmllint', 'remove_trailing_lines', 'trim_whitespace'},
-  ['javascript'] = {'prettier'},
-  ['javascriptreact'] = {'prettier'},
-  ['typescript'] = {'prettier'},
-  ['typescriptreact'] = {'prettier'},
-  ['graphql'] = {'prettier'},
-  ['json'] = {'prettier'},
-  ['vue'] = {'prettier'},
-  ['html'] = {'prettier'},
-  ['lua'] = {'luafmt', 'trim_whitespace', 'remove_trailing_lines'},
-}
 -- Yoink
 vim.g.yoinkMaxItems = 20
 vim.g.yoinkIncludeDeleteOperations = 1
@@ -124,24 +106,9 @@ vim.g.yoinkSavePersistently = 1
 if vim.fn.executable('rg') then
   vim.g.rg_derive_root='true'
 end
--- vim.g.tagbar_autofocus = 1
--- vim.g.tagbar_autoclose = 1
--- vim.g.tagbar_map_showproto = ''
+-- tagbar
+vim.g.tagbar_autofocus = 1
+vim.g.tagbar_autoclose = 1
+vim.g.tagbar_map_showproto = ''
+-- tmux-navigator
 vim.g.tmux_navigator_no_mappings = 1
--- vim-visual-multi
-vim.g.VM_default_mappings = 0
-vim.cmd[[
-let g:VM_maps = {}
-let g:VM_maps["Find Under"]                  = '<C-n>'
-let g:VM_maps["Find Subword Under"]          = '<C-n>'
-let g:VM_maps["Select All"]                  = '\A'
-let g:VM_maps["Start Regex Search"]          = '\/'
-let g:VM_maps["Add Cursor Down"]             = '<C-Down>'
-let g:VM_maps["Add Cursor Up"]               = '<C-Up>'
-let g:VM_maps["Add Cursor At Pos"]           = '\\'
-let g:VM_maps["Visual Regex"]                = '\r'
-let g:VM_maps["Visual All"]                  = '\A'
-let g:VM_maps["Visual Add"]                  = '\a'
-let g:VM_maps["Visual Find"]                 = '\f'
-let g:VM_maps["Visual Cursors"]              = '\c'
-]]

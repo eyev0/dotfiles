@@ -1,5 +1,4 @@
-local shared_conf = require'conf.lsp.shared_conf'
-local nvim_lsp = require"lspconfig"
+local nvim_lsp = require "lspconfig"
 
 nvim_lsp.tsserver.setup {
   on_attach = function(client, bufnr)
@@ -31,7 +30,7 @@ nvim_lsp.tsserver.setup {
       no_save_after_format = false,
       -- parentheses completion
       complete_parens = true,
-      signature_help_in_parens = false,
+      signature_help_in_parens = false
     }
     -- required to enable ESLint code actions and formatting
     -- ts_utils.setup_client(client)
@@ -43,7 +42,7 @@ nvim_lsp.tsserver.setup {
     vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", ":TSLspImportAll<CR>", {silent = true})
 
     -- call regular on_attach
-    shared_conf.on_attach(client, bufnr)
+    _G.lsp_on_attach(client, bufnr)
   end,
-  capabilities = shared_conf.capabilities,
+  capabilities = _G.lsp_capabilities
 }

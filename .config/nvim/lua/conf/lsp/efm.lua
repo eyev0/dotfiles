@@ -1,5 +1,4 @@
 local lspconfig = require "lspconfig"
-local shared_conf = require "conf.lsp.shared_conf"
 
 local prettier = {formatCommand = "prettierd ${INPUT}", formatStdin = true}
 
@@ -15,13 +14,15 @@ local lua_fmt = {
 local black = {formatCommand = "black --quiet -", formatStdin = true}
 local isort = {formatCommand = "isort --quiet -", formatStdin = true}
 
+local java_google = {formatCommand = "java -jar "..os.getenv('HOME')..'/.local/jar/google-java-format-1.10.0-all-deps.jar '..vim.api.nvim_buf_get_name(0)}
+
 lspconfig.efm.setup {
   on_attach = function(client)
     client.resolved_capabilities.document_formatting = true
     client.resolved_capabilities.goto_definition = false
-    shared_conf.on_attach(client)
+    _G.lsp_on_attach(client)
   end,
-  capabilities = shared_conf.capabilities,
+  capabilities = _G.lsp_capabilities,
   filetypes = {
     "javascript",
     "javascriptreact",
@@ -32,10 +33,11 @@ lspconfig.efm.setup {
     "json",
     "lua",
     "vue",
-    "python"
+    "python",
+    "java",
   },
   settings = {
-    rootMarkers = {".git/", "package.json", "pyproject.toml"},
+    rootMarkers = {".git/", "package.json", "pyproject.toml", "gradle.build", "build.gradle", "pom.xml"},
     languages = {
       javascript = {prettier},
       javascriptreact = {prettier},
@@ -46,7 +48,8 @@ lspconfig.efm.setup {
       css = {prettier},
       vue = {prettier},
       lua = {lua_fmt},
-      python = {black, isort}
+      python = {black, isort},
+      java = {java_google}
     }
   }
 }

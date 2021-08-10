@@ -1,3 +1,16 @@
+_G.lsp_on_attach = function(client, bufnr)
+  vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+  vim.api.nvim_command("setlocal signcolumn=yes:2")
+  _G.set_lsp_buf_shortcuts(client, bufnr)
+  require'conf.lspsignature'.on_attach()
+end
+
+-- LSP Snippet Support
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+_G.lsp_capabilities = capabilities
+
 vim.fn.sign_define(
     "LspDiagnosticsSignError",
     {texthl = "LspDiagnosticsSignError", text = ""}
@@ -23,7 +36,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
     vim.lsp.with(
         vim.lsp.diagnostic.on_publish_diagnostics,
         {
-            virtual_text = false,
+            virtual_text = true,
             update_in_insert = false,
             underline = true,
             signs = true
@@ -61,3 +74,11 @@ require'conf.lsp.dockerls'
 require'conf.lsp.html'
 require'conf.lsp.clangd'
 require'conf.lsp.efm'
+
+-- jdtls
+vim.cmd[[
+augroup jdtls_lsp
+    autocmd!
+    autocmd FileType java lua require'conf.lsp.jdtls'.setup()
+augroup end
+]]

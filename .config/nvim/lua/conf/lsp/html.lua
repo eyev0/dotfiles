@@ -1,6 +1,5 @@
-local shared_conf = require'conf.lsp.shared_conf'
 require'lspconfig'.html.setup {
-  on_attach = shared_conf.on_attach,
-  capabilities = shared_conf.capabilities,
+  on_attach = _G.lsp_on_attach,
+  capabilities = _G.lsp_capabilities,
 }
 

@@ -18,5 +18,4 @@ vim.cmd[[
 aug OutlineNoSignCol 
   au!  
   au BufNew,BufRead Outline set signcolumn=no 
-  au BufNew,BufRead Outline echo 1
 aug END ]]

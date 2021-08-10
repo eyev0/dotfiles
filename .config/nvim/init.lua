@@ -3,14 +3,14 @@
 require'globals'
 require'options'
 require'plugins'
-require'colorscheme'
+-- require'colorscheme'
+require'utils.local_nvimrc'.load()
 
 -- hey vscode extension
 if (vim.g.vscode == nil) then
   require'utils.trim_whitespace'
   require'utils.inline_gitblame'
-  require'utils.local_nvimrc'.load()
 end
 
--- keymaps are sourced in after/plugin/maps.vim
+-- keymaps are set in ./after/plugin/keymappings.lua
 -- require'keymappings'

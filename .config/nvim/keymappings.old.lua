@@ -41,8 +41,10 @@ map('v', '>', '>gv', {noremap = true, silent = true})
 -- clear last search
 map('n', '<C-c>', [[:let @/=""<CR>]], { noremap = true, silent = true })
 -- hacking search with visual mode
-map('x', '<leader>/', [[<Esc>/\%V]], { noremap = true, silent = true })
-map('v', '//', [[y/\V<C-R>=escape(@",'/\')<CR><CR>]], { noremap = true, silent = true })
+-- search within current selection
+map('x', '/i', [[<Esc>/\%V]], { noremap = true })
+-- search for selected text
+map('v', '/a', [[y/\V<C-R>=escape(@",'/\')<CR><CR>]], { noremap = true })
 -- jj to escape as well as C-c
 -- map('i', '<C-c>', [[<C-o><Esc>]], { noremap = true, silent = true })
 map('i', 'jj', '<ESC>', {noremap = true, silent = true})
@@ -58,8 +60,7 @@ map('n', 'dJ', [[i<CR><Esc>k$]], { noremap = true, silent = true })
 -- yank and select whole file
 map('n', '<leader>Y', [[gg"+yG]], { silent = true })
 map('n', '<leader>V', [[ggVG]], { silent = true })
--- paste at the end of current line
-map('n', '<leader>P', [[$p]], { silent = true })
+-- yank to EOL
 map('n', 'Y', [[y$]], { silent = true })
 -- Toggle inline git-blame
 map('n', 'yog', ':call ToggleGitBlameText()<CR>', {noremap = true, silent = true})
@@ -80,6 +81,31 @@ map('n', '<leader>st', [[:set ft=]], { noremap = true, silent = false })
 map('n', 'gz', [[za]], { noremap = false, silent = true })
 
 -- plugin shortcuts
+-- lsp
+local function set_lsp_buf_shortcuts(client, bufnr)
+  local function buf_map(...)
+    vim.api.nvim_buf_set_keymap(bufnr, ...)
+  end
+  buf_map("n", "<leader>jd", "<cmd>lua vim.lsp.buf.definition()<CR>", {noremap = true, silent = true})
+  buf_map("n", "<leader>jr", "<cmd>lua vim.lsp.buf.references()<CR>", {noremap = true, silent = true})
+  buf_map("n", "[e", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", {noremap = true, silent = true})
+  buf_map("n", "]e", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", {noremap = true, silent = true})
+  buf_map("n", "<leader>es", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", {noremap = true, silent = true})
+  buf_map("n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", {noremap = true, silent = true})
+  buf_map("n", "<M-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", {noremap = true, silent = true})
+  buf_map("i", "<M-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", {noremap = true, silent = true})
+  buf_map("n", "<leader>rr", "<cmd>lua vim.lsp.buf.rename()<CR>", {noremap = true, silent = true})
+  buf_map("n", "<leader>ji", "<cmd>lua vim.lsp.buf.implementation()<CR>", {noremap = true, silent = true})
+  buf_map('n', '<C-m>', '<cmd>lua vim.lsp.buf.code_action()<CR>', { noremap=true, silent=true })
+  buf_map('v', '<C-m>', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', { noremap=true, silent=true })
+  if client.resolved_capabilities.document_formatting then
+    buf_map("n", "<leader>ef", "<cmd>lua vim.lsp.buf.formatting()<CR>", {noremap = true, silent = true})
+  end
+  if client.resolved_capabilities.document_range_formatting then
+    buf_map("v", "<leader>ef", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", {noremap = true, silent = true})
+  end
+end
+_G.set_lsp_buf_shortcuts = set_lsp_buf_shortcuts
 -- completion
 map('i', '<C-space>', [[compe#complete()]], { noremap=true, silent=true, expr=true })
 map('i', '<CR>', 'v:lua.completion_confirm()', {expr = true , noremap = true})
@@ -111,8 +137,10 @@ map('n', ']r', [[<plug>(YoinkRotateForward)]], { silent = true })
 map('n', 'y', [[<plug>(YoinkYankPreserveCursorPosition)]], { silent = true })
 map('x', 'y', [[<plug>(YoinkYankPreserveCursorPosition)]], { silent = true })
 -- floating lazygit = awesome
-map('n', 'gt', [[<cmd>lua require('lspsaga.floaterm').open_float_terminal('lazygit')<CR>]], { noremap=true, silent=true })
-map('t', '<M-w>', [[<C-\><C-n>:lua require('lspsaga.floaterm').close_float_terminal()<CR>]], { silent=true })
+-- map('n', 'gt', [[<cmd>lua require('lspsaga.floaterm').open_float_terminal('lazygit')<CR>]], { noremap=true, silent=true })
+map('n', 'gt', [[:FloatermNew --height=0.9 --width=0.7 --wintype=float --name=lazygit --position=center --autoclose=2 lazygit<CR>]], { noremap=true, silent=true })
+-- map('t', '<M-w>', [[<C-\><C-n>:lua require('lspsaga.floaterm').close_float_terminal()<CR>]], { silent=true })
+map('t', '<M-w>', [[<C-\><C-n>:FloatermKill<CR>]], { silent=true })
 -- vimspector
 vim.cmd[[
 func GotoWindow(id)
@@ -133,11 +161,20 @@ map('n', '<F6>', [[<Plug>VimspectorStepOver]], { silent = true })
 map('n', '<F7>', [[<Plug>VimspectorStepOut]], { silent = true })
 map('n', '<F8>', [[<Plug>VimspectorContinue]], { silent = true })
 map('n', '<F9>', [[<Plug>VimspectorRunToCursor]], { silent = true })
+-- dap
+-- map('n', '<F5>', [[:lua require'dap'.continue()<CR>]], { noremap = true, silent = true })
+-- map('n', '<F8>', [[:lua require'dap'.step_over()<CR>]], { noremap = true, silent = true })
+-- map('n', '<F11>', [[:lua require'dap'.step_into()<CR>]], { noremap = true, silent = true })
+-- map('n', '<F12>', [[:lua require'dap'.step_out()<CR>]], { noremap = true, silent = true })
+-- map('n', '<leader>b', [[:lua require'dap'.toggle_breakpoint()<CR>]], { noremap = true, silent = true })
+-- map('n', '<leader>B', [[:lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>]], { noremap = true, silent = true })
+-- map('n', '<leader>lp', [[:lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>]], { noremap = true, silent = true })
+-- map('n', '<leader>dr', [[:lua require'dap'.repl.open()<CR>]], { noremap = true, silent = true })
+-- map('n', '<leader>dl', [[:lua require'dap'.run_last()<CR>]], { noremap = true, silent = true })
 -- Maximizer
 map('n', '<leader>m', [[:MaximizerToggle!<CR>]], { noremap = true, silent = true })
 -- Telescope
-map('n', '<C-p>', [[:Telescope find_files<CR>]], { noremap = true, silent = true })
-map('n', '<leader><C-p>', [[:Telescope git_files<cr>]], { noremap = true, silent = true })
+map('n', '<C-p>', [[:lua require'conf.telescope'.project_files()<CR>]], { noremap = true, silent = true })
 map('n', '<leader>fs', [[:Telescope live_grep<cr>]], { noremap = true, silent = true })
 map('n', '<leader>fo', [[:Telescope buffers<cr>]], { noremap = true, silent = true })
 map('n', '<leader>fm', [[:Telescope keymaps<cr>]], { noremap = true, silent = true })
@@ -146,7 +183,7 @@ map('n', '<leader>fv', [[:Telescope vim_options<cr>]], { noremap = true, silent 
 map('n', '<leader>fl', [[:Telescope highlights<cr>]], { noremap = true, silent = true })
 map('n', '<leader>fa', [[:Telescope autocommands<cr>]], { noremap = true, silent = true })
 -- symbols_outline
-map('n', '<leader>so', [[:SymbolsOutline<CR>]], { noremap = true, silent = true })
+-- map('n', '<leader>so', [[:SymbolsOutline<CR>]], { noremap = true, silent = true })
 -- treesitter playground
 map('n', '<leader>tsp', [[:TSPlaygroundToggle<CR>]], { noremap = true, silent = true })
 -- git stuff
@@ -162,8 +199,15 @@ map('n', 'gll', [[:Git pull<CR>]], { noremap = true, silent = true })
 map('n', '<leader>dv', [[:DiffviewOpen HEAD]], { noremap = true })
 -- UndoTree
 map('n', '<leader>ut', [[:UndotreeToggle<CR>]], { noremap = true, silent = true })
--- ALE fixes things
-map('n', '<leader>rf', [[:ALEFix<CR>]], { noremap = true, silent = true })
 -- far.vim
 map('n', '<leader>ff', [[:Farf<CR>]], { noremap = true, silent = true })
 map('v', '<leader>ff', [[:Farf<CR>]], { noremap = true, silent = true })
+-- iswap
+map('n', '<leader>is', [[:ISwap<CR>]], { noremap = true, silent = true })
+-- zen mode
+map('n', '<leader>zm', [[:ZenMode<CR>]], { noremap = true, silent = true })
+-- vista = tags
+map('n', '<leader>to', [[:Vista!!<CR>]], { noremap = true, silent = true })
+map('n', '<leader>tl', [[:Vista nvim_lsp<CR>]], { noremap = true, silent = true })
+-- lsptrouble
+map("n", "<leader>jt", ":LspTroubleToggle<CR>", {noremap = true, silent = true})

@@ -63,12 +63,26 @@ return require("packer").startup(
     use { 'tmux-plugins/vim-tmux', cond = not_vscode } -- syntax highlighting for .tmux.conf
     -- git
     use { 'tpope/vim-fugitive', cond = not_vscode }
+    -- use { 'pwntester/octo.nvim', config = function () require'octo'.setup() end, cond = not_vscode }
     use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim', opt = true }, config = function() require'conf.gitsigns' end, cond = not_vscode }
     use { 'sindrets/diffview.nvim', config = function() require'conf.diffview' end, disable = true, cond = not_vscode }
     -- telescope
     use { 'nvim-telescope/telescope.nvim', config = function() require'conf.telescope' end, cond = not_vscode }
+    -- lsp
+    use { 'neovim/nvim-lspconfig', config = function () require'conf.lsp' end, cond = not_vscode }
+    use { 'jose-elias-alvarez/nvim-lsp-ts-utils', cond = not_vscode }
+    use { 'hrsh7th/nvim-compe', config = function () require'conf.compe' end, cond = not_vscode }
+    use { 'ray-x/lsp_signature.nvim', config = function () require'conf.lspsignature' end, cond = not_vscode }
+    use { 'hrsh7th/vim-vsnip', cond = not_vscode }
+    use { 'hrsh7th/vim-vsnip-integ', cond = not_vscode }
+    use { 'rafamadriz/friendly-snippets', cond = not_vscode }
+    use { 'folke/lsp-trouble.nvim', config = function () require'conf.lsptrouble' end, cond = not_vscode }
+    use { 'onsails/lspkind-nvim', config = function () require'lspkind'.init() end, cond = not_vscode }
+    use { 'liuchengxu/vista.vim', cond = not_vscode }
+    use { 'simrat39/symbols-outline.nvim', config = function() require'conf.outline' end, cond = not_vscode, disable = true }
     -- lua stuff
     -- TODO: check it out
+    -- use 'bfredl/nvim-luadev'
     use { 'tjdevries/nlua.nvim', cond = not_vscode }
     -- debugging
     use { 'puremourning/vimspector', cond = not_vscode }
