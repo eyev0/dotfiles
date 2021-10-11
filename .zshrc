@@ -140,3 +140,8 @@ export SDKMAN_DIR="/home/yev/.sdkman"
 [[ -s "/home/yev/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yev/.sdkman/bin/sdkman-init.sh"
 
 eval "$(zoxide init zsh)"
+
+
+# BEGIN_KITTY_SHELL_INTEGRATION
+if test -e "/run/media/yev/shada/home/sources/kitty/shell-integration/kitty.zsh"; then source "/run/media/yev/shada/home/sources/kitty/shell-integration/kitty.zsh"; fi
+# END_KITTY_SHELL_INTEGRATION
