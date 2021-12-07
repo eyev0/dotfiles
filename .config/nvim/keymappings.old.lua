@@ -107,9 +107,9 @@ local function set_lsp_buf_shortcuts(client, bufnr)
 end
 _G.set_lsp_buf_shortcuts = set_lsp_buf_shortcuts
 -- completion
-map('i', '<C-space>', [[compe#complete()]], { noremap=true, silent=true, expr=true })
+map('i', '<C-space>', [[cmp#complete()]], { noremap=true, silent=true, expr=true })
 map('i', '<CR>', 'v:lua.completion_confirm()', {expr = true , noremap = true})
-map('i', '<C-e>', [[compe#close('<C-e>')]], { noremap=true, silent=true, expr=true })
+map('i', '<C-e>', [[cmp#close('<C-e>')]], { noremap=true, silent=true, expr=true })
 map("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
 map("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
 map("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})

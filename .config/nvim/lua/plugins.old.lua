@@ -71,7 +71,7 @@ return require("packer").startup(
     -- lsp
     use { 'neovim/nvim-lspconfig', config = function () require'conf.lsp' end, cond = not_vscode }
     use { 'jose-elias-alvarez/nvim-lsp-ts-utils', cond = not_vscode }
-    use { 'hrsh7th/nvim-compe', config = function () require'conf.compe' end, cond = not_vscode }
+    use { 'hrsh7th/nvim-cmp', config = function () require'conf.cmp' end, cond = not_vscode }
     use { 'ray-x/lsp_signature.nvim', config = function () require'conf.lspsignature' end, cond = not_vscode }
     use { 'hrsh7th/vim-vsnip', cond = not_vscode }
     use { 'hrsh7th/vim-vsnip-integ', cond = not_vscode }

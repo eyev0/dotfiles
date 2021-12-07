@@ -67,8 +67,12 @@ return require("packer").startup(
     use { 'sindrets/diffview.nvim', config = function() require'conf.diffview' end, disable = true, cond = not_vscode }
     -- telescope
     use { 'nvim-telescope/telescope.nvim', config = function() require'conf.telescope' end, cond = not_vscode }
+    -- lsp
+    -- use { 'neovim/nvim-lspconfig', config = function () require'conf.lsp' end, cond = not_vscode }
+    -- use { 'hrsh7th/nvim-cmp', config = function () require'conf.cmp' end, cond = not_vscode }
+    -- use { 'hrsh7th/cmp-vsnip', cond = not_vscode }
+    -- use { 'hrsh7th/vim-vsnip', cond = not_vscode }
     -- lua stuff
-    -- TODO: check it out
     use { 'tjdevries/nlua.nvim', cond = not_vscode }
     -- debugging
     use { 'puremourning/vimspector', cond = not_vscode }

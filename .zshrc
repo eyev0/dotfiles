@@ -119,8 +119,8 @@ KEYTIMEOUT=1
 
 alias c='clear'
 alias psv='source venv/bin/activate'
-alias al='exa -alh'
-alias la='exa -alh'
+alias al='lsd -alh'
+alias la='lsd -alh'
 alias ta='tmux a'
 alias t='tmux'
 alias ku='systemctl restart kvpnc.service'

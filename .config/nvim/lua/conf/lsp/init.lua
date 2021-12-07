@@ -75,10 +75,3 @@ require'conf.lsp.html'
 require'conf.lsp.clangd'
 require'conf.lsp.efm'
 
--- jdtls
-vim.cmd[[
-augroup jdtls_lsp
-    autocmd!
-    autocmd FileType java lua require'conf.lsp.jdtls'.setup()
-augroup end
-]]

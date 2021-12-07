@@ -65,3 +65,6 @@ vim.cmd[[
     au BufEnter,CursorHold NvimTree NvimTreeRefresh 
   aug END
 ]]
+
+require'nvim-tree'.setup()
+
