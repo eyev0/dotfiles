@@ -1,5 +1,5 @@
 local lsp = vim.lsp
-local get_current_buf = vim.api.nvim_get_current_buf
+-- local get_current_buf = vim.api.nvim_get_current_buf
 
 local function is_lsp_attached()
   return next(lsp.buf_get_clients()) ~= nil
@@ -8,12 +8,13 @@ end
 local function get_diagnostics_count(severity)
   if not is_lsp_attached() then return nil end
 
-  local bufnr = get_current_buf()
-  local active_clients = lsp.buf_get_clients(bufnr)
+  -- local bufnr = get_current_buf()
+  -- local active_clients = lsp.buf_get_clients(bufnr)
   local count = 0
 
-  for _, client in pairs(active_clients) do
-    count = count + lsp.diagnostic.get_count(bufnr, severity, client.id)
+  -- for _, client in pairs(active_clients) do
+  for _ in pairs(vim.diagnostic.get(0, { severity = severity })) do
+    count = count + 1
   end
 
   return count
@@ -38,22 +39,22 @@ local function lsp_attached()
 end
 
 local function diagnostic_errors()
-  local count = get_diagnostics_count('Error')
+  local count = get_diagnostics_count(vim.diagnostic.severity.ERROR)
   return count ~= nil and ('  ') .. count or ''
 end
 
 local function diagnostic_warnings()
-  local count = get_diagnostics_count('Warning')
+  local count = get_diagnostics_count(vim.diagnostic.severity.WARN)
   return count ~= nil and ('  ') .. count or ''
 end
 
 local function diagnostic_hints()
-  local count = get_diagnostics_count('Hint')
+  local count = get_diagnostics_count(vim.diagnostic.severity.HINT)
   return count ~= nil and ('  ') .. count or ''
 end
 
 local function diagnostic_info()
-  local count = get_diagnostics_count('Information')
+  local count = get_diagnostics_count(vim.diagnostic.severity.INFO)
   return count ~= nil and ('  ') .. count or ''
 end
 

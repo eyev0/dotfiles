@@ -54,12 +54,12 @@ ZSH_THEME="ys"
 # ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -117,6 +117,10 @@ eval "$(register-python-argcomplete pipx)"
 
 KEYTIMEOUT=1
 
+alias vim='nvim'
+alias v='nvim'
+alias vimdiff='nvim -d'
+
 alias c='clear'
 alias psv='source venv/bin/activate'
 alias al='lsd -alh'
@@ -128,10 +132,19 @@ alias ks='systemctl status kvpnc.service'
 alias kd='systemctl stop kvpnc.service'
 alias ld='lazydocker'
 alias lg='lazygit'
-alias rng='ranger'
+alias lm='lazynpm'
+alias pm='pnpm'
+alias rn='ranger'
+
+alias yc='yarn clean'
+alias ys='yarn start'
+alias yb='yarn build'
 
 alias dotconf='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 alias lgd='lazygit -g $HOME/.dotfiles -w $HOME'
+
+alias p='pass'
+alias psync='pass git push'
 
 alias luamake=/home/yev/.cache/nvim/lspconfig/sumneko_lua/lua-language-server/3rd/luamake/luamake
 
@@ -139,9 +152,7 @@ alias luamake=/home/yev/.cache/nvim/lspconfig/sumneko_lua/lua-language-server/3r
 export SDKMAN_DIR="/home/yev/.sdkman"
 [[ -s "/home/yev/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yev/.sdkman/bin/sdkman-init.sh"
 
-eval "$(zoxide init zsh)"
-
-
 # BEGIN_KITTY_SHELL_INTEGRATION
 if test -e "/run/media/yev/shada/home/sources/kitty/shell-integration/kitty.zsh"; then source "/run/media/yev/shada/home/sources/kitty/shell-integration/kitty.zsh"; fi
 # END_KITTY_SHELL_INTEGRATION
+#

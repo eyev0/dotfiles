@@ -13,6 +13,9 @@ local mappings = {
   }
 }
 
+
+-- require('telescope').load_extension('projects')
+
 require('telescope').setup{
   defaults = {
     selection_strategy = "reset",

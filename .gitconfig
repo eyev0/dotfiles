@@ -24,3 +24,9 @@
 
 [interactive]
     diffFilter = delta --color-only
+
+[diff]
+    tool = nvimdiff
+
+[merge]
+    tool = nvimdiff

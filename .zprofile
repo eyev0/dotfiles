@@ -17,4 +17,4 @@ export QT_QPA_PLATFORM=wayland
 # gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 22                                                                                                                   <<<
 # gsettings set org.gnome.desktop.peripherals.keyboard delay 245
 
-source $HOME/.sbl_artifactory
+source $HOME/.sbl

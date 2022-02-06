@@ -17,10 +17,10 @@ local isort = {formatCommand = "isort --quiet -", formatStdin = true}
 local java_google = {formatCommand = "java -jar "..os.getenv('HOME')..'/.local/jar/google-java-format-1.10.0-all-deps.jar '..vim.api.nvim_buf_get_name(0)}
 
 lspconfig.efm.setup {
-  on_attach = function(client)
+  on_attach = function(client, bufnr)
     client.resolved_capabilities.document_formatting = true
     client.resolved_capabilities.goto_definition = false
-    _G.lsp_on_attach(client)
+    _G.lsp_on_attach(client, bufnr)
   end,
   capabilities = _G.lsp_capabilities,
   filetypes = {

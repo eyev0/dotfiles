@@ -1,6 +1,7 @@
+local M = {}
 local api = vim.api
 
-U.gitlens_set_virtual_text = function ()
+function M.blameVirtText()
   -- local ft = vim.fn.expand('%:h:t') -- get the current file extension
   local ft = vim.bo.filetype -- get the current file extension
   if ft == '' then -- if we are in a scratch buffer or unknown filetype
@@ -28,7 +29,7 @@ U.gitlens_set_virtual_text = function ()
   api.nvim_buf_set_virtual_text(0, 2, line[1] - 1, {{ text,'InlineGitBlame' }}, {}) -- set virtual text for namespace 2 with the content from git and assign it to the higlight group 'InlineGitBlame'
 end
 
-U.gitlens_clear_virtual_text = function () -- important for clearing out the text when our cursor moves
+function M.clearBlameVirtText() -- important for clearing out the text when our cursor moves
   api.nvim_buf_clear_namespace(0, 2, 0, -1)
 end
 
@@ -36,9 +37,9 @@ vim.cmd[[
 fun! SetInlineGitBlameAus()
   aug InlineGitBlameAus
     au!
-    au CursorHold   * lua U.gitlens_set_virtual_text()
-    au CursorMoved  * lua U.gitlens_clear_virtual_text()
-    au InsertEnter  * lua U.gitlens_clear_virtual_text()
+    au CursorHold   * lua require'conf.inline_gitblame'.blameVirtText()
+    au CursorMoved  * lua require'conf.inline_gitblame'.clearBlameVirtText()
+    au InsertEnter  * lua require'conf.inline_gitblame'.clearBlameVirtText()
   aug END
 endfun
 fun! ToggleGitBlameText()
@@ -56,3 +57,4 @@ call SetInlineGitBlameAus()
 -- works with lua config only when defered..
 vim.defer_fn(function () vim.cmd[[hi! link InlineGitBlame Comment]] end, 200)
 
+return M

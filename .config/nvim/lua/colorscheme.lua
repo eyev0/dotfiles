@@ -4,7 +4,7 @@
 -- Normal ctermfg=#223 ctermbg=#235 guifg=#ebdbb2 guibg=#282828
 -- vim.cmd[[au ColorScheme * hi! NormalInactive ctermfg=223 ctermbg=235]]
 -- vim.cmd[[au ColorScheme * hi! NormalFloat ctermfg=223 ctermbg=235]]
-vim.cmd [[
+vim.cmd([[
 fun! SetQsColors()
   augroup QuickScopeColors
     autocmd!
@@ -13,7 +13,7 @@ fun! SetQsColors()
   augroup END
 endfun
 call SetQsColors()
-]]
+]])
 
 vim.o.background = O.background
 -- gruvbox
