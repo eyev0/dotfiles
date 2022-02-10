@@ -18,7 +18,7 @@ vim.o.backup = false
 vim.o.writebackup = false
 vim.o.undofile = true
 vim.cmd([[set undodir=~/.vim/undodir]])
-vim.o.updatetime = 35
+vim.o.updatetime = 100
 vim.o.timeout = true
 vim.o.timeoutlen = 300
 vim.o.ttimeout = false
@@ -57,7 +57,7 @@ vim.opt.clipboard:prepend({ "unnamedplus" })
 vim.o.termguicolors = true
 vim.cmd([[set shortmess+=c]])
 vim.cmd([[set iskeyword+=-]])
-vim.o.conceallevel = 0 -- So that I can see `` in markdown files
+vim.o.conceallevel = 3 -- So that I can see `` in markdown files
 vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 vim.o.softtabstop = 4
@@ -104,7 +104,7 @@ vim.g.qs_highlight_on_keys = { "f", "F", "t", "T" }
 vim.g.yoinkMaxItems = 20
 vim.g.yoinkIncludeDeleteOperations = 1
 vim.g.yoinkMoveCursorToEndOfPaste = 1
-vim.g.yoinkSavePersistently = 1
+vim.g.yoinkSavePersistently = 0
 if vim.fn.executable("rg") then
 	vim.g.rg_derive_root = "true"
 end

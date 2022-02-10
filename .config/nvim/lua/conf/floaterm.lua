@@ -9,7 +9,7 @@
 -- vim.g.floaterm_shell=O.shell
 vim.g.floaterm_autoinsert=1
 vim.g.floaterm_width=0.9
-vim.g.floaterm_height=0.4
+vim.g.floaterm_height=0.35
 vim.g.floaterm_title="floaterm($1|$2)"
 vim.g.floaterm_autoclose=1
 vim.g.floaterm_wintype='split'

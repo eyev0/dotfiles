@@ -1,10 +1,23 @@
 local nvim_lsp = require("lspconfig")
 local ts_utils = require("nvim-lsp-ts-utils")
 
+local init_options = {
+	hostInfo = "neovim",
+	preferences = {
+		includeInlayParameterNameHints = "all",
+		includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+		includeInlayFunctionParameterTypeHints = true,
+		includeInlayVariableTypeHints = true,
+		includeInlayPropertyDeclarationTypeHints = true,
+		includeInlayFunctionLikeReturnTypeHints = true,
+		includeInlayEnumMemberValueHints = true,
+	},
+}
+
 nvim_lsp.tsserver.setup({
 	-- Needed for inlayHints. Merge this table with your settings or copy
 	-- it from the source if you want to add your own init_options.
-	init_options = ts_utils.init_options,
+	init_options = init_options,
 	--
 	on_attach = function(client, bufnr)
 		if client.config.flags then
@@ -40,13 +53,13 @@ nvim_lsp.tsserver.setup({
 			auto_inlay_hints = true,
 			inlay_hints_highlight = "Comment",
 			inlay_hints_priority = 1, -- priority of the hint extmarks
-			inlay_hints_throttle = 150, -- throttle the inlay hint request
+			inlay_hints_throttle = vim.o.updatetime, -- throttle the inlay hint request
 			inlay_hints_format = { -- format options for individual hint kind
 				-- Type = {},
 				Parameter = {
 					highlight = "Comment",
 					text = function(text)
-						return ""
+						return "p:" .. text:sub(0, -2)
 					end,
 				},
 				Enum = {},
@@ -54,13 +67,12 @@ nvim_lsp.tsserver.setup({
 				Type = {
 					highlight = "Comment",
 					text = function(text)
-						return ":" .. text:sub(3)
+						return "t:" .. text:sub(3)
 					end,
 				},
 			},
-
 			-- update imports on file move
-			update_imports_on_move = false,
+			update_imports_on_move = true,
 			require_confirmation_on_move = false,
 			watch_dir = nil,
 		})

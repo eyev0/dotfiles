@@ -138,13 +138,14 @@ alias rn='ranger'
 
 alias yc='yarn clean'
 alias ys='yarn start'
+alias yw='yarn watch'
 alias yb='yarn build'
 
 alias dotconf='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 alias lgd='lazygit -g $HOME/.dotfiles -w $HOME'
 
 alias p='pass'
-alias psync='pass git push'
+alias psync='pass git pull && pass git push'
 
 alias luamake=/home/yev/.cache/nvim/lspconfig/sumneko_lua/lua-language-server/3rd/luamake/luamake
 

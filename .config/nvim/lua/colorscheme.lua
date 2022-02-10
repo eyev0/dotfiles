@@ -27,3 +27,5 @@ vim.g.tokyonight_dark_sidebar = false
 
 vim.cmd("colorscheme " .. O.colorscheme)
 vim.g.colorscheme_defined = 1
+
+O.colors = require("tokyonight.colors").setup()

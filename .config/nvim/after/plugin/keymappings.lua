@@ -65,7 +65,7 @@ map("n", "Y", [[y$]], { silent = true })
 -- Toggle inline git-blame
 map("n", "yog", ":call ToggleGitBlameText()<CR>", { noremap = true, silent = true })
 -- Toggle lsp diagnostics preview window auto-popup
-map("n", "yoe", ":call ToggleDiagnosticsPreviewText()<CR>", { noremap = true, silent = true })
+map("n", "<leader>k", ":call ToggleDiagnosticsPreviewText()<CR>", { noremap = true, silent = true })
 -- sometimes scrolloff gets messed up for no obvious reason
 map("n", "<leader>sso", [[:set scrolloff=9 <bar> :set sidescrolloff=3<CR>]], { noremap = true, silent = true })
 -- quickfix stuff
@@ -86,17 +86,27 @@ local function set_lsp_buf_shortcuts(_, bufnr)
 	local function buf_map(...)
 		vim.api.nvim_buf_set_keymap(bufnr, ...)
 	end
-	buf_map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
-	buf_map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", { noremap = true, silent = true })
-	buf_map("n", "<F11>", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", { noremap = true, silent = true })
-	buf_map("n", "<F12>", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", { noremap = true, silent = true })
-	-- buf_map("n", "<leader>es", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", { noremap = true, silent = true })
+	buf_map("n", "gd", ":Trouble lsp_definitions<CR>", { noremap = true, silent = true })
+	buf_map("n", "gr", ":Trouble lsp_references<CR>", { noremap = true, silent = true })
+	buf_map(
+		"n",
+		"<C-F3>",
+		"<cmd>lua vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })<CR>",
+		{ noremap = true, silent = true }
+	)
+	buf_map(
+		"n",
+		"<F3>",
+		"<cmd>lua vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })<CR>",
+		{ noremap = true, silent = true }
+	)
 	buf_map("n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", { noremap = true, silent = true })
 	buf_map("n", "<M-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", { noremap = true, silent = true })
 	buf_map("i", "<M-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", { noremap = true, silent = true })
 	buf_map("n", "gn", "<cmd>lua vim.lsp.buf.rename()<CR>", { noremap = true, silent = true })
-	buf_map("n", "<leader>ji", "<cmd>lua vim.lsp.buf.implementation()<CR>", { noremap = true, silent = true })
-	buf_map("n", "<C-m>", "<cmd>lua vim.lsp.buf.code_action()<CR>", { noremap = true, silent = true })
+	buf_map("n", "<leader>ji", ":Trouble lsp_implementations<CR>", { noremap = true, silent = true })
+	-- buf_map("n", "<C-m>", "<cmd>lua vim.lsp.buf.code_action()<CR>", { noremap = true, silent = true })
+	buf_map("n", "<C-m>", ":CodeActionMenu<CR>", { noremap = true, silent = true })
 	buf_map("v", "<C-m>", "<cmd>lua vim.lsp.buf.range_code_action()<CR>", { noremap = true, silent = true })
 	-- if client.resolved_capabilities.document_formatting then
 	buf_map("n", "<leader>ef", "<cmd>lua vim.lsp.buf.formatting()<CR>", { noremap = true, silent = true })
@@ -108,6 +118,9 @@ end
 _G.set_lsp_buf_shortcuts = set_lsp_buf_shortcuts
 -- lsptrouble
 map("n", "<leader>jt", ":TroubleToggle<CR>", { noremap = true, silent = true })
+map("n", "<leader>jd", ":Trouble document_diagnostics<CR>", { noremap = true, silent = true })
+map("n", "<leader>jw", ":Trouble document_workspace<CR>", { noremap = true, silent = true })
+map("n", "<leader>td", ":TodoTrouble<CR>", { noremap = true, silent = true })
 -- refactorings
 -- map(
 -- 	"v",
@@ -134,16 +147,18 @@ map("n", "<leader>jt", ":TroubleToggle<CR>", { noremap = true, silent = true })
 -- 	{ noremap = true, silent = true }
 -- )
 -- completion
-map("i", "<C-space>", [[cmp#complete()]], { noremap = true, silent = true, expr = true })
-map("i", "<CR>", "v:lua.completion_confirm()", { expr = true, noremap = true })
-map("i", "<C-e>", [[cmp#close('<C-e>')]], { noremap = true, silent = true, expr = true })
-map("i", "<Tab>", "v:lua.tab_complete()", { expr = true })
-map("s", "<Tab>", "v:lua.tab_complete()", { expr = true })
-map("i", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
-map("s", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
--- vsnip - Expand snippet
-map("i", "<C-j>", [[vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-j>']], { silent = true, expr = true })
-map("s", "<C-j>", [[vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-j>']], { silent = true, expr = true })
+if _G.not_vscode() then
+	map("i", "<C-space>", [[cmp#complete()]], { noremap = true, silent = true, expr = true })
+	map("i", "<CR>", "v:lua.completion_confirm()", { expr = true, noremap = true })
+	map("i", "<C-e>", [[cmp#close('<C-e>')]], { noremap = true, silent = true, expr = true })
+	map("i", "<Tab>", "v:lua.tab_complete()", { expr = true })
+	map("s", "<Tab>", "v:lua.tab_complete()", { expr = true })
+	map("i", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
+	map("s", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
+	-- vsnip - Expand snippet
+	map("i", "<C-j>", [[vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-j>']], { silent = true, expr = true })
+	map("s", "<C-j>", [[vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-j>']], { silent = true, expr = true })
+end
 -- NvimTree
 map("n", "<leader>n", [[:NvimTreeToggle<CR>]], { noremap = true, silent = true })
 map("n", "<leader><leader>n", [[:NvimTreeFindFile<CR>]], { noremap = true, silent = true })
@@ -159,8 +174,8 @@ map("n", "X", [[D]], { noremap = true, silent = true })
 -- Yoink maps
 map("n", "p", [[<plug>(YoinkPaste_p)]], { silent = true })
 map("n", "P", [[<plug>(YoinkPaste_P)]], { silent = true })
-map("n", "[r", [[<plug>(YoinkRotateBack)]], { silent = true })
-map("n", "]r", [[<plug>(YoinkRotateForward)]], { silent = true })
+map("n", "<PageUp>", [[<plug>(YoinkRotateBack)]], { silent = true })
+map("n", "<PageDown>", [[<plug>(YoinkRotateForward)]], { silent = true })
 map("n", "y", [[<plug>(YoinkYankPreserveCursorPosition)]], { silent = true })
 map("x", "y", [[<plug>(YoinkYankPreserveCursorPosition)]], { silent = true })
 -- floating lazygit = awesome
@@ -173,14 +188,20 @@ map(
 )
 map("n", "<F1>", [[:FloatermToggle<CR>]], { noremap = true, silent = true })
 map("t", "<F1>", [[<C-\><C-n>:FloatermToggle<CR>]], { noremap = true, silent = true })
-map("n", "<F2>", [[:FloatermNew<CR>]], { noremap = true, silent = true })
-map("t", "<F2>", [[<C-\><C-n>:FloatermNew<CR>]], { noremap = true, silent = true })
-map("n", "<F3>", [[:FloatermPrev<CR>]], { noremap = true, silent = true })
-map("t", "<F3>", [[<C-\><C-n>:FloatermPrev<CR>]], { noremap = true, silent = true })
-map("n", "<F4>", [[:FloatermNext<CR>]], { noremap = true, silent = true })
-map("t", "<F4>", [[<C-\><C-n>:FloatermNext<CR>]], { noremap = true, silent = true })
+map("n", "<C-F1>", [[:FloatermNew<CR>]], { noremap = true, silent = true })
+map("t", "<C-F1>", [[<C-\><C-n>:FloatermNew<CR>]], { noremap = true, silent = true })
+map("t", "<C-PageDown>", [[<C-\><C-n>:FloatermPrev<CR>]], { noremap = true, silent = true })
+map("t", "<C-PageUp>", [[<C-\><C-n>:FloatermNext<CR>]], { noremap = true, silent = true })
+map("n", "<C-PageDown>", [[:FloatermPrev<CR>]], { noremap = true, silent = true })
+map("n", "<C-PageUp>", [[<:FloatermNext<CR>]], { noremap = true, silent = true })
 -- map('t', '<M-w>', [[<C-\><C-n>:lua require('lspsaga.floaterm').close_float_terminal()<CR>]], { silent=true })
 map("t", "<M-w>", [[<C-\><C-n>:FloatermKill<CR>]], { silent = true })
+map("t", "<C-h>", [[<C-\><C-n>:TmuxNavigateLeft<CR>]], { silent = true })
+map("t", "<C-j>", [[<C-\><C-n>:TmuxNavigateDown<CR>]], { silent = true })
+map("t", "<C-k>", [[<C-\><C-n>:TmuxNavigateUp<CR>]], { silent = true })
+map("t", "<C-l>", [[<C-\><C-n>:TmuxNavigateRight<CR>]], { silent = true })
+map("t", "<C-Up>", [[<C-\><C-n>:resize -2<CR>]], { noremap = true, silent = true })
+map("t", "<C-Down>", [[<C-\><C-n>:resize +2<CR>]], { noremap = true, silent = true })
 -- vimspector
 vim.cmd([[
 func GotoWindow(id)
@@ -196,11 +217,11 @@ map("n", "<leader>ds", [[<Plug>VimspectorToggleBreakpoint]], { silent = true })
 map("n", "<Leader>di", [[<Plug>VimspectorBalloonEval]], { silent = true })
 -- for visual mode, preview visually selected text
 map("x", "<Leader>di", [[<Plug>VimspectorBalloonEval]], { silent = true })
-map("n", "<F5>", [[<Plug>VimspectorStepInto]], { silent = true })
-map("n", "<F6>", [[<Plug>VimspectorStepOver]], { silent = true })
-map("n", "<F7>", [[<Plug>VimspectorStepOut]], { silent = true })
+map("n", "<C-F5>", [[<Plug>VimspectorStepInto]], { silent = true })
+map("n", "<F5>", [[<Plug>VimspectorStepOver]], { silent = true })
+map("n", "<A-F5>", [[<Plug>VimspectorStepOut]], { silent = true })
 map("n", "<F8>", [[<Plug>VimspectorContinue]], { silent = true })
-map("n", "<F9>", [[<Plug>VimspectorRunToCursor]], { silent = true })
+-- map("n", "<F9>", [[<Plug>VimspectorRunToCursor]], { silent = true })
 -- dap
 -- map('n', '<F5>', [[:lua require'dap'.continue()<CR>]], { noremap = true, silent = true })
 -- map('n', '<F8>', [[:lua require'dap'.step_over()<CR>]], { noremap = true, silent = true })
@@ -227,23 +248,25 @@ map("n", "<leader>fa", [[:Telescope autocommands<cr>]], { noremap = true, silent
 -- treesitter playground
 map("n", "<leader>tsp", [[:TSPlaygroundToggle<CR>]], { noremap = true, silent = true })
 -- git stuff
-map("n", "gss", [[:tab Git<CR>]], { noremap = true, silent = true })
+-- map("n", "gss", [[:tab Git<CR>]], { noremap = true, silent = true })
+map("n", "gss", [[:DiffviewOpen HEAD<CR> :Git<CR>]], { noremap = true, silent = true })
 map("n", "glg", [[:tabnew <bar> Gclog -50 <bar> copen<CR>]], { noremap = true, silent = true })
 map("n", "gls", [[:tabnew <bar> Gclog -50 --stat <bar> copen<CR>]], { noremap = true, silent = true })
-map("n", "glf", [[:tabnew <bar> :b# <bar> :Gclog -50 -- % <bar> copen<CR>]], { noremap = true, silent = true })
-map("n", "gd", [[:tabnew <bar> :b# <bar> :Gvdiffsplit! HEAD<CR>]], { noremap = true, silent = true })
-map("n", "gb", [[:Git blame<CR>]], { noremap = true, silent = true })
+-- map("n", "glf", [[:tabnew <bar> :b# <bar> :Gclog -50 -- % <bar> copen<CR>]], { noremap = true, silent = true })
+map("n", "glf", [[:DiffviewFileHistory<CR>]], { noremap = true, silent = true })
+-- map("n", "gd", [[:tabnew <bar> :b# <bar> :Gvdiffsplit! HEAD<CR>]], { noremap = true, silent = true })
+map("n", "gsf", [[:DiffviewOpen HEAD -- %:p<CR>]], { noremap = true, silent = true })
 map("n", "gp", [[:Git push<CR>]], { noremap = true, silent = true })
 map("n", "gll", [[:Git pull<CR>]], { noremap = true, silent = true })
 -- Diffview.nvim
-map("n", "<leader>dv", [[:DiffviewOpen HEAD]], { noremap = true })
+map("n", "gsd", [[:DiffviewOpen HEAD]], { noremap = true })
 -- UndoTree
 map("n", "<leader>ut", [[:UndotreeToggle<CR>]], { noremap = true, silent = true })
 -- far.vim
 map("n", "<leader>ff", [[:Farf<CR>]], { noremap = true, silent = true })
 map("v", "<leader>ff", [[:Farf<CR>]], { noremap = true, silent = true })
 -- iswap
-map("n", "<leader>is", [[:ISwap<CR>]], { noremap = true, silent = true })
+-- map("n", "<leader>is", [[:ISwap<CR>]], { noremap = true, silent = true })
 -- zen mode
 map("n", "<leader>zm", [[:ZenMode<CR>]], { noremap = true, silent = true })
 -- vista = tags
