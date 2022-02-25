@@ -109,27 +109,30 @@ source $ZSH/oh-my-zsh.sh
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+export NODE_PATH=$(npm root -g)
+
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 
 eval "$(register-python-argcomplete pipx)"
 
-KEYTIMEOUT=1
+export KEYTIMEOUT=1
 
 alias vim='nvim'
 alias v='nvim'
+alias n='nvim'
+alias ns='nvim -S'
+alias nc='nvim -S -c "PackerCompile"'
 alias vimdiff='nvim -d'
 
 alias c='clear'
 alias psv='source venv/bin/activate'
 alias al='lsd -alh'
 alias la='lsd -alh'
-alias ta='tmux a'
-alias t='tmux'
-alias ku='systemctl restart kvpnc.service'
-alias ks='systemctl status kvpnc.service'
-alias kd='systemctl stop kvpnc.service'
+alias t='env TERM=screen-256color tmux'
+alias ta='env TERM=screen-256color tmux a'
+alias tkill='tmux kill-server'
 alias ld='lazydocker'
 alias lg='lazygit'
 alias lm='lazynpm'
@@ -138,8 +141,10 @@ alias rn='ranger'
 
 alias yc='yarn clean'
 alias ys='yarn start'
+alias ysv='yarn serve'
 alias yw='yarn watch'
 alias yb='yarn build'
+alias yd='yarn dev'
 
 alias dotconf='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 alias lgd='lazygit -g $HOME/.dotfiles -w $HOME'
@@ -149,11 +154,44 @@ alias psync='pass git pull && pass git push'
 
 alias luamake=/home/yev/.cache/nvim/lspconfig/sumneko_lua/lua-language-server/3rd/luamake/luamake
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+# THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/home/yev/.sdkman"
 [[ -s "/home/yev/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yev/.sdkman/bin/sdkman-init.sh"
 
 # BEGIN_KITTY_SHELL_INTEGRATION
 if test -e "/run/media/yev/shada/home/sources/kitty/shell-integration/kitty.zsh"; then source "/run/media/yev/shada/home/sources/kitty/shell-integration/kitty.zsh"; fi
 # END_KITTY_SHELL_INTEGRATION
-#
+
+# cursor stuff
+bindkey -v
+
+# Change cursor with support for inside/outside tmux
+function _set_cursor() {
+    if [[ $TMUX = '' ]]; then
+      echo -ne $1
+    else
+      echo -ne "\ePtmux;\e\e$1\e\\"
+    fi
+}
+
+# 1 or 0 -> blinking block
+# 2 -> solid block
+# 3 -> blinking underscore
+# 4 -> solid underscore
+# 5 -> blinking vertical bar
+# 6 -> solid vertical bar
+function _set_block_cursor() { _set_cursor '\e[2 q' }
+function _set_beam_cursor() { _set_cursor '\e[6 q' }
+
+function zle-keymap-select {
+  if [[ ${KEYMAP} == vicmd ]] || [[ $1 = 'block' ]]; then
+      _set_block_cursor
+  else
+      _set_beam_cursor
+  fi
+}
+zle -N zle-keymap-select
+# ensure beam cursor when starting new terminal
+precmd_functions+=(_set_beam_cursor) #
+# ensure insert mode and beam cursor when exiting vim
+zle-line-init() { zle -K viins; _set_beam_cursor }

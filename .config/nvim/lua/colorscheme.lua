@@ -18,14 +18,19 @@ call SetQsColors()
 vim.o.background = O.background
 -- gruvbox
 vim.g.gruvbox_contrast_light = O.contrast
-vim.g.gruvbox_contrast_dark = O.contrast
+vim.g.gruv = O.contrast
+-- gruvbox-material
+vim.g.gruvbox_material_palette = O.pallete
+vim.g.gruvbox_material_better_performance = 1
 -- tokyonight
 -- storm or night
-vim.g.tokyonight_style = "night"
+vim.g.tokyonight_style = "storm"
 vim.g.tokyonight_italic_functions = true
 vim.g.tokyonight_dark_sidebar = false
 
 vim.cmd("colorscheme " .. O.colorscheme)
 vim.g.colorscheme_defined = 1
 
-O.colors = require("tokyonight.colors").setup()
+return {
+	colors = require("tokyonight.colors").setup({}),
+}

@@ -90,7 +90,7 @@ require("nvim-tree").setup({
 	git = {
 		enable = true,
 		ignore = false,
-		timeout = 600,
+		timeout = 1000,
 	},
 	view = {
 		width = 30,

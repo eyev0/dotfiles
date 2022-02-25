@@ -14,7 +14,7 @@ local config = {
 	playground = {
 		enable = true,
 		disable = {},
-		updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+		updatetime = 30, -- Debounced time for highlighting nodes in the playground from source code
 		persist_queries = false, -- Whether the query persists across vim sessions
 	},
 	refactor = {
@@ -25,14 +25,15 @@ local config = {
 		enable = true,
 	},
 	pairs = {
-		enable = false,
+		enable = true,
 		disable = {},
 		highlight_pair_events = { "CursorHold" }, -- e.g. {"CursorMoved"}, -- when to highlight the pairs, use {} to deactivate highlighting
 		highlight_self = false, -- whether to highlight also the part of the pair under cursor (or only the partner)
 		goto_right_end = false, -- whether to go to the end of the right partner or the beginning
 		fallback_cmd_normal = "call matchit#Match_wrapper('',1,'n')", -- What command to issue when we can't find a pair (e.g. "normal! %")
 		keymaps = {
-			goto_partner = "<leader>%",
+			goto_partner = "%",
+			delete_balanced = "<leader>%d",
 		},
 	},
 	autotag = {
@@ -117,6 +118,30 @@ local function disable_rainbow_parens()
 	config.rainbow = { enable = false }
 	require("nvim-treesitter.configs").setup(config)
 end
+
+local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
+
+-- These two are optional and provide syntax highlighting
+-- for Neorg tables and the @document.meta tag
+parser_configs.norg_meta = {
+	install_info = {
+		url = "https://github.com/nvim-neorg/tree-sitter-norg-meta",
+		files = { "src/parser.c" },
+		branch = "main",
+	},
+}
+
+parser_configs.norg_table = {
+	install_info = {
+		url = "https://github.com/nvim-neorg/tree-sitter-norg-table",
+		files = { "src/parser.c" },
+		branch = "main",
+	},
+}
+
+-- fix for jsonc
+local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+parser_config.jsonc.used_by = "json"
 
 require("nvim-treesitter.configs").setup(config)
 

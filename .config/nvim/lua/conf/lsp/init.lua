@@ -2,9 +2,9 @@ _G.lsp_on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 	vim.api.nvim_command("setlocal signcolumn=yes:2")
 	_G.set_lsp_buf_shortcuts(client, bufnr)
-	require("conf.lspsignature").on_attach()
+	-- require("conf.lspsignature").on_attach()
+	require("illuminate").on_attach(client)
 end
-
 -- LSP Snippet Support
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -19,7 +19,6 @@ vim.cmd([[
   highlight! DiagnosticLineNrWarn guibg=#51412A guifg=#FFA500 gui=bold
   highlight! DiagnosticLineNrInfo guibg=#1E535D guifg=#00FFFF gui=bold
   highlight! DiagnosticLineNrHint guibg=#1E205D guifg=#0000FF gui=bold
-
   sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
   sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticLineNrWarn
   sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=DiagnosticLineNrInfo
@@ -76,11 +75,11 @@ fun! ToggleDiagnosticsPreviewText()
     aug END
   endif
 endfun
-call SetDiagnosticAu()
+" call SetDiagnosticAu()
 ]])
 
 -- lsputils
-vim.lsp.handlers["textDocument/codeAction"] = vim.lsp.with(require("lsputil.codeAction").code_action_handler)
+-- vim.lsp.handlers["textDocument/codeAction"] = vim.lsp.with(require("lsputil.codeAction").code_action_handler)
 -- vim.lsp.handlers["textDocument/references"] = require("lsputil.locations").references_handler
 -- vim.lsp.handlers["textDocument/definition"] = require("lsputil.locations").definition_handler
 -- vim.lsp.handlers["textDocument/declaration"] = require("lsputil.locations").declaration_handler
@@ -89,8 +88,9 @@ vim.lsp.handlers["textDocument/codeAction"] = vim.lsp.with(require("lsputil.code
 -- vim.lsp.handlers["textDocument/documentSymbol"] = require("lsputil.symbols").document_handler
 -- vim.lsp.handlers["workspace/symbol"] = require("lsputil.symbols").workspace_handler
 
-require("conf.lsp.tsserver")
 require("conf.lsp.vuels")
+require("conf.lsp.tsserver")
+-- require("conf.lsp.volar")
 require("conf.lsp.sumneko")
 require("conf.lsp.rust_analyzer")
 require("conf.lsp.pyright")

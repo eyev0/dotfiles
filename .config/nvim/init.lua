@@ -2,9 +2,10 @@
 
 require("globals")
 require("options")
+require("utils.nvimrc").load({ ".nvimrc", })
 require("plugins")
 -- require'colorscheme'
-require("utils.local_nvimrc").load()
+require("utils.nvimrc").load({ ".dap-config" })
 
 -- hey vscode extension
 if vim.g.vscode == nil then

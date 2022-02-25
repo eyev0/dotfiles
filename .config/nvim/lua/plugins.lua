@@ -14,24 +14,87 @@ end
 
 _G.not_vscode = not_vscode
 
+local function load_treesitter_plugins(use)
+	local use_treesitter = true
+	if use_treesitter then
+		use({
+			"nvim-treesitter/nvim-treesitter",
+			run = ":TSUpdate",
+			config = function()
+				require("conf.treesitter")
+			end,
+			cond = not_vscode,
+		})
+		use({ "p00f/nvim-ts-rainbow", cond = not_vscode })
+		use({ "JoosepAlviste/nvim-ts-context-commentstring", cond = not_vscode })
+		use({ "theHamsta/nvim-treesitter-pairs", cond = not_vscode })
+		use({ "windwp/nvim-ts-autotag", cond = not_vscode })
+		use({ "nvim-treesitter/nvim-treesitter-textobjects", cond = not_vscode })
+		use({
+			"romgrk/nvim-treesitter-context",
+			config = function()
+				require("conf.ts-context")
+			end,
+			cond = not_vscode,
+			after = "nvim-treesitter",
+			requires = {
+				"nvim-treesitter/nvim-treesitter",
+				run = ":TSUpdate",
+				config = function()
+					require("conf.treesitter")
+				end,
+				cond = not_vscode,
+			},
+		})
+		use({
+			"nvim-treesitter/playground",
+			run = ":TSInstall query",
+			cond = not_vscode,
+			after = "nvim-treesitter",
+			requires = {
+				"nvim-treesitter/nvim-treesitter",
+				run = ":TSUpdate",
+				config = function()
+					require("conf.treesitter")
+				end,
+				cond = not_vscode,
+			},
+		})
+		use({
+			"nvim-neorg/neorg",
+			config = function()
+				require("conf.neorg")
+			end,
+			after = "nvim-treesitter",
+			cond = not_vscode,
+		})
+	end
+end
+
 -- not working?..
 -- vim.cmd("autocmd BufWritePost plugins.lua PackerCompile") -- Auto compile when there are changes in plugins.lua
 
 return require("packer").startup(function(use)
 	-- Packer can manage itself
 	use({ "wbthomason/packer.nvim" })
+	-- laggy..
+	use({
+		"folke/tokyonight.nvim",
+		config = function()
+			require("colorscheme")
+		end,
+		cond = not_vscode,
+	})
 	-- text editing sugar
 	use("tpope/vim-repeat")
 	use("tpope/vim-surround")
 	use("tpope/vim-commentary")
 	use("tpope/vim-unimpaired")
-	-- use 'tpope/vim-abolish'
 	use("svermeulen/vim-cutlass")
 	use("svermeulen/vim-yoink")
 	use("svermeulen/vim-subversive")
 	use("unblevable/quick-scope")
 	use("tommcdo/vim-exchange")
-	-- use({ "wellle/targets.vim" })
 	use({ "sgur/vim-textobj-parameter", requires = { "kana/vim-textobj-user" } })
 	use("tpope/vim-obsession")
 	-- buffer stuff
@@ -44,15 +107,15 @@ return require("packer").startup(function(use)
 		end,
 	})
 	-- filesystem
-	use("tpope/vim-eunuch")
-	use("lambdalisue/suda.vim")
+	-- use("tpope/vim-eunuch")
+	-- use("lambdalisue/suda.vim")
 	-- dependency packages
 	use({ "nvim-lua/plenary.nvim" })
 	use({ "nvim-lua/popup.nvim" })
 	use({ "kyazdani42/nvim-web-devicons" })
 	use({ "rktjmp/lush.nvim" })
-
 	-- plugins not to be used with vscode
+	use({ "neoclide/jsonc.vim", cond = not_vscode })
 	use({
 		"folke/which-key.nvim",
 		config = function()
@@ -83,9 +146,9 @@ return require("packer").startup(function(use)
 		cond = not_vscode,
 	})
 	use({
-		"glepnir/indent-guides.nvim",
+		"lukas-reineke/indent-blankline.nvim",
 		config = function()
-			require("conf.indentguides")
+			require("conf.indent_blankline")
 		end,
 		cond = not_vscode,
 	})
@@ -125,12 +188,6 @@ return require("packer").startup(function(use)
 		end,
 		cond = not_vscode,
 	})
-	--TODO
-	--FIXME
-	--BUG
-	--HACK
-	--PERF
-	--NOTE
 	-- tmux
 	use({ "christoomey/vim-tmux-navigator", cond = not_vscode }) -- navigation perks
 	use({ "tmux-plugins/vim-tmux", cond = not_vscode }) -- syntax highlighting for .tmux.conf
@@ -168,25 +225,12 @@ return require("packer").startup(function(use)
 		},
 		cond = not_vscode,
 	})
+	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 	-- treesitter - top shit
-	use({ "p00f/nvim-ts-rainbow", cond = not_vscode })
-	-- use({ "nvim-treesitter/playground", cond = not_vscode })
-	-- use({ "nvim-treesitter/nvim-treesitter-refactor", cond = not_vscode })
-	use({ "JoosepAlviste/nvim-ts-context-commentstring", cond = not_vscode })
-	use({ "theHamsta/nvim-treesitter-pairs", cond = not_vscode })
-	use({ "windwp/nvim-ts-autotag", cond = not_vscode })
-	use({ "nvim-treesitter/nvim-treesitter-textobjects", cond = not_vscode })
-	use({
-		"nvim-treesitter/nvim-treesitter",
-		run = ":TSUpdate",
-		config = function()
-			require("conf.treesitter")
-		end,
-		cond = not_vscode,
-	})
+	load_treesitter_plugins(use)
+	use({ "RRethy/vim-illuminate" })
 	-- lsp
-	use({ "ray-x/lsp_signature.nvim", cond = not_vscode })
-	use({ "weilbith/nvim-code-action-menu" })
+	-- use({ "weilbith/nvim-code-action-menu" })
 	use({
 		"neovim/nvim-lspconfig",
 		requires = { "jose-elias-alvarez/nvim-lsp-ts-utils", cond = not_vscode },
@@ -199,11 +243,10 @@ return require("packer").startup(function(use)
 	use({ "hrsh7th/cmp-buffer" })
 	use({ "hrsh7th/cmp-path" })
 	use({ "hrsh7th/cmp-cmdline" })
-	-- use({ "hrsh7th/cmp-nvim-lsp-document-symbol" })
+	use({ "hrsh7th/cmp-nvim-lsp-document-symbol" })
 	use({ "hrsh7th/cmp-nvim-lua" })
-	use({
-		"David-Kunz/cmp-npm",
-	})
+	use({ "hrsh7th/cmp-nvim-lsp-signature-help" })
+	use({ "David-Kunz/cmp-npm" })
 	use({
 		"hrsh7th/nvim-cmp",
 		config = function()
@@ -212,6 +255,7 @@ return require("packer").startup(function(use)
 	})
 	use({ "hrsh7th/cmp-vsnip" })
 	use({ "hrsh7th/vim-vsnip" })
+	use({ "rafamadriz/friendly-snippets" })
 	use({ "onsails/lspkind-nvim" })
 	use({ "liuchengxu/vista.vim", cond = not_vscode })
 	use({
@@ -224,57 +268,51 @@ return require("packer").startup(function(use)
 	use({ "RishabhRD/nvim-lsputils" })
 	use({ "folke/lsp-colors.nvim" })
 	-- for workspace diagnostics
-	use({ "nvim-lua/lsp_extensions.nvim" })
-	-- use { 'simrat39/symbols-outline.nvim', config = function() require'conf.outline' end, cond = not_vscode, disable = true }
+	-- use({ "nvim-lua/lsp_extensions.nvim" })
 	-- lua stuff
 	use({ "tjdevries/nlua.nvim", cond = not_vscode })
+	use({ "rafcamlet/nvim-luapad" })
 	-- debugging
+	-- use({ "puremourning/vimspector", cond = not_vscode })
 	use({
-		"puremourning/vimspector",
+		"mfussenegger/nvim-dap",
 		config = function()
-			require("conf.vimspector")
+			require("conf.dap")
 		end,
 		cond = not_vscode,
 	})
-	-- context
 	use({
-		"romgrk/nvim-treesitter-context",
+		"rcarriga/nvim-dap-ui",
 		config = function()
-			require("conf.ts-context")
+			require("conf.dap.ui")
 		end,
 		cond = not_vscode,
 	})
-	-- use({
-	-- 	"ThePrimeagen/refactoring.nvim",
-	-- 	config = function()
-	-- 		require("refactoring").setup()
-	-- 	end,
-	-- 	requires = {
-	-- 		"nvim-treesitter/nvim-treesitter",
-	-- 		run = ":TSUpdate",
-	-- 		config = function()
-	-- 			require("conf.treesitter")
-	-- 		end,
-	-- 		cond = not_vscode,
-	-- 	},
-	-- 	cond = not_vscode,
-	-- })
+	use({
+		"theHamsta/nvim-dap-virtual-text",
+		config = function()
+			require("conf.dap.virtual-text")
+		end,
+		cond = not_vscode,
+	})
 	-- neovim browser integration
-	use({ "glacambre/firenvim", cond = not_vscode })
+	use({ "glacambre/firenvim" })
 	-- colors
-	use({
-		"folke/tokyonight.nvim",
-		config = function()
-			require("colorscheme")
-		end,
-		cond = not_vscode,
-	})
+	use({ "sainnhe/gruvbox-material" })
 	use({
 		"petertriho/nvim-scrollbar",
 		config = function()
 			require("conf.scrollbar")
 		end,
+		after = "tokyonight.nvim",
 		cond = not_vscode,
+		requires = {
+			"folke/tokyonight.nvim",
+			config = function()
+				require("colorscheme")
+			end,
+			cond = not_vscode,
+		},
 	})
 	use({
 		"norcalli/nvim-colorizer.lua",

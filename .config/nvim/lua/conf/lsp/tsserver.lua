@@ -1,5 +1,6 @@
 local nvim_lsp = require("lspconfig")
 local ts_utils = require("nvim-lsp-ts-utils")
+-- local util = require("lspconfig.util")
 
 local init_options = {
 	hostInfo = "neovim",
@@ -14,17 +15,15 @@ local init_options = {
 	},
 }
 
-nvim_lsp.tsserver.setup({
-	-- Needed for inlayHints. Merge this table with your settings or copy
-	-- it from the source if you want to add your own init_options.
-	init_options = init_options,
-	--
-	on_attach = function(client, bufnr)
+local on_attach_factory = function(enable_formatting)
+	local on_attach = function(client, bufnr)
 		if client.config.flags then
 			client.config.flags.allow_incremental_sync = true
 		end
-		client.resolved_capabilities.document_formatting = false
-		client.resolved_capabilities.document_range_formatting = false
+		if enable_formatting ~= nil then
+			client.resolved_capabilities.document_formatting = false
+			client.resolved_capabilities.document_range_formatting = false
+		end
 		-- defaults
 		ts_utils.setup({
 			debug = false,
@@ -81,13 +80,32 @@ nvim_lsp.tsserver.setup({
 		ts_utils.setup_client(client)
 
 		-- no default maps, so you may want to define some here
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "gs", ":TSLspOrganize<CR>", { silent = true })
-		-- vim.api.nvim_buf_set_keymap(bufnr, "n", "qq", ":TSLspFixCurrent<CR>", {silent = true})
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", ":TSLspRenameFile<CR>", { silent = true })
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", ":TSLspImportAll<CR>", { silent = true })
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>gs", ":TSLspOrganize<CR>", { silent = true })
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>gr", ":TSLspRenameFile<CR>", { silent = true })
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>gi", ":TSLspImportAll<CR>", { silent = true })
 
 		-- call regular on_attach
 		_G.lsp_on_attach(client, bufnr)
-	end,
+	end
+	return on_attach
+end
+
+nvim_lsp.tsserver.setup({
+	-- Needed for inlayHints. Merge this table with your settings or copy
+	-- it from the source if you want to add your own init_options.
+	init_options = init_options,
+	on_attach = on_attach_factory(false),
 	capabilities = _G.lsp_capabilities,
+	-- root_dir = function(startpath)
+	-- 	local r = util.root_pattern(".volar")(startpath)
+	-- 	if r == nil then
+	-- 		-- NO ROOT_PATTERN .volar, start on these markers
+	-- 		return util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git")(startpath)
+	-- 	else
+	-- 		-- HAS ROOT_PATTERN .volar, do not start at all
+	-- 		return util.root_pattern()(startpath)
+	-- 	end
+	-- end,
 })
+
+return { on_attach_factory = on_attach_factory }
