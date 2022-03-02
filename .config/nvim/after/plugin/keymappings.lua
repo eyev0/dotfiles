@@ -111,17 +111,17 @@ local function set_lsp_buf_shortcuts(_, bufnr)
 	map("n", "<M-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", { noremap = true, silent = true })
 	map("i", "<M-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", { noremap = true, silent = true })
 	map("n", "gn", "<cmd>lua vim.lsp.buf.rename()<CR>", { noremap = true, silent = true })
-	-- map("n", "<leader>gi", ":Trouble lsp_implementations<CR>", { noremap = true, silent = true })
+	map("n", "gi", ":Trouble lsp_implementations<CR>", { noremap = true, silent = true })
 	map("n", "<C-m>", "<cmd>lua vim.lsp.buf.code_action()<CR>", { noremap = true, silent = true })
 	-- map("n", "<C-m>", ":CodeActionMenu<CR>", { noremap = true, silent = true })
 	map("v", "<C-m>", "<cmd>lua vim.lsp.buf.range_code_action()<CR>", { noremap = true, silent = true })
 end
 _G.set_lsp_buf_shortcuts = set_lsp_buf_shortcuts
--- enable formatting without calling on_attach (for null-ls)
+-- formatting without calling on_attach (for null-ls)
 map("n", "<leader>ef", "<cmd>lua vim.lsp.buf.formatting()<CR>", { noremap = true, silent = true })
 map("v", "<leader>ef", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", { noremap = true, silent = true })
 -- lsptrouble
-map("n", "gk", ":TroubleToggle<CR>", { noremap = true, silent = true })
+map("n", "ge", ":TroubleToggle<CR>", { noremap = true, silent = true })
 map("n", "<leader>td", ":TodoTrouble<CR>", { noremap = true, silent = true })
 -- completion
 if _G.not_vscode() then
@@ -240,6 +240,7 @@ map("n", "<leader>oa", [[:Telescope autocommands<cr>]], { noremap = true, silent
 map("n", "<leader>or", [[:Telescope reloader<cr>]], { noremap = true, silent = true })
 map("n", "<leader>oc", [[:Telescope commands<cr>]], { noremap = true, silent = true })
 map("n", "<leader>ot", [[:Telescope builtin<cr>]], { noremap = true, silent = true })
+map("n", "<leader>op", [[:Telescope projects<cr>]], { noremap = true, silent = true })
 -- symbols_outline
 -- map('n', '<leader>so', [[:SymbolsOutline<CR>]], { noremap = true, silent = true })
 -- treesitter playground
@@ -271,5 +272,9 @@ map("v", "<leader>ff", [[:Farf<CR>]], { noremap = true, silent = true })
 -- zen mode
 map("n", "<leader>zm", [[:ZenMode<CR>]], { noremap = true, silent = true })
 -- vista = tags
-map("n", "<leader>to", [[:Vista!!<CR>]], { noremap = true, silent = true })
-map("n", "<leader>tl", [[:Vista nvim_lsp<CR>]], { noremap = true, silent = true })
+-- map("n", "<leader>to", [[:Vista!!<CR>]], { noremap = true, silent = true })
+map("n", "<leader>gs", [[:Vista nvim_lsp<CR>]], { noremap = true, silent = true })
+-- sessions
+map("n", "<leader>sl", [[<cmd>lua require("persistence").load({ last = true })<CR>]], { noremap = true, silent = true })
+map("n", "<leader>so", [[<cmd>lua require("persistence").load()<CR>]], { noremap = true, silent = true })
+map("n", "<leader>sq", [[<cmd>lua require("persistence").stop()<CR>]], { noremap = true, silent = true })

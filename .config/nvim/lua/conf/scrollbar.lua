@@ -1,4 +1,4 @@
-local colors = require("colorscheme").colors
+-- local colors = require("colorscheme").colors
 
 require("scrollbar").setup({
 	-- handle = {

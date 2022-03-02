@@ -122,9 +122,15 @@ export KEYTIMEOUT=1
 alias vim='nvim'
 alias v='nvim'
 alias n='nvim'
-alias ns='nvim -S'
-alias nc='nvim -S -c "PackerCompile"'
+alias ns='nvim -c PersistenceLoad'
 alias vimdiff='nvim -d'
+
+alias nord='nordvpn'
+
+alias ev='expressvpn'
+alias evc='expressvpn connect'
+alias evs='expressvpn status'
+alias evd='expressvpn disconnect'
 
 alias c='clear'
 alias psv='source venv/bin/activate'
@@ -154,17 +160,18 @@ alias psync='pass git pull && pass git push'
 
 alias luamake=/home/yev/.cache/nvim/lspconfig/sumneko_lua/lua-language-server/3rd/luamake/luamake
 
+# sdkman
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/home/yev/.sdkman"
 [[ -s "/home/yev/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yev/.sdkman/bin/sdkman-init.sh"
 
+# kitty
 # BEGIN_KITTY_SHELL_INTEGRATION
 if test -e "/run/media/yev/shada/home/sources/kitty/shell-integration/kitty.zsh"; then source "/run/media/yev/shada/home/sources/kitty/shell-integration/kitty.zsh"; fi
 # END_KITTY_SHELL_INTEGRATION
 
 # cursor stuff
 bindkey -v
-
 # Change cursor with support for inside/outside tmux
 function _set_cursor() {
     if [[ $TMUX = '' ]]; then
@@ -173,7 +180,6 @@ function _set_cursor() {
       echo -ne "\ePtmux;\e\e$1\e\\"
     fi
 }
-
 # 1 or 0 -> blinking block
 # 2 -> solid block
 # 3 -> blinking underscore
@@ -181,8 +187,7 @@ function _set_cursor() {
 # 5 -> blinking vertical bar
 # 6 -> solid vertical bar
 function _set_block_cursor() { _set_cursor '\e[2 q' }
-function _set_beam_cursor() { _set_cursor '\e[6 q' }
-
+function _set_beam_cursor() { _set_cursor '\e[3 q' }
 function zle-keymap-select {
   if [[ ${KEYMAP} == vicmd ]] || [[ $1 = 'block' ]]; then
       _set_block_cursor
@@ -195,3 +200,6 @@ zle -N zle-keymap-select
 precmd_functions+=(_set_beam_cursor) #
 # ensure insert mode and beam cursor when exiting vim
 zle-line-init() { zle -K viins; _set_beam_cursor }
+
+# direnv
+eval "$(direnv hook zsh)"

@@ -1,6 +1,6 @@
 _G.lsp_on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-	vim.api.nvim_command("setlocal signcolumn=yes:2")
+	-- vim.api.nvim_command("setlocal signcolumn=yes:1")
 	_G.set_lsp_buf_shortcuts(client, bufnr)
 	-- require("conf.lspsignature").on_attach()
 	require("illuminate").on_attach(client)
@@ -12,18 +12,6 @@ capabilities.textDocument.completion.completionItem.documentationFormat = { "mar
 -- for cmp.nvim
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 _G.lsp_capabilities = capabilities
-
--- Highlight line number instead of having icons in sign column
-vim.cmd([[
-  highlight! DiagnosticLineNrError guibg=#51202A guifg=#FF0000 gui=bold
-  highlight! DiagnosticLineNrWarn guibg=#51412A guifg=#FFA500 gui=bold
-  highlight! DiagnosticLineNrInfo guibg=#1E535D guifg=#00FFFF gui=bold
-  highlight! DiagnosticLineNrHint guibg=#1E205D guifg=#0000FF gui=bold
-  sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
-  sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticLineNrWarn
-  sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=DiagnosticLineNrInfo
-  sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=DiagnosticLineNrHint
-]])
 
 -- hover window with borders
 vim.cmd([[autocmd! ColorScheme * highlight NormalFloat guibg=#1f2335]])
@@ -51,11 +39,11 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 			severity = { min = vim.diagnostic.severity.WARN },
 		},
 		update_in_insert = false,
+		severity_sort = true,
 		underline = true,
-		signs = {
-			severity_sort = true,
-			priority = 2,
-		},
+		-- signs = {
+		-- 	priority = 2,
+		-- },
 	}
 )
 
@@ -102,3 +90,10 @@ require("conf.lsp.html")
 require("conf.lsp.clangd")
 require("conf.lsp.gopls")
 require("conf.lsp.graphql")
+
+vim.cmd([[
+augroup JdtlsInit
+    autocmd!
+    autocmd FileType java lua require'conf.lsp.jdtls'.setup()
+augroup end
+]])

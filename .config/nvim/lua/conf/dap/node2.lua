@@ -21,9 +21,5 @@ table.insert(DEBUG_CONFIGS, {
 			name = "Launch file",
 			program = "${file}",
 		},
-		{
-			name = "Launch file2",
-			program = "${file}",
-		},
 	},
 })

@@ -20,6 +20,7 @@ local function load_treesitter_plugins(use)
 		use({
 			"nvim-treesitter/nvim-treesitter",
 			run = ":TSUpdate",
+			module = "nvim-treesitter",
 			config = function()
 				require("conf.treesitter")
 			end,
@@ -77,14 +78,6 @@ end
 return require("packer").startup(function(use)
 	-- Packer can manage itself
 	use({ "wbthomason/packer.nvim" })
-	-- laggy..
-	use({
-		"folke/tokyonight.nvim",
-		config = function()
-			require("colorscheme")
-		end,
-		cond = not_vscode,
-	})
 	-- text editing sugar
 	use("tpope/vim-repeat")
 	use("tpope/vim-surround")
@@ -226,6 +219,28 @@ return require("packer").startup(function(use)
 		cond = not_vscode,
 	})
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
+	use({ "nvim-telescope/telescope-ui-select.nvim" })
+	use({
+		"ahmedkhalf/project.nvim",
+		config = function()
+			require("conf.project")
+		end,
+	})
+	use({
+		"folke/persistence.nvim",
+		event = "BufReadPre", -- this will only start session saving when an actual file was opened
+		module = "persistence",
+		config = function()
+			require("conf.persistence")
+		end,
+	})
+	use({
+		"glepnir/dashboard-nvim",
+		config = function()
+			require("conf.dashboard")
+		end,
+		disable = true,
+	})
 	-- treesitter - top shit
 	load_treesitter_plugins(use)
 	use({ "RRethy/vim-illuminate" })
@@ -267,6 +282,13 @@ return require("packer").startup(function(use)
 	use({ "RishabhRD/popfix" })
 	use({ "RishabhRD/nvim-lsputils" })
 	use({ "folke/lsp-colors.nvim" })
+	use({ "mfussenegger/nvim-jdtls" })
+	use({
+		"kosayoda/nvim-lightbulb",
+		config = function()
+			require("conf.lightbulb")
+		end,
+	})
 	-- for workspace diagnostics
 	-- use({ "nvim-lua/lsp_extensions.nvim" })
 	-- lua stuff
@@ -279,24 +301,28 @@ return require("packer").startup(function(use)
 		config = function()
 			require("conf.dap")
 		end,
-		cond = not_vscode,
 	})
 	use({
 		"rcarriga/nvim-dap-ui",
 		config = function()
 			require("conf.dap.ui")
 		end,
-		cond = not_vscode,
+		after = "nvim-dap",
 	})
 	use({
 		"theHamsta/nvim-dap-virtual-text",
 		config = function()
 			require("conf.dap.virtual-text")
 		end,
-		cond = not_vscode,
+		after = "nvim-dap",
 	})
 	-- neovim browser integration
-	use({ "glacambre/firenvim" })
+	use({
+		"glacambre/firenvim",
+		run = function()
+			vim.fn["firenvim#install"](0)
+		end,
+	})
 	-- colors
 	use({ "sainnhe/gruvbox-material" })
 	use({
@@ -304,15 +330,6 @@ return require("packer").startup(function(use)
 		config = function()
 			require("conf.scrollbar")
 		end,
-		after = "tokyonight.nvim",
-		cond = not_vscode,
-		requires = {
-			"folke/tokyonight.nvim",
-			config = function()
-				require("colorscheme")
-			end,
-			cond = not_vscode,
-		},
 	})
 	use({
 		"norcalli/nvim-colorizer.lua",
@@ -320,6 +337,5 @@ return require("packer").startup(function(use)
 			require("colorizer").setup()
 		end,
 		disable = true,
-		cond = not_vscode,
 	})
 end)

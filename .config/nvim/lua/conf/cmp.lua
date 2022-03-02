@@ -3,8 +3,8 @@ local cmp = require("cmp")
 -- local compare = require("cmp.config.compare")
 -- local default_config = require("cmp.config.default")
 local lspkind = require("lspkind")
--- local types = require("cmp.types")
--- local str = require("cmp.utils.str")
+local types = require("cmp.types")
+local str = require("cmp.utils.str")
 
 local has_words_before = function()
 	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -73,13 +73,16 @@ cmp.setup({
 	-- 		compare.order,
 	-- 	},
 	-- },
+	sorting = {
+		priority_weight = 3,
+	},
 	sources = cmp.config.sources({
-		{ name = "nvim_lsp", priority = 1 },
-		{ name = "vsnip", priority = 2 }, -- For vsnip users.
+		{ name = "nvim_lsp", priority = 10 },
+		{ name = "vsnip", priority = 5 }, -- For vsnip users.
 	}, {
 		{ name = "nvim_lsp_signature_help" },
 	}, {
-		{ name = "buffer", priority = 3 },
+		{ name = "buffer", priority = 7 },
 	}, {
 		{ name = "path", priority = 4 },
 	}),
@@ -87,40 +90,37 @@ cmp.setup({
 		format = lspkind.cmp_format({
 			mode = "symbol", -- show only symbol annotations
 			maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+			-- TODO: show source file in PUM if possible
+			-- print("---------")
+			-- tprint(entry, 2)
+			--
 			-- The function below will be called before any actual modifications from lspkind
 			-- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
-			-- TODO: show source file in PUM if possible
 			-- with_text = false,
-			-- before = function(entry, vim_item)
-			-- -- print("---------")
-			-- 	-- printTable(entry.source.source.client)
-			-- -- tprint(entry.source.source.client, 2)
-			-- -- tprint(entry, 2)
-			-- -- tprint(vim_item)
-			-- 	-- Get the full snippet (and only keep first line)
-			-- 	local word = entry:get_insert_text()
-			-- 	if entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet then
-			-- 		word = vim.lsp.util.parse_snippet(word)
-			-- 	end
-			-- 	word = str.oneline(word)
-
-			-- 	-- concatenates the string
-			-- 	-- local max = 50
-			-- 	-- if string.len(word) >= max then
-			-- 	-- 	local before = string.sub(word, 1, math.floor((max - 3) / 2))
-			-- 	-- 	word = before .. "..."
-			-- 	-- end
-
-			-- 	if
-			-- 		entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet
-			-- 		and string.sub(vim_item.abbr, -1, -1) == "~"
-			-- 	then
-			-- 		word = word .. "~"
-			-- 	end
-			-- 	vim_item.abbr = word
-
-			-- 	return vim_item
-			-- end,
+			before = function(entry, vim_item)
+				-- Get the full snippet (and only keep first line)
+				local word = entry:get_insert_text()
+				if entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet then
+					word = vim.lsp.util.parse_snippet(word)
+				end
+				word = str.oneline(word)
+				-- concatenates the string
+				-- local max = 50
+				-- if string.len(word) >= max then
+				-- 	local before = string.sub(word, 1, math.floor((max - 3) / 2))
+				-- 	word = before .. "..."
+				-- end
+				if
+					entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet
+					and string.sub(vim_item.abbr, -1, -1) == "~"
+				then
+					word = "~" .. word .. "~"
+				end
+				if string.len(word) > 0 then
+					vim_item.abbr = word
+				end
+				return vim_item
+			end,
 		}),
 	},
 })
@@ -144,30 +144,3 @@ cmp.setup.cmdline(":", {
 		{ name = "nvim_lua" },
 	}),
 })
-
-local t = function(str)
-	return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
--- Use (s-)tab to:
---- move to prev/next item in completion menuone
---- jump to prev/next snippet's placeholder
-_G.tab_complete = function()
-	if vim.fn.pumvisible() == 1 then
-		return t("<C-n>")
-	elseif vim.fn.call("vsnip#available", { 1 }) == 1 then
-		return t("<Plug>(vsnip-expand-or-jump)")
-	else
-		return t("<Tab>")
-	end
-end
-
-_G.s_tab_complete = function()
-	if vim.fn.pumvisible() == 1 then
-		return t("<C-p>")
-	elseif vim.fn.call("vsnip#jumpable", { -1 }) == 1 then
-		return t("<Plug>(vsnip-jump-prev)")
-	else
-		return t("<S-Tab>")
-	end
-end

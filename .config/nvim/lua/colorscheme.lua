@@ -1,9 +1,24 @@
--- if vim.fn.exists("g:colorscheme_defined") == 1 then
---   return
--- end
--- Normal ctermfg=#223 ctermbg=#235 guifg=#ebdbb2 guibg=#282828
--- vim.cmd[[au ColorScheme * hi! NormalInactive ctermfg=223 ctermbg=235]]
--- vim.cmd[[au ColorScheme * hi! NormalFloat ctermfg=223 ctermbg=235]]
+-- Highlight line number instead of having icons in sign column
+vim.cmd([[
+  augroup DiagnosticsHighlighting
+    autocmd!
+    autocmd ColorScheme * highlight! DiagnosticLineNrError guibg=#51202A guifg=#FF0000 gui=bold
+    autocmd ColorScheme * highlight! DiagnosticLineNrWarn guibg=#51412A guifg=#FFA500 gui=bold
+    autocmd ColorScheme * highlight! DiagnosticLineNrInfo guibg=#1E535D guifg=#00FFFF gui=bold
+    autocmd ColorScheme * highlight! DiagnosticLineNrHint guibg=#1E205D guifg=#0000FF gui=bold
+    " autocmd ColorScheme * sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
+    autocmd ColorScheme * sign define DiagnosticSignError text= texthl= linehl= numhl=DiagnosticLineNrError
+    autocmd ColorScheme * sign define DiagnosticSignWarn text= texthl= linehl= numhl=DiagnosticLineNrWarn
+    autocmd ColorScheme * sign define DiagnosticSignInfo text= texthl= linehl= numhl=DiagnosticLineNrInfo
+    autocmd ColorScheme * sign define DiagnosticSignHint text= texthl= linehl= numhl=DiagnosticLineNrHint
+    " colorful virtual text
+    " autocmd ColorScheme * highlight! link VirtualTextHint DiagnosticSignHint
+    " autocmd ColorScheme * highlight! link VirtualTextInfo DiagnosticSignInfo
+    " autocmd ColorScheme * highlight! link VirtualTextWarning DiagnosticSignWarn
+    " autocmd ColorScheme * highlight! link VirtualTextError DiagnosticSignError
+  augroup END
+]])
+
 vim.cmd([[
 fun! SetQsColors()
   augroup QuickScopeColors
@@ -29,8 +44,3 @@ vim.g.tokyonight_italic_functions = true
 vim.g.tokyonight_dark_sidebar = false
 
 vim.cmd("colorscheme " .. O.colorscheme)
-vim.g.colorscheme_defined = 1
-
-return {
-	colors = require("tokyonight.colors").setup({}),
-}

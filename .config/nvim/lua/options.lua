@@ -120,8 +120,8 @@ set guifont=Source\ Code\ Pro\ Medium:h13
 vim.g.loaded_matchparen = 1
 -- firenvim
 vim.g.firenvim_config = {
-	["globalSettings"] = {},
-	["localSettings"] = { [".*"] = { ["takeover"] = "never" } },
+	["globalSettings"] = { ["takeover"] = "never" },
+	-- ["localSettings"] = { [".*"] = { ["takeover"] = "never" } },
 }
 -- quick-scope
 vim.g.qs_max_chars = 150
