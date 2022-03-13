@@ -1,5 +1,9 @@
+local setup = require("jdtls.setup")
+local jdtls = require("jdtls")
+local u = require("utils")
+local dap = require("dap")
 local root_markers = { "build.gradle", "gradle.build", "pom.xml" }
-local root_dir = require("jdtls.setup").find_root(root_markers)
+local root_dir = setup.find_root(root_markers)
 local home = vim.fn.expand("$HOME")
 local workspace_folder = home .. "/.local/share/eclipse.jdt.ls/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
 
@@ -13,9 +17,16 @@ local config = {
 		allow_incremental_sync = true,
 	},
 	on_attach = function(client, bufnr)
-		-- TODO: setup dap with java
-		require("jdtls").setup_dap()
-		require("jdtls.setup").add_commands()
+		jdtls.setup_dap()
+		-- u.tprint(require("dap").adapters)
+		local java_adapter = dap.adapters.java
+		dap.adapters.java = function(callback, config)
+			if config.preLaunchTask then
+				vim.cmd("!" .. config.preLaunchTask)
+			end
+			return java_adapter(callback, config)
+		end
+		setup.add_commands()
 
 		client.resolved_capabilities.document_formatting = false
 		_G.lsp_on_attach(client, bufnr)
@@ -23,27 +34,37 @@ local config = {
 		local function buf_map(...)
 			vim.api.nvim_buf_set_keymap(bufnr, ...)
 		end
-		buf_map("n", "<C-m>", "<Cmd>lua pcall(require('jdtls').code_action())<CR>", { noremap = true, silent = true })
-		buf_map("v", "<C-m>", "<Esc><Cmd>lua require('jdtls').code_action(true)<CR>", { noremap = true, silent = true })
+		buf_map("n", "<M-m>", "<Cmd>lua pcall(require('jdtls').code_action())<CR>", { noremap = true, silent = true })
+		buf_map("v", "<M-m>", "<Esc><Cmd>lua require('jdtls').code_action(true)<CR>", { noremap = true, silent = true })
 		buf_map(
 			"n",
 			"<leader>re",
 			"<Cmd>lua require('jdtls').code_action(false, 'refactor')<CR>",
 			{ noremap = true, silent = true }
 		)
-		buf_map("n", "<A-o>", "<Cmd>lua require('jdtls').organize_imports()<CR>", { noremap = true, silent = true })
-		buf_map("n", "crv", "<Cmd>lua require('jdtls').extract_variable()<CR>", { noremap = true, silent = true })
+		buf_map(
+			"n",
+			"<leader>gs",
+			"<Cmd>lua require('jdtls').organize_imports()<CR>",
+			{ noremap = true, silent = true }
+		)
+		buf_map("n", "xrv", "<Cmd>lua require('jdtls').extract_variable()<CR>", { noremap = true, silent = true })
 		buf_map(
 			"v",
-			"crv",
+			"xrv",
 			"<Esc><Cmd>lua require('jdtls').extract_variable(true)<CR>",
 			{ noremap = true, silent = true }
 		)
-		buf_map("n", "crc", "<Cmd>lua require('jdtls').extract_constant()<CR>", { noremap = true, silent = true })
-		buf_map("v", "crc", "<Cmd>lua require('jdtls').organize_imports()<CR>", { noremap = true, silent = true })
+		buf_map("n", "xrc", "<Cmd>lua require('jdtls').extract_constant()<CR>", { noremap = true, silent = true })
 		buf_map(
 			"v",
-			"crm",
+			"<leader>gs",
+			"<Cmd>lua require('jdtls').organize_imports()<CR>",
+			{ noremap = true, silent = true }
+		)
+		buf_map(
+			"v",
+			"xrm",
 			"<Esc><Cmd>lua require('jdtls').extract_method(true)<CR>",
 			{ noremap = true, silent = true }
 		)

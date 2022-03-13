@@ -37,9 +37,9 @@ vim.cmd[[
 fun! SetInlineGitBlameAus()
   aug InlineGitBlameAus
     au!
-    au CursorHold   * lua require'conf.inline_gitblame'.blameVirtText()
-    au CursorMoved  * lua require'conf.inline_gitblame'.clearBlameVirtText()
-    au InsertEnter  * lua require'conf.inline_gitblame'.clearBlameVirtText()
+    au CursorHold   * lua require'utils.inline_gitblame'.blameVirtText()
+    au CursorMoved  * lua require'utils.inline_gitblame'.clearBlameVirtText()
+    au InsertEnter  * lua require'utils.inline_gitblame'.clearBlameVirtText()
   aug END
 endfun
 fun! ToggleGitBlameText()
@@ -51,7 +51,7 @@ fun! ToggleGitBlameText()
     aug END
   endif
 endfun
-call SetInlineGitBlameAus()
+" call SetInlineGitBlameAus()
 ]]
 
 -- works with lua config only when defered..

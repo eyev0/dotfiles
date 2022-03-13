@@ -1,18 +1,12 @@
-local npairs = require("nvim-autopairs")
-
--- skip it, if you use another global object
-vim.g.completion_confirm_key = ""
-_G.completion_confirm = function()
-	if vim.fn.pumvisible() ~= 0 then
-		if vim.fn.complete_info()["selected"] ~= -1 then
-			return vim.fn["cmp#confirm"](npairs.esc("<cr>"))
-		else
-			return npairs.esc("<cr>")
-		end
-	else
-		return npairs.autopairs_cr()
-	end
-end
+local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+local cmp = require("cmp")
+-- cmp.event:on("confirm_done", function(...)
+-- 	local a = { ... }
+-- 	require("utils").tprint(a)
+-- 	return cmp_autopairs.on_confirm_done({ map_char = { tex = "" } })(...)
+-- end)
+cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({ map_char = { tex = "" } }))
+cmp_autopairs.lisp[#cmp_autopairs.lisp + 1] = "racket"
 
 require("nvim-autopairs").setup({
 	disable_filetype = { "TelescopePrompt", "vim" },

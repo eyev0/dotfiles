@@ -1,5 +1,7 @@
 -- source all global configs
 require("conf.dap.node2")
+require("conf.dap.java")
+require("conf.dap.nlua")
 
 local dap = require("dap")
 
@@ -43,7 +45,7 @@ DEBUG_CONFIGS_BASE = {
 local u = require("utils")
 -- merge workspace configs with base configs
 if table.maxn(DEBUG_CONFIGS) > 0 then
-  -- u.tprint(DEBUG_CONFIGS, 3)
+	-- u.tprint(DEBUG_CONFIGS, 3)
 	for _, item in pairs(DEBUG_CONFIGS) do
 		for lang, configs in pairs(item) do
 			if dap.configurations[lang] == nil then

@@ -1,3 +1,4 @@
+local telescope = require("telescope")
 local actions = require("telescope.actions")
 -- local trouble = require("trouble.providers.telescope")
 
@@ -27,6 +28,7 @@ require("telescope").setup({
 		winblend = 0,
 		mappings = mappings,
 		path = "smart",
+		hidden = true,
 		-- wrap_results = true,
 	},
 	extensions = {
@@ -45,11 +47,14 @@ require("telescope").setup({
 	},
 })
 
-require("telescope").load_extension("fzf")
-require("telescope").load_extension("ui-select")
-require("telescope").load_extension("projects")
+telescope.load_extension("fzf")
+telescope.load_extension("ui-select")
+telescope.load_extension("projects")
+telescope.load_extension("dap")
 
 vim.cmd([[autocmd User TelescopePreviewerLoaded setlocal wrap]])
+
+require("conf.dap.file_picker")
 
 return {
 	project_files = function()

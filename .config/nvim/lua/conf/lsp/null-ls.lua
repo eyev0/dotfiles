@@ -21,6 +21,7 @@ end
 
 -- register any number of sources simultaneously
 local sources = {
+  -- formatting
 	null_ls.builtins.formatting.stylua,
 	null_ls.builtins.formatting.prettierd.with({
 		condition = with_eslint_config(false),
@@ -29,19 +30,26 @@ local sources = {
 		condition = with_eslint_config(true),
 	}),
 	null_ls.builtins.formatting.xmllint,
-	--
+	null_ls.builtins.formatting.google_java_format,
+	-- null_ls.builtins.formatting.rustfmt,
+	null_ls.builtins.formatting.black,
+	-- diagnostics
 	null_ls.builtins.diagnostics.eslint_d.with({
 		condition = with_eslint_config(true),
 	}),
-	null_ls.builtins.diagnostics.write_good,
-	--
+	null_ls.builtins.diagnostics.checkmake,
+	null_ls.builtins.diagnostics.flake8,
+	null_ls.builtins.diagnostics.gitlint,
+	-- null_ls.builtins.diagnostics.write_good,
+	-- null_ls.builtins.diagnostics.editorconfig_checker,
+	-- null_ls.builtins.diagnostics.tsc,
+	-- code actions
 	null_ls.builtins.code_actions.eslint_d.with({
 		condition = with_eslint_config(true),
 	}),
-	-- null_ls.builtins.diagnostics.editorconfig_checker,
-	null_ls.builtins.completion.spell,
-	-- null_ls.builtins.diagnostics.tsc,
 	-- null_ls.builtins.code_actions.gitsigns,
+  -- completion
+	-- null_ls.builtins.completion.spell,
 }
 
 local defaults = {

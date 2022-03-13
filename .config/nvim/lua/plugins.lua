@@ -61,14 +61,14 @@ local function load_treesitter_plugins(use)
 				cond = not_vscode,
 			},
 		})
-		use({
-			"nvim-neorg/neorg",
-			config = function()
-				require("conf.neorg")
-			end,
-			after = "nvim-treesitter",
-			cond = not_vscode,
-		})
+		-- use({
+		-- 	"nvim-neorg/neorg",
+		-- 	config = function()
+		-- 		require("conf.neorg")
+		-- 	end,
+		-- 	after = "nvim-treesitter",
+		-- 	cond = not_vscode,
+		-- })
 	end
 end
 
@@ -78,6 +78,9 @@ end
 return require("packer").startup(function(use)
 	-- Packer can manage itself
 	use({ "wbthomason/packer.nvim" })
+  -- startup
+	use({ "lewis6991/impatient.nvim" })
+	use({ "nathom/filetype.nvim" })
 	-- text editing sugar
 	use("tpope/vim-repeat")
 	use("tpope/vim-surround")
@@ -96,12 +99,17 @@ return require("packer").startup(function(use)
 	use({
 		"b0o/mapx.nvim",
 		config = function()
-			require("mapx").setup({ global = true })
+			require("mapx").setup({ global = "skip" })
 		end,
 	})
 	-- filesystem
-	-- use("tpope/vim-eunuch")
-	-- use("lambdalisue/suda.vim")
+	use({ "lambdalisue/suda.vim" })
+	use({
+		"907th/vim-auto-save",
+		config = function()
+			require("conf.autosave")
+		end,
+	})
 	-- dependency packages
 	use({ "nvim-lua/plenary.nvim" })
 	use({ "nvim-lua/popup.nvim" })
@@ -184,6 +192,13 @@ return require("packer").startup(function(use)
 	-- tmux
 	use({ "christoomey/vim-tmux-navigator", cond = not_vscode }) -- navigation perks
 	use({ "tmux-plugins/vim-tmux", cond = not_vscode }) -- syntax highlighting for .tmux.conf
+	-- lastplace
+	use({
+		"ethanholz/nvim-lastplace",
+		config = function()
+			require("conf.lastplace")
+		end,
+	})
 	-- markdown
 	-- use({ "preservim/vim-markdown", requires = { "godlygeek/tabular" } })
 	-- git
@@ -204,6 +219,16 @@ return require("packer").startup(function(use)
 		cond = not_vscode,
 	})
 	-- telescope
+	-- extensions
+	use({ "nvim-telescope/telescope-dap.nvim" })
+	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
+	use({ "nvim-telescope/telescope-ui-select.nvim" })
+	use({
+		"ahmedkhalf/project.nvim",
+		config = function()
+			require("conf.project")
+		end,
+	})
 	use({
 		"nvim-telescope/telescope.nvim",
 		config = function()
@@ -214,20 +239,18 @@ return require("packer").startup(function(use)
 			config = function()
 				require("conf.trouble")
 			end,
-			cond = not_vscode,
 		},
-		cond = not_vscode,
 	})
-	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
-	use({ "nvim-telescope/telescope-ui-select.nvim" })
+	-- use({
+	-- 	"folke/persistence.nvim",
+	-- 	event = "BufReadPre", -- this will only start session saving when an actual file was opened
+	-- 	module = "persistence",
+	-- 	config = function()
+	-- 		require("conf.persistence")
+	-- 	end,
+	-- })
 	use({
-		"ahmedkhalf/project.nvim",
-		config = function()
-			require("conf.project")
-		end,
-	})
-	use({
-		"folke/persistence.nvim",
+		"edementyev/persistence.nvim",
 		event = "BufReadPre", -- this will only start session saving when an actual file was opened
 		module = "persistence",
 		config = function()
@@ -296,6 +319,8 @@ return require("packer").startup(function(use)
 	use({ "rafcamlet/nvim-luapad" })
 	-- debugging
 	-- use({ "puremourning/vimspector", cond = not_vscode })
+	-- lua
+	use({ "jbyuki/one-small-step-for-vimkind" })
 	use({
 		"mfussenegger/nvim-dap",
 		config = function()

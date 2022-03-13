@@ -125,12 +125,9 @@ alias n='nvim'
 alias ns='nvim -c PersistenceLoad'
 alias vimdiff='nvim -d'
 
-alias nord='nordvpn'
-
-alias ev='expressvpn'
-alias evc='expressvpn connect'
-alias evs='expressvpn status'
-alias evd='expressvpn disconnect'
+alias wgu='wg-quick up wg0'
+alias wgd='wg-quick down wg0'
+alias myip='curl ifconfig.me'
 
 alias c='clear'
 alias psv='source venv/bin/activate'

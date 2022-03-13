@@ -80,7 +80,9 @@ require("conf.lsp.vuels")
 require("conf.lsp.tsserver")
 -- require("conf.lsp.volar")
 require("conf.lsp.sumneko")
-require("conf.lsp.rust_analyzer")
+-- require("conf.lsp.rust_analyzer")
+require("conf.lsp.rls")
+require("conf.lsp.solidity")
 require("conf.lsp.pyright")
 require("conf.lsp.jsonls")
 require("conf.lsp.bashls")
@@ -91,9 +93,10 @@ require("conf.lsp.clangd")
 require("conf.lsp.gopls")
 require("conf.lsp.graphql")
 
+vim.cmd([[command! JdtlsStartOrAttach lua require("conf.lsp.jdtls").setup()]])
 vim.cmd([[
 augroup JdtlsInit
     autocmd!
-    autocmd FileType java lua require'conf.lsp.jdtls'.setup()
+    autocmd FileType java JdtlsStartOrAttach
 augroup end
 ]])

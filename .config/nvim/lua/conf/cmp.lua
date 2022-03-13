@@ -28,17 +28,10 @@ cmp.setup({
 		["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
 		["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
 		["<C-y>"] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
-		-- ["<C-e>"] = cmp.mapping({
-		-- 	i = cmp.mapping.abort(),
-		-- 	c = cmp.mapping.close(),
-		-- }),
-		-- ["<C-e>"] = cmp.mapping(function(fallback)
-		-- 	if cmp.visible() then
-		-- 		fallback()
-		-- 		-- else
-		-- 		-- 	cmp.abort()
-		-- 	end
-		-- end),
+		["<C-e>"] = cmp.mapping({
+			i = cmp.mapping.abort(),
+			c = cmp.mapping.close(),
+		}),
 		["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
@@ -77,14 +70,11 @@ cmp.setup({
 		priority_weight = 3,
 	},
 	sources = cmp.config.sources({
-		{ name = "nvim_lsp", priority = 10 },
-		{ name = "vsnip", priority = 5 }, -- For vsnip users.
-	}, {
-		{ name = "nvim_lsp_signature_help" },
-	}, {
-		{ name = "buffer", priority = 7 },
-	}, {
-		{ name = "path", priority = 4 },
+		{ name = "nvim_lsp", group_index = 1, priority = 15 },
+		{ name = "vsnip", group_index = 1, priority = 5 },
+		{ name = "buffer", group_index = 2, priority = 2, max_item_count = 3, keyword_length = 4 },
+		{ name = "path", group_index = 2, priority = 1 },
+		{ name = "nvim_lsp_signature_help", group_index = 3 },
 	}),
 	formatting = {
 		format = lspkind.cmp_format({
@@ -104,12 +94,6 @@ cmp.setup({
 					word = vim.lsp.util.parse_snippet(word)
 				end
 				word = str.oneline(word)
-				-- concatenates the string
-				-- local max = 50
-				-- if string.len(word) >= max then
-				-- 	local before = string.sub(word, 1, math.floor((max - 3) / 2))
-				-- 	word = before .. "..."
-				-- end
 				if
 					entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet
 					and string.sub(vim_item.abbr, -1, -1) == "~"
@@ -137,10 +121,8 @@ cmp.setup.cmdline("/", {
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline(":", {
 	sources = cmp.config.sources({
-		{ name = "path" },
-	}, {
-		{ name = "cmdline" },
-	}, {
-		{ name = "nvim_lua" },
+		{ name = "cmdline", group_index = 1, priority = 4 },
+		{ name = "nvim_lua", group_index = 1, priority = 3 },
+		{ name = "path", group_index = 2, priority = 2 },
 	}),
 })

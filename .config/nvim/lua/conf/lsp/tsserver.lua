@@ -20,7 +20,7 @@ local on_attach_factory = function(enable_formatting)
 		if client.config.flags then
 			client.config.flags.allow_incremental_sync = true
 		end
-		if enable_formatting ~= nil then
+		if enable_formatting ~= true then
 			client.resolved_capabilities.document_formatting = false
 			client.resolved_capabilities.document_range_formatting = false
 		end
@@ -28,7 +28,7 @@ local on_attach_factory = function(enable_formatting)
 		ts_utils.setup({
 			debug = false,
 			disable_commands = false,
-			enable_import_on_completion = false,
+			enable_import_on_completion = true,
 
 			-- import all
 			import_all_timeout = 5000, -- ms
@@ -54,7 +54,6 @@ local on_attach_factory = function(enable_formatting)
 			inlay_hints_priority = 1, -- priority of the hint extmarks
 			inlay_hints_throttle = vim.o.updatetime, -- throttle the inlay hint request
 			inlay_hints_format = { -- format options for individual hint kind
-				-- Type = {},
 				Parameter = {
 					highlight = "Comment",
 					text = function(text)
@@ -62,7 +61,6 @@ local on_attach_factory = function(enable_formatting)
 					end,
 				},
 				Enum = {},
-				-- Example format customization for `Type` kind:
 				Type = {
 					highlight = "Comment",
 					text = function(text)

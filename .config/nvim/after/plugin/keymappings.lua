@@ -16,6 +16,8 @@ map("n", "<C-h>", [[:TmuxNavigateLeft<cr>]], { noremap = true, silent = true })
 map("n", "<C-j>", [[:TmuxNavigateDown<cr>]], { noremap = true, silent = true })
 map("n", "<C-k>", [[:TmuxNavigateUp<cr>]], { noremap = true, silent = true })
 map("n", "<C-l>", [[:TmuxNavigateRight<cr>]], { noremap = true, silent = true })
+--
+map("n", "<M-l>", [[]], { noremap = true, silent = true })
 -- buffers stuff
 map("n", "<leader>w", [[:BufDel<CR>]], { noremap = true, silent = true })
 map("n", "<M-w>", [[:wincmd q<CR>]], { noremap = true, silent = true })
@@ -26,6 +28,7 @@ map("n", "<leader>v", [[:wincmd v<CR>]], { noremap = true, silent = true })
 map("n", "<leader>en", [[:enew<CR>]], { noremap = true, silent = true })
 -- tabs stuff
 map("n", "<leader>tn", [[:tabnew<CR>]], { noremap = true, silent = true })
+map("n", "<leader>to", [[:tabonly<CR>]], { noremap = true, silent = true })
 map("n", "<leader>q", [[:tabc<CR>]], { noremap = true, silent = true })
 -- Arrows switch tabs
 map("n", "<Right>", ":tabnext<CR>", { noremap = true, silent = true })
@@ -70,7 +73,7 @@ map("n", "<leader>V", [[ggVG]], { silent = true })
 -- yank to EOL
 map("n", "Y", [[y$]], { silent = true })
 -- Toggle inline git-blame
--- map("n", "yog", ":call ToggleGitBlameText()<CR>", { noremap = true, silent = true })
+map("n", "yog", ":call ToggleGitBlameText()<CR>", { noremap = true, silent = true })
 -- Toggle lsp diagnostics preview window auto-popup
 map("n", "<leader>k", ":call ToggleDiagnosticsPreviewText()<CR>", { noremap = true, silent = true })
 -- sometimes scrolloff gets messed up for no obvious reason
@@ -123,19 +126,6 @@ map("v", "<leader>ef", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", { noremap 
 -- lsptrouble
 map("n", "ge", ":TroubleToggle<CR>", { noremap = true, silent = true })
 map("n", "<leader>td", ":TodoTrouble<CR>", { noremap = true, silent = true })
--- completion
-if _G.not_vscode() then
-	map("i", "<C-space>", [[cmp#complete()]], { noremap = true, silent = true, expr = true })
-	map("i", "<CR>", "v:lua.completion_confirm()", { expr = true, noremap = true })
-	map("i", "<C-e>", [[cmp#close('<C-e>')]], { noremap = true, silent = true, expr = true })
-	map("i", "<Tab>", "v:lua.tab_complete()", { expr = true })
-	map("s", "<Tab>", "v:lua.tab_complete()", { expr = true })
-	map("i", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
-	map("s", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
-	-- vsnip - Expand snippet
-	map("i", "<C-j>", [[vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-j>']], { silent = true, expr = true })
-	map("s", "<C-j>", [[vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-j>']], { silent = true, expr = true })
-end
 -- NvimTree
 map("n", "<leader>n", [[:NvimTreeToggle<CR>]], { noremap = true, silent = true })
 map("n", "<leader><leader>n", [[:NvimTreeFindFile<CR>]], { noremap = true, silent = true })
@@ -218,8 +208,18 @@ map(
 	{ noremap = true, silent = true }
 )
 map("n", "<leader>dr", [[:lua require'dap'.terminate()<CR> <bar> :tabonly<CR>]], { noremap = true, silent = true })
-map("n", "<leader>dl", [[:lua require'dap'.run_last()<CR>]], { noremap = true, silent = true })
+map("n", "<C-F5>", [[:lua require'dap'.run_last()<CR>]], { noremap = true, silent = true })
 map("n", "<leader>du", [[:lua require'dapui'.toggle()<CR>]], { noremap = true, silent = true })
+-- telescope dap
+map("n", "<leader>dlb", [[:Telescope dap list_breakpoints<CR>]], { noremap = true, silent = true })
+map("n", "<leader>dlv", [[:Telescope dap variables<CR>]], { noremap = true, silent = true })
+map("n", "<leader>dlf", [[:Telescope dap configurations<CR>]], { noremap = true, silent = true })
+map("n", "<leader>dlc", [[:Telescope dap commands<CR>]], { noremap = true, silent = true })
+-- :Telescope dap commands
+-- :Telescope dap configurations
+-- :Telescope dap list_breakpoints
+-- :Telescope dap variables
+-- :Telescope dap frames
 -- Luapad
 map("n", "<leader>lp", [[:Luapad<CR>]], { noremap = true })
 map("n", "<leader>la", [[:lua require('luapad').toggle()<CR>]], { noremap = true })
@@ -246,19 +246,14 @@ map("n", "<leader>op", [[:Telescope projects<cr>]], { noremap = true, silent = t
 -- treesitter playground
 map("n", "<leader>tsp", [[:TSPlaygroundToggle<CR>]], { noremap = true, silent = true })
 -- git stuff
--- map("n", "gss", [[:tab Git<CR>]], { noremap = true, silent = true })
-map(
-	"n",
-	"gss",
-	[[:DiffviewOpen HEAD<CR> :Git<CR> <bar> :resize -7<CR> <bar> <C-w>k]],
-	{ noremap = true, silent = true }
-)
+map("n", "gss", [[:DiffviewOpen HEAD<CR> :Git<CR> <bar> :resize -7<CR>]], { noremap = true, silent = true })
 map("n", "glg", [[:DiffviewFileHistory .<CR>]], { noremap = true, silent = true })
 -- map("n", "glf", [[:tabnew <bar> :b# <bar> :Gclog -50 -- % <bar> copen<CR>]], { noremap = true, silent = true })
 map("n", "glf", [[:DiffviewFileHistory<CR>]], { noremap = true, silent = true })
--- map("n", "gd", [[:tabnew <bar> :b# <bar> :Gvdiffsplit! HEAD<CR>]], { noremap = true, silent = true })
+map("n", "gfm", [[:tabnew <bar> :b# <bar> :Gvdiffsplit! HEAD<CR>]], { noremap = true, silent = true })
 map("n", "gfd", [[:DiffviewOpen HEAD -- %:p<CR> <bar> <C-w>l<C-w>l]], { noremap = true, silent = true })
 map("n", "gp", [[:Git push<CR>]], { noremap = true, silent = true })
+vim.cmd([[autocmd BufEnter fugitive mapclear bufname() gp <bar> nnoremap gp :Git push<CR>]])
 map("n", "gll", [[:Git pull<CR>]], { noremap = true, silent = true })
 -- Diffview.nvim
 map("n", "gsd", [[:DiffviewOpen HEAD]], { noremap = true })
@@ -275,6 +270,9 @@ map("n", "<leader>zm", [[:ZenMode<CR>]], { noremap = true, silent = true })
 -- map("n", "<leader>to", [[:Vista!!<CR>]], { noremap = true, silent = true })
 map("n", "<leader>gs", [[:Vista nvim_lsp<CR>]], { noremap = true, silent = true })
 -- sessions
-map("n", "<leader>sl", [[<cmd>lua require("persistence").load({ last = true })<CR>]], { noremap = true, silent = true })
-map("n", "<leader>so", [[<cmd>lua require("persistence").load()<CR>]], { noremap = true, silent = true })
-map("n", "<leader>sq", [[<cmd>lua require("persistence").stop()<CR>]], { noremap = true, silent = true })
+map("n", "<leader>sl", [[:lua require("persistence").load({ last = true })<CR>]], { noremap = true, silent = true })
+map("n", "<leader>so", [[:PersistenceLoad<CR>]], { noremap = true, silent = true })
+map("n", "<leader>sq", [[:lua require("persistence").stop()<CR>]], { noremap = true, silent = true })
+map("n", "<leader>sr", [[:PersistenceDeleteCurrent<CR>]], { noremap = true, silent = true })
+-- project
+map("n", "<leader>sd", [[:ProjectRoot<CR>]], { noremap = true, silent = true })

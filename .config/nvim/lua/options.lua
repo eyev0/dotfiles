@@ -89,14 +89,16 @@ if exists('$TMUX')
    " initialize cursor shape/color on startup (silent !echo approach doesn't seem to work for tmux)
    augroup ResetCursorShape
       au!
-      "autocmd VimEnter * startinsert | stopinsert
-      autocmd VimEnter * normal! :startinsert :stopinsert
-      "autocmd VimEnter * :normal :startinsert :stopinsert
+      " autocmd VimEnter * startinsert | stopinsert
+      " autocmd VimEnter * normal! :startinsert :stopinsert
+      " autocmd VimEnter * :normal :startinsert :stopinsert
+      " autocmd ChangeNvimCursor * normal! :startinsert :stopinsert
    augroup END
 
    " reset cursor when leaving tmux
-   autocmd VimLeave * silent !echo -ne "\033Ptmux;\033\033[2 q\033\\"
-   autocmd VimLeave * silent !echo -ne "\033Ptmux;\033\033]12;gray\007\033\\"
+   " autocmd VimLeave * silent !echo -ne "\033Ptmux;\033\033[2 q\033\\"
+   " autocmd VimLeave * silent !echo -ne "\033Ptmux;\033\033]12;gray\007\033\\"
+   doautocmd User ChangeNvimCursor
  endif
 ]])
 

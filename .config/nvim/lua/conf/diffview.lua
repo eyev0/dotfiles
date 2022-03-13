@@ -104,4 +104,11 @@ local options = {
 	},
 }
 
+vim.cmd([[
+augroup DiffViewPanel
+  autocmd!
+  autocmd BufEnter DiffViewFilePanel,DiffviewFileHistory lua require'diffview'.trigger_event('refresh_files')
+augroup end
+]])
+
 require("diffview").setup(options)
