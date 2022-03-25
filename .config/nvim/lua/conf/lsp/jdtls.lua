@@ -10,6 +10,8 @@ local workspace_folder = home .. "/.local/share/eclipse.jdt.ls/" .. vim.fn.fname
 local extendedClientCapabilities = require("jdtls").extendedClientCapabilities
 extendedClientCapabilities.resolveAdditionalTextEditsSupport = true
 
+local initialized = false
+
 local config = {
 	cmd = { "java-lsp.sh", workspace_folder },
 	filetypes = { "java" },
@@ -19,12 +21,15 @@ local config = {
 	on_attach = function(client, bufnr)
 		jdtls.setup_dap()
 		-- u.tprint(require("dap").adapters)
-		local java_adapter = dap.adapters.java
-		dap.adapters.java = function(callback, config)
-			if config.preLaunchTask then
-				vim.cmd("!" .. config.preLaunchTask)
+		if not initialized then
+			local java_adapter = dap.adapters.java
+			dap.adapters.java = function(callback, config)
+				if config.preLaunchTask then
+					vim.cmd("!" .. config.preLaunchTask)
+				end
+				return java_adapter(callback, config)
 			end
-			return java_adapter(callback, config)
+      initialized = true
 		end
 		setup.add_commands()
 
@@ -42,12 +47,7 @@ local config = {
 			"<Cmd>lua require('jdtls').code_action(false, 'refactor')<CR>",
 			{ noremap = true, silent = true }
 		)
-		buf_map(
-			"n",
-			"<leader>gs",
-			"<Cmd>lua require('jdtls').organize_imports()<CR>",
-			{ noremap = true, silent = true }
-		)
+		buf_map("n", "<F10>", "<Cmd>lua require('jdtls').organize_imports()<CR>", { noremap = true, silent = true })
 		buf_map("n", "xrv", "<Cmd>lua require('jdtls').extract_variable()<CR>", { noremap = true, silent = true })
 		buf_map(
 			"v",

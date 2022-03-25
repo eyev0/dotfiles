@@ -77,6 +77,7 @@ endfun
 -- vim.lsp.handlers["workspace/symbol"] = require("lsputil.symbols").workspace_handler
 
 require("conf.lsp.vuels")
+-- require("conf.lsp.eslint")
 require("conf.lsp.tsserver")
 -- require("conf.lsp.volar")
 require("conf.lsp.sumneko")

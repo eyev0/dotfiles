@@ -7,10 +7,10 @@ vim.cmd([[
     autocmd ColorScheme * highlight! DiagnosticLineNrInfo guibg=#1E535D guifg=#00FFFF gui=bold
     autocmd ColorScheme * highlight! DiagnosticLineNrHint guibg=#1E205D guifg=#0000FF gui=bold
     " autocmd ColorScheme * sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
-    autocmd ColorScheme * sign define DiagnosticSignError text= texthl= linehl= numhl=DiagnosticLineNrError
-    autocmd ColorScheme * sign define DiagnosticSignWarn text= texthl= linehl= numhl=DiagnosticLineNrWarn
-    autocmd ColorScheme * sign define DiagnosticSignInfo text= texthl= linehl= numhl=DiagnosticLineNrInfo
-    autocmd ColorScheme * sign define DiagnosticSignHint text= texthl= linehl= numhl=DiagnosticLineNrHint
+    autocmd ColorScheme * sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
+    autocmd ColorScheme * sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticLineNrWarn
+    autocmd ColorScheme * sign define DiagnosticSignInfo text= texthl= linehl=DiagnosticSignInfo numhl=DiagnosticLineNrInfo
+    autocmd ColorScheme * sign define DiagnosticSignHint text= texthl= linehl=DiagnosticSignHint numhl=DiagnosticLineNrHint
     " colorful virtual text
     " autocmd ColorScheme * highlight! link VirtualTextHint DiagnosticSignHint
     " autocmd ColorScheme * highlight! link VirtualTextInfo DiagnosticSignInfo
@@ -31,9 +31,6 @@ call SetQsColors()
 ]])
 
 vim.o.background = O.background
--- gruvbox
-vim.g.gruvbox_contrast_light = O.contrast
-vim.g.gruv = O.contrast
 -- gruvbox-material
 vim.g.gruvbox_material_palette = O.pallete
 vim.g.gruvbox_material_better_performance = 1

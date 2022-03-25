@@ -61,6 +61,7 @@ local function load_treesitter_plugins(use)
 				cond = not_vscode,
 			},
 		})
+		use({ "David-Kunz/treesitter-unit" })
 		-- use({
 		-- 	"nvim-neorg/neorg",
 		-- 	config = function()
@@ -78,9 +79,14 @@ end
 return require("packer").startup(function(use)
 	-- Packer can manage itself
 	use({ "wbthomason/packer.nvim" })
-  -- startup
+	-- startup
 	use({ "lewis6991/impatient.nvim" })
-	use({ "nathom/filetype.nvim" })
+	use({
+		"nathom/filetype.nvim",
+		config = function()
+			require("conf.filetype")
+		end,
+	})
 	-- text editing sugar
 	use("tpope/vim-repeat")
 	use("tpope/vim-surround")
@@ -125,6 +131,7 @@ return require("packer").startup(function(use)
 		cond = not_vscode,
 	})
 	-- text editor enhancements
+	use({ "ThePrimeagen/harpoon" })
 	use({
 		"kyazdani42/nvim-tree.lua",
 		config = function()
@@ -159,33 +166,6 @@ return require("packer").startup(function(use)
 		"windwp/nvim-autopairs",
 		config = function()
 			require("conf.autopairs")
-		end,
-		cond = not_vscode,
-	})
-	use({
-		"brooth/far.vim",
-		config = function()
-			require("conf.far")
-		end,
-		cond = not_vscode,
-	})
-	use({
-		"folke/zen-mode.nvim",
-		config = function()
-			require("zen-mode").setup()
-		end,
-		cond = not_vscode,
-	})
-	use({
-		"folke/twilight.nvim",
-		config = function()
-			require("conf.twilight")
-		end,
-	})
-	use({
-		"folke/todo-comments.nvim",
-		config = function()
-			require("conf.todo-comments")
 		end,
 		cond = not_vscode,
 	})
@@ -268,7 +248,12 @@ return require("packer").startup(function(use)
 	load_treesitter_plugins(use)
 	use({ "RRethy/vim-illuminate" })
 	-- lsp
-	-- use({ "weilbith/nvim-code-action-menu" })
+	use({
+		"weilbith/nvim-code-action-menu",
+		config = function()
+			require("conf.code-action-menu")
+		end,
+	})
 	use({
 		"neovim/nvim-lspconfig",
 		requires = { "jose-elias-alvarez/nvim-lsp-ts-utils", cond = not_vscode },
@@ -303,7 +288,14 @@ return require("packer").startup(function(use)
 		end,
 	})
 	use({ "RishabhRD/popfix" })
-	use({ "RishabhRD/nvim-lsputils" })
+	-- use({ "RishabhRD/nvim-lsputils" })
+	use({
+		"hood/popui.nvim",
+		config = function()
+			vim.ui.select = require("popui.ui-overrider")
+		end,
+		disable = false,
+	})
 	use({ "folke/lsp-colors.nvim" })
 	use({ "mfussenegger/nvim-jdtls" })
 	use({
@@ -340,6 +332,12 @@ return require("packer").startup(function(use)
 			require("conf.dap.virtual-text")
 		end,
 		after = "nvim-dap",
+	})
+	use({
+		"David-Kunz/jester",
+		config = function()
+			require("conf.dap.jester")
+		end,
 	})
 	-- neovim browser integration
 	use({

@@ -7,7 +7,7 @@ local dap = require("dap")
 
 dap.defaults.fallback.terminal_win_cmd = "tabnew DapConsole"
 -- load a subset of vscode configurations that are supported
--- require("dap.ext.vscode").load_launchjs()
+-- require("dap.ext.vscode").load_launchjs(nil, { ["pwa-node"] = { "javascript", "typescript" } })
 -- autocomplete in repl
 vim.cmd([[au FileType dap-repl lua require('dap.ext.autocompl').attach()]])
 -- sign for breakpoints

@@ -6,6 +6,9 @@ local lspkind = require("lspkind")
 local types = require("cmp.types")
 local str = require("cmp.utils.str")
 
+-- setup cmp-npm
+require("cmp-npm").setup({})
+
 local has_words_before = function()
 	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
 	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
@@ -75,6 +78,7 @@ cmp.setup({
 		{ name = "buffer", group_index = 2, priority = 2, max_item_count = 3, keyword_length = 4 },
 		{ name = "path", group_index = 2, priority = 1 },
 		{ name = "nvim_lsp_signature_help", group_index = 3 },
+		{ name = "npm", group_index = 4, keyword_length = 4 },
 	}),
 	formatting = {
 		format = lspkind.cmp_format({

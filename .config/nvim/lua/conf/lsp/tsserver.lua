@@ -40,13 +40,13 @@ local on_attach_factory = function(enable_formatting)
 				buffers = 4, -- loaded buffer names
 			},
 			import_all_scan_buffers = 100,
-			import_all_select_source = false,
+			import_all_select_source = true,
 			-- if false will avoid organizing imports
 			always_organize_imports = true,
 
 			-- filter diagnostics
 			filter_out_diagnostics_by_severity = {},
-			filter_out_diagnostics_by_code = {},
+			filter_out_diagnostics_by_code = { 80001 },
 
 			-- inlay hints
 			auto_inlay_hints = true,
@@ -78,9 +78,9 @@ local on_attach_factory = function(enable_formatting)
 		ts_utils.setup_client(client)
 
 		-- no default maps, so you may want to define some here
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>gs", ":TSLspOrganize<CR>", { silent = true })
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>gr", ":TSLspRenameFile<CR>", { silent = true })
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>gi", ":TSLspImportAll<CR>", { silent = true })
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "<F9>", ":TSLspImportAll<CR>", { noremap = true, silent = true })
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "<F10>", ":TSLspOrganize<CR>", { silent = true })
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>gr", ":TSLspRenameFile<CR>", { noremap = true, silent = true })
 
 		-- call regular on_attach
 		_G.lsp_on_attach(client, bufnr)

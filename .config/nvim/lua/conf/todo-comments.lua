@@ -46,6 +46,7 @@ local options = {
 			"--with-filename",
 			"--line-number",
 			"--column",
+      "--glob=!node_modules",
 		},
 		-- regex that will be used to match keywords.
 		-- don't replace the (KEYWORDS) placeholder

@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-topics=`echo "tmux lua golang vuejs cpp python javascript typescript nodejs rust" | tr ' ' '\n'`
+topics=`echo "rust lua javascript typescript nodejs golang vuejs cpp python tmux" | tr ' ' '\n'`
 selection=`echo "$topics" | fzf`
 read -p "query: " query
 
