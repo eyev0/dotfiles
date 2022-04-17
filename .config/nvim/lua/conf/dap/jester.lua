@@ -19,7 +19,6 @@ local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local conf = require("telescope.config").values
 local actions = require("telescope.actions")
-local actions_set = require("telescope.actions.set")
 local action_state = require("telescope.actions.state")
 
 -- our picker function: colors
@@ -29,17 +28,44 @@ local actions_picker = function(opts)
 		pickers.new(opts, {
 			prompt_title = "Jester Actions",
 			finder = finders.new_table({
-				results = { "run", "debug", "run_file", "run_last", "debug_file", "debug_last" },
+				results = {
+          "test file with coverage",
+					"test file",
+					"test all",
+					"test all with coverage",
+					"run",
+					"debug",
+					"run_file",
+					"run_last",
+					"debug_file",
+					"debug_last",
+				},
 			}),
 			sorter = conf.generic_sorter(opts),
 			attach_mappings = function(prompt_bufnr, _)
-				actions_set.select:replace(function()
+				actions.select_default:replace(function()
 					actions.close(prompt_bufnr)
 					local selection = action_state.get_selected_entry()
 					-- print(vim.inspect(map))
 					-- print(vim.inspect(selection))
 					-- vim.api.nvim_put({ selection[1] }, "", false, true)
-					require("jester")[selection[1]](JEST_CONFIG)
+					if selection[1] == "test file" then
+						vim.cmd("split | terminal npx jest " .. vim.fn.expand("%:."))
+					end
+					if selection[1] == "test file with coverage" then
+						vim.cmd(
+							'split | terminal npx jest --coverage --collectCoverageFrom="" ' .. vim.fn.expand("%:.")
+						)
+					end
+					if selection[1] == "test all" then
+						vim.cmd("split | terminal npx jest")
+					end
+					if selection[1] == "test all with coverage" then
+						vim.cmd("split | terminal npx jest --coverage")
+					end
+					if require("jester")[selection[1]] ~= nil then
+						require("jester")[selection[1]](JEST_CONFIG)
+					end
 				end)
 				return true
 			end,

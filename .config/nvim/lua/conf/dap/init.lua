@@ -2,6 +2,7 @@
 require("conf.dap.node2")
 require("conf.dap.java")
 require("conf.dap.nlua")
+require("conf.dap.go")
 
 local dap = require("dap")
 

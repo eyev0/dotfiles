@@ -63,12 +63,10 @@ local function load_treesitter_plugins(use)
 		})
 		use({ "David-Kunz/treesitter-unit" })
 		-- use({
-		-- 	"nvim-neorg/neorg",
+		-- 	"ThePrimeagen/refactoring.nvim",
 		-- 	config = function()
-		-- 		require("conf.neorg")
+		-- 		require("refactoring").setup()
 		-- 	end,
-		-- 	after = "nvim-treesitter",
-		-- 	cond = not_vscode,
 		-- })
 	end
 end
@@ -198,6 +196,7 @@ return require("packer").startup(function(use)
 		-- disable = true,
 		cond = not_vscode,
 	})
+	use({ "ThePrimeagen/git-worktree.nvim" })
 	-- telescope
 	-- extensions
 	use({ "nvim-telescope/telescope-dap.nvim" })
@@ -221,14 +220,6 @@ return require("packer").startup(function(use)
 			end,
 		},
 	})
-	-- use({
-	-- 	"folke/persistence.nvim",
-	-- 	event = "BufReadPre", -- this will only start session saving when an actual file was opened
-	-- 	module = "persistence",
-	-- 	config = function()
-	-- 		require("conf.persistence")
-	-- 	end,
-	-- })
 	use({
 		"edementyev/persistence.nvim",
 		event = "BufReadPre", -- this will only start session saving when an actual file was opened
@@ -294,7 +285,7 @@ return require("packer").startup(function(use)
 		config = function()
 			vim.ui.select = require("popui.ui-overrider")
 		end,
-		disable = false,
+		disable = true,
 	})
 	use({ "folke/lsp-colors.nvim" })
 	use({ "mfussenegger/nvim-jdtls" })

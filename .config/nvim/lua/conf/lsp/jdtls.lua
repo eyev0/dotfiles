@@ -42,29 +42,29 @@ local config = {
 		buf_map("n", "<M-m>", "<Cmd>lua pcall(require('jdtls').code_action())<CR>", { noremap = true, silent = true })
 		buf_map("v", "<M-m>", "<Esc><Cmd>lua require('jdtls').code_action(true)<CR>", { noremap = true, silent = true })
 		buf_map(
-			"n",
-			"<leader>re",
-			"<Cmd>lua require('jdtls').code_action(false, 'refactor')<CR>",
-			{ noremap = true, silent = true }
-		)
-		buf_map("n", "<F10>", "<Cmd>lua require('jdtls').organize_imports()<CR>", { noremap = true, silent = true })
-		buf_map("n", "xrv", "<Cmd>lua require('jdtls').extract_variable()<CR>", { noremap = true, silent = true })
-		buf_map(
 			"v",
-			"xrv",
-			"<Esc><Cmd>lua require('jdtls').extract_variable(true)<CR>",
-			{ noremap = true, silent = true }
-		)
-		buf_map("n", "xrc", "<Cmd>lua require('jdtls').extract_constant()<CR>", { noremap = true, silent = true })
-		buf_map(
-			"v",
-			"<leader>gs",
+			"<leader>lao",
 			"<Cmd>lua require('jdtls').organize_imports()<CR>",
 			{ noremap = true, silent = true }
 		)
+		buf_map("n", "<F10>", "<Cmd>lua require('jdtls').organize_imports()<CR>", { noremap = true, silent = true })
+		buf_map(
+			"n",
+			"<leader>laf",
+			"<Cmd>lua require('jdtls').code_action(false, 'refactor')<CR>",
+			{ noremap = true, silent = true }
+		)
+		buf_map("n", "<leader>laev", "<Cmd>lua require('jdtls').extract_variable()<CR>", { noremap = true, silent = true })
 		buf_map(
 			"v",
-			"xrm",
+			"<leader>laev",
+			"<Esc><Cmd>lua require('jdtls').extract_variable(true)<CR>",
+			{ noremap = true, silent = true }
+		)
+		buf_map("n", "<leader>laec", "<Cmd>lua require('jdtls').extract_constant()<CR>", { noremap = true, silent = true })
+		buf_map(
+			"v",
+			"<leader>laem",
 			"<Esc><Cmd>lua require('jdtls').extract_method(true)<CR>",
 			{ noremap = true, silent = true }
 		)

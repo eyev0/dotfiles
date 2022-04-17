@@ -8,17 +8,15 @@ if EDITOR_CONFIG == nil then
 	}
 end
 
-local has_eslint_config = function()
-	return function(utils)
-		return utils.root_has_file({
-			".eslintrc",
-			".eslintrc.json",
-			".eslintrc.js",
-			".eslintrc.cjs",
-			".eslintrc.ts",
-			".eslintrc.yaml",
-		})
-	end
+local has_eslint_config = function(utils)
+	return utils.root_has_file({
+		".eslintrc",
+		".eslintrc.json",
+		".eslintrc.js",
+		".eslintrc.cjs",
+		".eslintrc.ts",
+		".eslintrc.yaml",
+	})
 end
 
 -- register any number of sources simultaneously
@@ -41,19 +39,21 @@ local sources = {
 	null_ls.builtins.formatting.black,
 	-- diagnostics
 	null_ls.builtins.diagnostics.eslint_d.with({
-		condition = has_eslint_config(),
-		-- prefer_local = "node_modules/.bin",
-		-- only_local = "node_modules/.bin",
+		condition = has_eslint_config,
 	}),
+	-- null_ls.builtins.diagnostics.semgrep.with({
+	-- 	extra_args = { "--config", "auto" },
+	-- }),
 	null_ls.builtins.diagnostics.checkmake,
 	null_ls.builtins.diagnostics.flake8,
 	null_ls.builtins.diagnostics.gitlint,
-	-- null_ls.builtins.diagnostics.write_good,
 	null_ls.builtins.diagnostics.editorconfig_checker,
+	null_ls.builtins.diagnostics.zsh,
+	-- null_ls.builtins.diagnostics.write_good,
 	-- null_ls.builtins.diagnostics.tsc,
 	-- code actions
 	null_ls.builtins.code_actions.eslint_d.with({
-		condition = has_eslint_config(),
+		condition = has_eslint_config,
 		-- prefer_local = "node_modules/.bin",
 		-- only_local = "node_modules/.bin",
 	}),

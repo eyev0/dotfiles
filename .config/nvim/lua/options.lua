@@ -6,7 +6,7 @@ vim.g.python3_host_prog = "$HOME/.venvs/neovim/bin/python"
 
 vim.o.completeopt = "menuone,noselect,preview"
 
-vim.cmd("set whichwrap+=<,>,[,],h,l") -- move to next line with theses keys
+vim.opt.whichwrap:append("<,>,[,],h,l") -- move to next line with theses keys
 -- vim.cmd('syntax on') -- syntax highlighting
 vim.o.pumheight = 10 -- Makes popup menu smaller
 
@@ -17,7 +17,7 @@ vim.o.autowrite = true
 vim.o.backup = false
 vim.o.writebackup = false
 vim.o.undofile = true
-vim.cmd([[set undodir=~/.vim/undodir]])
+vim.opt.undodir = "~/.vim/undodir"
 vim.o.updatetime = 100
 vim.o.timeout = true
 vim.o.timeoutlen = 300
@@ -49,13 +49,15 @@ O.set_scrolloffs()
 vim.wo.relativenumber = true
 vim.wo.number = true
 -- vim.cmd[[set signcolumn=auto:1-3]]
-vim.cmd([[set signcolumn=yes:1]])
 -- vim.wo.colorcolumn = "80"
 vim.o.showmode = false
+vim.opt.signcolumn = "yes:1"
 vim.opt.clipboard:prepend({ "unnamedplus" })
+vim.opt.shortmess:append("c")
+vim.opt.iskeyword:append("-")
+-- vim.cmd([[set shortmess+=c]])
+-- vim.cmd([[set iskeyword+=-]])
 vim.o.termguicolors = true
-vim.cmd([[set shortmess+=c]])
-vim.cmd([[set iskeyword+=-]])
 vim.o.conceallevel = 3 -- So that I can see `` in markdown files
 vim.o.shiftwidth = 4
 vim.o.tabstop = 4
@@ -64,7 +66,7 @@ vim.o.autoindent = true
 vim.o.smartindent = true
 vim.o.expandtab = true
 vim.o.foldmethod = "expr"
-vim.cmd([[set foldexpr=nvim_treesitter#foldexpr()]])
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.foldlevelstart = 99
 -- vim.o.langmap="ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\\"ZXCVBNM<>"
 

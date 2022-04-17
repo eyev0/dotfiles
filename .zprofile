@@ -4,7 +4,7 @@ export XDG_CACHE_HOME="$HOME/.cache"
 
 export PYENV_ROOT="$HOME/.pyenv"
 
-path=("$HOME/.yarn/bin" "$HOME/.pyenv/bin" "$HOME/.poetry/bin" "$HOME/bin" $path)
+path=("$HOME/.emacs.d/bin" "$HOME/go/bin" "$HOME/.yarn/bin" "$HOME/.pyenv/bin" "$HOME/.poetry/bin" "$HOME/bin" $path)
 
 export PATH
 
@@ -14,8 +14,24 @@ export EDITOR="/usr/local/bin/nvim"
 export SYSTEMD_EDITOR="/usr/local/bin/nvim"
 export KITTY_CONF="$HOME/.config/kitty/kitty.conf"
 
-# test wayland
+# wayland
 export QT_QPA_PLATFORM=wayland
+export MOZ_ENABLE_WAYLAND=1
+export QT_AUTO_SCREEN_SCALE_FACTOR=0
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+
+# export BEMENU_BACKEND='wayland'
+# export CLUTTER_BACKEND='wayland'
+# export ECORE_EVAS_ENGINE='wayland_egl'
+# export ELM_ENGINE='wayland_egl'
+# export GDK_BACKEND='wayland'
+# export MOZ_ENABLE_WAYLAND=1
+# export QT_AUTO_SCREEN_SCALE_FACTOR=0
+# export QT_QPA_PLATFORM='wayland-egl'
+# export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+# export SAL_USE_VCLPLUGIN='gtk3'
+# export SDL_VIDEODRIVER='wayland'
+# export _JAVA_AWT_WM_NONREPARENTING=1
 
 # xset r rate 285 42
 # this is working

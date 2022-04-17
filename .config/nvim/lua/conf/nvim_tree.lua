@@ -33,7 +33,7 @@ local keybindings = {
 	{ key = "g?", cb = tree_cb("toggle_help") },
 }
 
-vim.g.nvim_tree_indent_markers = 1 --0 by default, this option shows indent markers when folders are open
+-- vim.g.nvim_tree_indent_markers = 1 --0 by default, this option shows indent markers when folders are open
 vim.g.nvim_tree_git_hl = 1 --0 by default, will enable file highlight for git attributes (can be used without the icons).
 -- vim.g.nvim_tree_add_trailing = 1 --0 by default, append a trailing slash to folder names
 vim.g.nvim_tree_side = "left" --left by default
@@ -54,11 +54,11 @@ aug END
 require("nvim-tree").setup({
 	disable_netrw = false,
 	hijack_netrw = true,
+	hijack_cursor = true,
 	open_on_setup = false,
 	ignore_ft_on_setup = {},
 	auto_close = false,
 	open_on_tab = false,
-	hijack_cursor = true,
 	update_cwd = true,
 	update_to_buf_dir = {
 		enable = true,
@@ -104,6 +104,11 @@ require("nvim-tree").setup({
 		number = false,
 		relativenumber = false,
 		signcolumn = "yes",
+	},
+	renderer = {
+		indent_markers = {
+			enable = true,
+		},
 	},
 	trash = {
 		cmd = "trash",

@@ -78,9 +78,11 @@ local on_attach_factory = function(enable_formatting)
 		ts_utils.setup_client(client)
 
 		-- no default maps, so you may want to define some here
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "<F9>", ":TSLspImportAll<CR>", { noremap = true, silent = true })
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "<F10>", ":TSLspOrganize<CR>", { silent = true })
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>gr", ":TSLspRenameFile<CR>", { noremap = true, silent = true })
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>lai", ":TSLspImportAll<CR>", { noremap = true, silent = true })
+		-- vim.api.nvim_buf_set_keymap(bufnr, "n", "<F9>", ":TSLspImportAll<CR>", { noremap = true, silent = true })
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>lao", ":TSLspOrganize<CR>", { silent = true })
+		-- vim.api.nvim_buf_set_keymap(bufnr, "n", "<F10>", ":TSLspOrganize<CR>", { silent = true })
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>lam", ":TSLspRenameFile<CR>", { noremap = true, silent = true })
 
 		-- call regular on_attach
 		_G.lsp_on_attach(client, bufnr)
