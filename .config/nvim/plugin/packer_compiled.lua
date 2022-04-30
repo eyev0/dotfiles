@@ -270,7 +270,7 @@ _G.packer_plugins = {
     url = "https://github.com/weilbith/nvim-code-action-menu"
   },
   ["nvim-dap"] = {
-    after = { "nvim-dap-ui", "nvim-dap-virtual-text" },
+    after = { "nvim-dap-virtual-text", "nvim-dap-ui" },
     loaded = true,
     only_config = true
   },
@@ -342,11 +342,11 @@ _G.packer_plugins = {
     url = "https://github.com/kyazdani42/nvim-tree.lua"
   },
   ["nvim-treesitter"] = {
-    after = { "playground", "nvim-treesitter-context" },
+    after = { "nvim-treesitter-context", "playground" },
     cond = { "\27LJ\2\n8\0\0\1\0\3\0\t6\0\0\0009\0\1\0009\0\2\0\n\0\0\0X\0\2€+\0\1\0X\1\1€+\0\2\0L\0\2\0\vvscode\6g\bvim\0" },
     config = { "\27LJ\2\n/\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\20conf.treesitter\frequire\0" },
     loaded = false,
-    needs_bufread = true,
+    needs_bufread = false,
     only_cond = false,
     path = "/home/yev/.local/share/nvim/site/pack/packer/opt/nvim-treesitter",
     url = "https://github.com/nvim-treesitter/nvim-treesitter"
@@ -665,10 +665,22 @@ if not vim.g.packer_custom_loader_enabled then
   vim.g.packer_custom_loader_enabled = true
 end
 
--- Config for: filetype.nvim
-time([[Config for filetype.nvim]], true)
-try_loadstring("\27LJ\2\n-\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\18conf.filetype\frequire\0", "config", "filetype.nvim")
-time([[Config for filetype.nvim]], false)
+-- Config for: jester
+time([[Config for jester]], true)
+try_loadstring("\27LJ\2\n/\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\20conf.dap.jester\frequire\0", "config", "jester")
+time([[Config for jester]], false)
+-- Config for: nvim-lastplace
+time([[Config for nvim-lastplace]], true)
+try_loadstring("\27LJ\2\n.\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\19conf.lastplace\frequire\0", "config", "nvim-lastplace")
+time([[Config for nvim-lastplace]], false)
+-- Config for: nvim-lightbulb
+time([[Config for nvim-lightbulb]], true)
+try_loadstring("\27LJ\2\n.\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\19conf.lightbulb\frequire\0", "config", "nvim-lightbulb")
+time([[Config for nvim-lightbulb]], false)
+-- Config for: telescope.nvim
+time([[Config for telescope.nvim]], true)
+try_loadstring("\27LJ\2\n.\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\19conf.telescope\frequire\0", "config", "telescope.nvim")
+time([[Config for telescope.nvim]], false)
 -- Config for: project.nvim
 time([[Config for project.nvim]], true)
 try_loadstring("\27LJ\2\n,\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\17conf.project\frequire\0", "config", "project.nvim")
@@ -681,115 +693,103 @@ time([[Config for null-ls.nvim]], false)
 time([[Config for nvim-code-action-menu]], true)
 try_loadstring("\27LJ\2\n5\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\26conf.code-action-menu\frequire\0", "config", "nvim-code-action-menu")
 time([[Config for nvim-code-action-menu]], false)
--- Config for: telescope.nvim
-time([[Config for telescope.nvim]], true)
-try_loadstring("\27LJ\2\n.\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\19conf.telescope\frequire\0", "config", "telescope.nvim")
-time([[Config for telescope.nvim]], false)
--- Config for: nvim-cmp
-time([[Config for nvim-cmp]], true)
-try_loadstring("\27LJ\2\n(\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\rconf.cmp\frequire\0", "config", "nvim-cmp")
-time([[Config for nvim-cmp]], false)
--- Config for: nvim-lightbulb
-time([[Config for nvim-lightbulb]], true)
-try_loadstring("\27LJ\2\n.\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\19conf.lightbulb\frequire\0", "config", "nvim-lightbulb")
-time([[Config for nvim-lightbulb]], false)
--- Config for: nvim-scrollbar
-time([[Config for nvim-scrollbar]], true)
-try_loadstring("\27LJ\2\n.\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\19conf.scrollbar\frequire\0", "config", "nvim-scrollbar")
-time([[Config for nvim-scrollbar]], false)
--- Config for: nvim-lastplace
-time([[Config for nvim-lastplace]], true)
-try_loadstring("\27LJ\2\n.\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\19conf.lastplace\frequire\0", "config", "nvim-lastplace")
-time([[Config for nvim-lastplace]], false)
 -- Config for: vim-auto-save
 time([[Config for vim-auto-save]], true)
 try_loadstring("\27LJ\2\n-\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\18conf.autosave\frequire\0", "config", "vim-auto-save")
 time([[Config for vim-auto-save]], false)
--- Config for: mapx.nvim
-time([[Config for mapx.nvim]], true)
-try_loadstring("\27LJ\2\nE\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\vglobal\tskip\nsetup\tmapx\frequire\0", "config", "mapx.nvim")
-time([[Config for mapx.nvim]], false)
+-- Config for: nvim-cmp
+time([[Config for nvim-cmp]], true)
+try_loadstring("\27LJ\2\n(\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\rconf.cmp\frequire\0", "config", "nvim-cmp")
+time([[Config for nvim-cmp]], false)
+-- Config for: filetype.nvim
+time([[Config for filetype.nvim]], true)
+try_loadstring("\27LJ\2\n-\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\18conf.filetype\frequire\0", "config", "filetype.nvim")
+time([[Config for filetype.nvim]], false)
 -- Config for: nvim-dap
 time([[Config for nvim-dap]], true)
 try_loadstring("\27LJ\2\n(\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\rconf.dap\frequire\0", "config", "nvim-dap")
 time([[Config for nvim-dap]], false)
--- Config for: jester
-time([[Config for jester]], true)
-try_loadstring("\27LJ\2\n/\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\20conf.dap.jester\frequire\0", "config", "jester")
-time([[Config for jester]], false)
+-- Config for: mapx.nvim
+time([[Config for mapx.nvim]], true)
+try_loadstring("\27LJ\2\nE\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\vglobal\tskip\nsetup\tmapx\frequire\0", "config", "mapx.nvim")
+time([[Config for mapx.nvim]], false)
+-- Config for: nvim-scrollbar
+time([[Config for nvim-scrollbar]], true)
+try_loadstring("\27LJ\2\n.\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\19conf.scrollbar\frequire\0", "config", "nvim-scrollbar")
+time([[Config for nvim-scrollbar]], false)
 -- Conditional loads
-time([[Conditional loading of nvim-treesitter-pairs]], true)
-  require("packer.load")({"nvim-treesitter-pairs"}, {}, _G.packer_plugins)
-time([[Conditional loading of nvim-treesitter-pairs]], false)
-time([[Conditional loading of nvim-ts-context-commentstring]], true)
-  require("packer.load")({"nvim-ts-context-commentstring"}, {}, _G.packer_plugins)
-time([[Conditional loading of nvim-ts-context-commentstring]], false)
-time([[Conditional loading of vim-tmux-navigator]], true)
-  require("packer.load")({"vim-tmux-navigator"}, {}, _G.packer_plugins)
-time([[Conditional loading of vim-tmux-navigator]], false)
-time([[Conditional loading of diffview.nvim]], true)
-  require("packer.load")({"diffview.nvim"}, {}, _G.packer_plugins)
-time([[Conditional loading of diffview.nvim]], false)
-time([[Conditional loading of vim-floaterm]], true)
-  require("packer.load")({"vim-floaterm"}, {}, _G.packer_plugins)
-time([[Conditional loading of vim-floaterm]], false)
-time([[Conditional loading of nvim-bqf]], true)
-  require("packer.load")({"nvim-bqf"}, {}, _G.packer_plugins)
-time([[Conditional loading of nvim-bqf]], false)
-time([[Conditional loading of indent-blankline.nvim]], true)
-  require("packer.load")({"indent-blankline.nvim"}, {}, _G.packer_plugins)
-time([[Conditional loading of indent-blankline.nvim]], false)
-time([[Conditional loading of nlua.nvim]], true)
-  require("packer.load")({"nlua.nvim"}, {}, _G.packer_plugins)
-time([[Conditional loading of nlua.nvim]], false)
-time([[Conditional loading of nvim-treesitter-textobjects]], true)
-  require("packer.load")({"nvim-treesitter-textobjects"}, {}, _G.packer_plugins)
-time([[Conditional loading of nvim-treesitter-textobjects]], false)
 time([[Conditional loading of jsonc.vim]], true)
   require("packer.load")({"jsonc.vim"}, {}, _G.packer_plugins)
 time([[Conditional loading of jsonc.vim]], false)
-time([[Conditional loading of nvim-autopairs]], true)
-  require("packer.load")({"nvim-autopairs"}, {}, _G.packer_plugins)
-time([[Conditional loading of nvim-autopairs]], false)
-time([[Conditional loading of nvim-ts-rainbow]], true)
-  require("packer.load")({"nvim-ts-rainbow"}, {}, _G.packer_plugins)
-time([[Conditional loading of nvim-ts-rainbow]], false)
-time([[Conditional loading of playground]], true)
-  require("packer.load")({"playground"}, {}, _G.packer_plugins)
-time([[Conditional loading of playground]], false)
-time([[Conditional loading of nvim-lspconfig]], true)
-  require("packer.load")({"nvim-lspconfig"}, {}, _G.packer_plugins)
-time([[Conditional loading of nvim-lspconfig]], false)
-time([[Conditional loading of vim-fugitive]], true)
-  require("packer.load")({"vim-fugitive"}, {}, _G.packer_plugins)
-time([[Conditional loading of vim-fugitive]], false)
-time([[Conditional loading of undotree]], true)
-  require("packer.load")({"undotree"}, {}, _G.packer_plugins)
-time([[Conditional loading of undotree]], false)
-time([[Conditional loading of nvim-treesitter-context]], true)
-  require("packer.load")({"nvim-treesitter-context"}, {}, _G.packer_plugins)
-time([[Conditional loading of nvim-treesitter-context]], false)
-time([[Conditional loading of vim-tmux]], true)
-  require("packer.load")({"vim-tmux"}, {}, _G.packer_plugins)
-time([[Conditional loading of vim-tmux]], false)
-time([[Conditional loading of which-key.nvim]], true)
-  require("packer.load")({"which-key.nvim"}, {}, _G.packer_plugins)
-time([[Conditional loading of which-key.nvim]], false)
-time([[Conditional loading of nvim-ts-autotag]], true)
-  require("packer.load")({"nvim-ts-autotag"}, {}, _G.packer_plugins)
-time([[Conditional loading of nvim-ts-autotag]], false)
-time([[Conditional loading of nvim-tree.lua]], true)
-  require("packer.load")({"nvim-tree.lua"}, {}, _G.packer_plugins)
-time([[Conditional loading of nvim-tree.lua]], false)
-time([[Conditional loading of gitsigns.nvim]], true)
-  require("packer.load")({"gitsigns.nvim"}, {}, _G.packer_plugins)
-time([[Conditional loading of gitsigns.nvim]], false)
 time([[Conditional loading of lualine.nvim]], true)
   require("packer.load")({"lualine.nvim"}, {}, _G.packer_plugins)
 time([[Conditional loading of lualine.nvim]], false)
+time([[Conditional loading of nvim-ts-autotag]], true)
+  require("packer.load")({"nvim-ts-autotag"}, {}, _G.packer_plugins)
+time([[Conditional loading of nvim-ts-autotag]], false)
+time([[Conditional loading of nvim-autopairs]], true)
+  require("packer.load")({"nvim-autopairs"}, {}, _G.packer_plugins)
+time([[Conditional loading of nvim-autopairs]], false)
+time([[Conditional loading of nlua.nvim]], true)
+  require("packer.load")({"nlua.nvim"}, {}, _G.packer_plugins)
+time([[Conditional loading of nlua.nvim]], false)
+time([[Conditional loading of nvim-bqf]], true)
+  require("packer.load")({"nvim-bqf"}, {}, _G.packer_plugins)
+time([[Conditional loading of nvim-bqf]], false)
+time([[Conditional loading of nvim-treesitter-textobjects]], true)
+  require("packer.load")({"nvim-treesitter-textobjects"}, {}, _G.packer_plugins)
+time([[Conditional loading of nvim-treesitter-textobjects]], false)
+time([[Conditional loading of vim-floaterm]], true)
+  require("packer.load")({"vim-floaterm"}, {}, _G.packer_plugins)
+time([[Conditional loading of vim-floaterm]], false)
+time([[Conditional loading of nvim-treesitter-pairs]], true)
+  require("packer.load")({"nvim-treesitter-pairs"}, {}, _G.packer_plugins)
+time([[Conditional loading of nvim-treesitter-pairs]], false)
+time([[Conditional loading of vim-fugitive]], true)
+  require("packer.load")({"vim-fugitive"}, {}, _G.packer_plugins)
+time([[Conditional loading of vim-fugitive]], false)
+time([[Conditional loading of nvim-lspconfig]], true)
+  require("packer.load")({"nvim-lspconfig"}, {}, _G.packer_plugins)
+time([[Conditional loading of nvim-lspconfig]], false)
+time([[Conditional loading of which-key.nvim]], true)
+  require("packer.load")({"which-key.nvim"}, {}, _G.packer_plugins)
+time([[Conditional loading of which-key.nvim]], false)
+time([[Conditional loading of vim-tmux-navigator]], true)
+  require("packer.load")({"vim-tmux-navigator"}, {}, _G.packer_plugins)
+time([[Conditional loading of vim-tmux-navigator]], false)
+time([[Conditional loading of vim-tmux]], true)
+  require("packer.load")({"vim-tmux"}, {}, _G.packer_plugins)
+time([[Conditional loading of vim-tmux]], false)
+time([[Conditional loading of nvim-ts-rainbow]], true)
+  require("packer.load")({"nvim-ts-rainbow"}, {}, _G.packer_plugins)
+time([[Conditional loading of nvim-ts-rainbow]], false)
+time([[Conditional loading of undotree]], true)
+  require("packer.load")({"undotree"}, {}, _G.packer_plugins)
+time([[Conditional loading of undotree]], false)
+time([[Conditional loading of nvim-tree.lua]], true)
+  require("packer.load")({"nvim-tree.lua"}, {}, _G.packer_plugins)
+time([[Conditional loading of nvim-tree.lua]], false)
+time([[Conditional loading of indent-blankline.nvim]], true)
+  require("packer.load")({"indent-blankline.nvim"}, {}, _G.packer_plugins)
+time([[Conditional loading of indent-blankline.nvim]], false)
+time([[Conditional loading of nvim-treesitter-context]], true)
+  require("packer.load")({"nvim-treesitter-context"}, {}, _G.packer_plugins)
+time([[Conditional loading of nvim-treesitter-context]], false)
+time([[Conditional loading of playground]], true)
+  require("packer.load")({"playground"}, {}, _G.packer_plugins)
+time([[Conditional loading of playground]], false)
+time([[Conditional loading of diffview.nvim]], true)
+  require("packer.load")({"diffview.nvim"}, {}, _G.packer_plugins)
+time([[Conditional loading of diffview.nvim]], false)
+time([[Conditional loading of nvim-ts-context-commentstring]], true)
+  require("packer.load")({"nvim-ts-context-commentstring"}, {}, _G.packer_plugins)
+time([[Conditional loading of nvim-ts-context-commentstring]], false)
 time([[Conditional loading of vista.vim]], true)
   require("packer.load")({"vista.vim"}, {}, _G.packer_plugins)
 time([[Conditional loading of vista.vim]], false)
+time([[Conditional loading of gitsigns.nvim]], true)
+  require("packer.load")({"gitsigns.nvim"}, {}, _G.packer_plugins)
+time([[Conditional loading of gitsigns.nvim]], false)
 -- Load plugins in order defined by `after`
 time([[Sequenced loading]], true)
 vim.cmd [[ packadd nvim-dap-ui ]]

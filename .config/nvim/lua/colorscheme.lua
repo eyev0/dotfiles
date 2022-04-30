@@ -34,6 +34,7 @@ vim.o.background = O.background
 -- gruvbox-material
 vim.g.gruvbox_material_palette = O.pallete
 vim.g.gruvbox_material_better_performance = 1
+vim.g.gruvbox_material_transparent_background = 1
 -- tokyonight
 -- storm or night
 vim.g.tokyonight_style = "storm"

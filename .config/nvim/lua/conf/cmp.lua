@@ -18,6 +18,26 @@ local feedkey = function(key, mode)
 	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
+local next_item = cmp.mapping(function(fallback)
+	if cmp.visible() then
+		cmp.select_next_item()
+	elseif vim.fn["vsnip#available"](1) == 1 then
+		feedkey("<Plug>(vsnip-expand-or-jump)", "")
+	elseif has_words_before() then
+		cmp.complete()
+	else
+		fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+	end
+end, { "i", "s" })
+
+local prev_item = cmp.mapping(function()
+	if cmp.visible() then
+		cmp.select_prev_item()
+	elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+		feedkey("<Plug>(vsnip-jump-prev)", "")
+	end
+end, { "i", "s" })
+
 cmp.setup({
 	preselect = cmp.PreselectMode.Item,
 	snippet = {
@@ -36,24 +56,10 @@ cmp.setup({
 			c = cmp.mapping.close(),
 		}),
 		["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-		["<Tab>"] = cmp.mapping(function(fallback)
-			if cmp.visible() then
-				cmp.select_next_item()
-			elseif vim.fn["vsnip#available"](1) == 1 then
-				feedkey("<Plug>(vsnip-expand-or-jump)", "")
-			elseif has_words_before() then
-				cmp.complete()
-			else
-				fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
-			end
-		end, { "i", "s" }),
-		["<S-Tab>"] = cmp.mapping(function()
-			if cmp.visible() then
-				cmp.select_prev_item()
-			elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-				feedkey("<Plug>(vsnip-jump-prev)", "")
-			end
-		end, { "i", "s" }),
+		["<C-n>"] = next_item,
+		["<Tab>"] = next_item,
+		["<C-p>"] = prev_item,
+		["<S-Tab>"] = prev_item,
 	},
 	-- sorting = default_config.sorting,
 	-- sorting = {

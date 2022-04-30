@@ -17,7 +17,7 @@ vim.o.autowrite = true
 vim.o.backup = false
 vim.o.writebackup = false
 vim.o.undofile = true
-vim.opt.undodir = "~/.vim/undodir"
+vim.opt.undodir = vim.fn.expand("$HOME/.vim/undodir")
 vim.o.updatetime = 100
 vim.o.timeout = true
 vim.o.timeoutlen = 300
@@ -48,15 +48,12 @@ vim.wo.cursorline = true
 O.set_scrolloffs()
 vim.wo.relativenumber = true
 vim.wo.number = true
--- vim.cmd[[set signcolumn=auto:1-3]]
 -- vim.wo.colorcolumn = "80"
 vim.o.showmode = false
 vim.opt.signcolumn = "yes:1"
 vim.opt.clipboard:prepend({ "unnamedplus" })
 vim.opt.shortmess:append("c")
 vim.opt.iskeyword:append("-")
--- vim.cmd([[set shortmess+=c]])
--- vim.cmd([[set iskeyword+=-]])
 vim.o.termguicolors = true
 vim.o.conceallevel = 3 -- So that I can see `` in markdown files
 vim.o.shiftwidth = 4
