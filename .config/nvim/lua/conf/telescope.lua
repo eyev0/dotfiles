@@ -1,34 +1,35 @@
 local telescope = require("telescope")
 local actions = require("telescope.actions")
--- local trouble = require("trouble.providers.telescope")
 
 local mappings = {
 	i = {
-		["<C-/>"] = "which_key",
+		["<Esc>"] = actions.close,
+		["<C-c"] = false,
+		["<C-/>"] = actions.which_key,
 		["<C-x>"] = actions.select_horizontal + actions.center,
 		["<C-v>"] = actions.select_vertical + actions.center,
 		["<CR>"] = actions.select_default + actions.center,
-		-- ["<C-q>"] = trouble.open_with_trouble,
-		-- ["<M-q>"] = trouble.open_selected_with_trouble,
 		["<C-s>"] = actions.toggle_selection,
-		-- ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
-		-- ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+		-- ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+		["<C-q>"] = actions.smart_send_to_qflist,
 	},
 	n = {
-		-- ["<C-q>"] = trouble.open_with_trouble,
-		-- ["<M-q>"] = trouble.open_selected_with_trouble,
+		["<C-q>"] = actions.smart_send_to_qflist,
 	},
 }
 
 require("telescope").setup({
 	defaults = {
 		selection_strategy = "reset",
-		sorting_strategy = "descending",
-		layout_strategy = "horizontal",
+		sorting_strategy = "ascending",
+		layout_strategy = "center",
+		layout_config = { mirror = true, prompt_position = "top", scroll_speed = 7, height = 0.45, width = 0.6 },
 		winblend = 0,
 		mappings = mappings,
-		path = "smart",
+		path_display = { truncate = 5 },
 		hidden = true,
+		no_ignore = true,
+		follow = true,
 		-- wrap_results = true,
 	},
 	extensions = {
@@ -42,28 +43,15 @@ require("telescope").setup({
 			override_generic_sorter = true, -- override the generic sorter
 			override_file_sorter = true, -- override the file sorter
 			case_mode = "smart_case", -- or "ignore_case" or "respect_case"
-			-- the default case_mode is "smart_case"
 		},
 	},
 })
 
 telescope.load_extension("fzf")
 telescope.load_extension("ui-select")
-telescope.load_extension("projects")
 telescope.load_extension("dap")
 telescope.load_extension("harpoon")
-telescope.load_extension("git_worktree")
+telescope.load_extension("notify")
+-- telescope.load_extension("git_worktree")
 
 vim.cmd([[autocmd User TelescopePreviewerLoaded setlocal wrap]])
-
-require("conf.dap.file_picker")
-
-return {
-	project_files = function()
-		local opts = { hidden = true } -- define here if you want to define something
-		local ok = pcall(require("telescope.builtin").git_files, opts)
-		if not ok then
-			require("telescope.builtin").find_files(opts)
-		end
-	end,
-}

@@ -8,27 +8,28 @@ dapui.setup({
 		open = "<CR>",
 		remove = "d",
 		edit = "e",
+		toggle = "t",
 		repl = "r",
 	},
-	sidebar = {
-		-- You can change the order of elements in the sidebar
-		elements = {
-			-- Provide as ID strings or tables with "id" and "size" keys
-			{
-				id = "scopes",
-				size = 0.25, -- Can be float or integer > 1
+	layouts = {
+		{
+			elements = {
+				{ id = "stacks", size = 0.6 },
+				{ id = "watches", size = 0.2 },
+				{ id = "breakpoints", size = 0.2 },
 			},
-			{ id = "breakpoints", size = 0.25 },
-			{ id = "stacks", size = 0.25 },
-			{ id = "watches", size = 00.25 },
+			size = 0.15,
+			position = "left",
 		},
-		size = 40,
-		position = "left", -- Can be "left", "right", "top", "bottom"
-	},
-	tray = {
-		elements = { "repl" },
-		size = 10,
-		position = "bottom", -- Can be "left", "right", "top", "bottom"
+		{
+			elements = {
+				{ id = "scopes", size = 0.7 },
+				{ id = "repl", size = 0.3 },
+				-- "console",
+			},
+			size = 0.26,
+			position = "bottom",
+		},
 	},
 	floating = {
 		max_height = nil, -- These can be integers or a float between 0 and 1.
@@ -50,3 +51,11 @@ end
 dap.listeners.before.event_exited["dapui_config"] = function()
 	dapui.close()
 end
+
+dap.defaults.fallback.terminal_win_cmd = "tabnew DapConsole"
+dap.defaults.fallback.force_external_terminal = false
+dap.defaults.fallback.external_terminal = {
+	command = "tmux",
+  args = { "split-pane", "-p", "20", "-c", vim.fn.getcwd() },
+  -- args = { "split-pane", "-c", vim.fn.getcwd() },
+}

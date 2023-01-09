@@ -3,10 +3,17 @@ require("conf.dap.node2")
 require("conf.dap.java")
 require("conf.dap.nlua")
 require("conf.dap.go")
+require("conf.dap.python")
 
 local dap = require("dap")
 
 dap.defaults.fallback.terminal_win_cmd = "tabnew DapConsole"
+dap.defaults.fallback.force_external_terminal = false
+dap.defaults.fallback.external_terminal = {
+	command = "tmux",
+  args = { "split-pane", "-p", "20", "-c", vim.fn.getcwd() },
+  -- args = { "split-pane", "-c", vim.fn.getcwd() },
+}
 -- load a subset of vscode configurations that are supported
 -- require("dap.ext.vscode").load_launchjs(nil, { ["pwa-node"] = { "javascript", "typescript" } })
 -- autocomplete in repl
@@ -54,12 +61,12 @@ if table.maxn(DEBUG_CONFIGS) > 0 then
 			end
 			local merged_configs = {}
 			merged_configs[lang] = {}
-			u.push_tables(dap.configurations[lang], merged_configs[lang])
+			u.insert_tables(dap.configurations[lang], merged_configs[lang])
 			for _, config in pairs(configs) do
 				table.insert(merged_configs[lang], u.merge_tables({}, DEBUG_CONFIGS_BASE[lang], config))
 			end
 			-- insert all merged configs into dap.configurations.language
-			u.push_tables(dap.configurations[lang], merged_configs[lang])
+			u.insert_tables(dap.configurations[lang], merged_configs[lang])
 		end
 	end
 end

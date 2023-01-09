@@ -14,8 +14,8 @@ vim.cmd([[
     " colorful virtual text
     " autocmd ColorScheme * highlight! link VirtualTextHint DiagnosticSignHint
     " autocmd ColorScheme * highlight! link VirtualTextInfo DiagnosticSignInfo
-    " autocmd ColorScheme * highlight! link VirtualTextWarning DiagnosticSignWarn
-    " autocmd ColorScheme * highlight! link VirtualTextError DiagnosticSignError
+    autocmd ColorScheme * highlight! link VirtualTextWarning DiagnosticSignWarn
+    autocmd ColorScheme * highlight! link VirtualTextError DiagnosticSignError
   augroup END
 ]])
 
@@ -32,9 +32,13 @@ call SetQsColors()
 
 vim.o.background = O.background
 -- gruvbox-material
-vim.g.gruvbox_material_palette = O.pallete
+vim.g.gruvbox_material_foreground = O.pallete
+vim.g.gruvbox_material_background = O.contrast
 vim.g.gruvbox_material_better_performance = 1
 vim.g.gruvbox_material_transparent_background = 1
+vim.g.gruvbox_material_enable_italic = 1
+vim.g.gruvbox_material_visual = "reverse"
+vim.g.gruvbox_material_current_word = "grey background"
 -- tokyonight
 -- storm or night
 vim.g.tokyonight_style = "storm"

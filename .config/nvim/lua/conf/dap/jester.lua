@@ -13,7 +13,7 @@ vim.cmd([[command! JesterDebug lua require("jester").debug(JEST_CONFIG)]])
 -- Debug current file
 vim.cmd([[command! JesterDebugFile lua require("jester").debug_file(JEST_CONFIG)]])
 -- Debug last test(s)
-vim.cmd([[command! JesterDebufLast lua require("jester").debug_last(JEST_CONFIG)]])
+vim.cmd([[command! JesterDebugLast lua require("jester").debug_last(JEST_CONFIG)]])
 
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")

@@ -1,5 +1,5 @@
 local util = require("lspconfig.util")
-local u = require("utils")
+-- local u = require("utils")
 
 local function get_typescript_server_path(root_dir)
 	local project_root = util.find_node_modules_ancestor(root_dir)
@@ -17,28 +17,13 @@ local function get_typescript_server_path(root_dir)
 	end
 end
 
-local c = vim.lsp.protocol.make_client_capabilities()
-u.tprint(c.textDocument.completion)
-c = c.textDocument
-local capabilities = {
-	textDocument = {
-		codeAction = c.codeAction,
-		rename = c.rename,
-		implementation = c.implementation,
-		typeDefinition = c.typeDefinition,
-		declaration = c.declaration,
-		references = c.references,
-		definition = c.definition,
-		publishDiagnostics = {
-			relatedInformation = false,
-		},
-	},
-}
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
 -- u.tprint(capabilities)
+
 require("lspconfig").volar.setup({
 	on_attach = require("conf.lsp.tsserver").on_attach_factory(true),
-	-- capabilities = _G.lsp_capabilities,
-	capabilities = capabilities,
+	capabilities = _G.lsp_capabilities,
+	-- capabilities = capabilities,
 	filetypes = { "typescript", "typescriptreact", "vue" },
 	config = {
 		on_new_config = function(new_config, new_root_dir)

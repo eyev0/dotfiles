@@ -90,8 +90,31 @@ require("lualine").setup({
 				end,
 				fmt = trunc(90, 4, 30),
 			},
+			-- {
+			-- 	require("noice").api.status.message.get_hl,
+			-- 	cond = require("noice").api.status.message.has,
+			-- },
+			-- {
+			--   require("noice").api.status.command.get,
+			--   cond = require("noice").api.status.command.has,
+			--   color = { fg = "#ff9e64" },
+			-- },
+			-- {
+			--   require("noice").api.status.search.get,
+			--   cond = require("noice").api.status.search.has,
+			--   color = { fg = "#ff9e64" },
+			-- },
 		},
-		lualine_b = { { "branch", fmt = hide(75) } },
+		lualine_b = {
+			{ "branch", fmt = hide(75) },
+			{
+        -- show @recording messages
+				require("noice").api.status.mode.get,
+				cond = require("noice").api.status.mode.has,
+				color = { fg = "#ff9e64" },
+        fmt = trunc(100, 4, 30),
+			},
+		},
 		lualine_c = { { "filename" } },
 		lualine_x = {
 			{

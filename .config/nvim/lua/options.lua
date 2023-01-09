@@ -40,12 +40,12 @@ vim.o.incsearch = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.ttyfast = true
-vim.o.lazyredraw = true
+vim.o.lazyredraw = false
 vim.o.wrapscan = true
 vim.o.report = 0
-vim.o.synmaxcol = 200
+vim.o.synmaxcol = 300
 vim.wo.cursorline = true
-O.set_scrolloffs()
+set_scrolloffs()
 vim.wo.relativenumber = true
 vim.wo.number = true
 -- vim.wo.colorcolumn = "80"
@@ -55,7 +55,7 @@ vim.opt.clipboard:prepend({ "unnamedplus" })
 vim.opt.shortmess:append("c")
 vim.opt.iskeyword:append("-")
 vim.o.termguicolors = true
-vim.o.conceallevel = 3 -- So that I can see `` in markdown files
+vim.o.conceallevel = 0
 vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 vim.o.softtabstop = 4
@@ -65,6 +65,7 @@ vim.o.expandtab = true
 vim.o.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.foldlevelstart = 99
+vim.o.splitkeep = nil
 -- vim.o.langmap="ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\\"ZXCVBNM<>"
 
 -- tmux italics

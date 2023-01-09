@@ -123,6 +123,7 @@ alias vim='nvim'
 alias v='nvim'
 alias n='nvim'
 alias ns='nvim -c PersistenceLoad'
+alias nsr='env $(cat base.env | xargs) nvim -c PersistenceLoad'
 alias vimdiff='nvim -d'
 
 alias wgu='wg-quick up wg0'

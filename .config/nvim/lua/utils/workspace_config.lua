@@ -19,17 +19,20 @@ local function load_file(path)
 	return false
 end
 
+local home = vim.fn.expand("$HOME")
 local function load(files)
 	local cwd = vim.fn.getcwd()
 	for _, file in pairs(files) do
 		local dirpath = cwd .. "/"
-		local filepath = dirpath .. file
-		while vim.loop.fs_realpath(dirpath) ~= vim.fn.expand("$HOME") and not vim.loop.fs_stat(filepath) do
-			dirpath = dirpath .. "../"
+		local filepath
+		while vim.loop.fs_realpath(dirpath) ~= home do
 			filepath = dirpath .. file
-		end
-		if vim.loop.fs_stat(filepath) then
-			load_file(filepath)
+			if vim.loop.fs_stat(filepath) then
+				load_file(filepath)
+				break
+			else
+				dirpath = dirpath .. "../"
+			end
 		end
 	end
 end

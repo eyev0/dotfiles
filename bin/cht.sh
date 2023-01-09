@@ -4,4 +4,5 @@ topics=`echo "rust lua javascript typescript nodejs golang vuejs cpp python tmux
 selection=`echo "$topics" | fzf`
 read -p "query: " query
 
-tmux neww zsh -c "curl -s cht.sh/$selection/$(echo $query | tr ' ' '+') | bat --paging=always --style=plain"
+# tmux neww zsh -c "curl -s cht.sh/$selection/$(echo $query | tr ' ' '+') | bat --paging=always --style=plain"
+curl -s cht.sh/$selection/$(echo $query | tr ' ' '+') | bat --paging=always --style=plain

@@ -1,4 +1,3 @@
--- local lsputils = require("lspconfig.util")
 local M = {}
 
 M.tprint = function(tbl, max_depth, depth)
@@ -30,21 +29,23 @@ M.merge_tables = function(target, ...)
 			end
 		end
 	end
-  return target
+	return target
 end
 
-M.push_tables = function(target, ...)
+M.insert_tables = function(target, ...)
 	local tables = { ... }
 	if type(target) == "table" then
 		for _, t in pairs(tables) do
 			if type(t) == "table" then
 				for _, value in pairs(t) do
-          table.insert(target, value)
+					table.insert(target, value)
 				end
 			end
 		end
 	end
-  return target
+	return target
 end
+
+require("utils.trim_whitespace")
 
 return M

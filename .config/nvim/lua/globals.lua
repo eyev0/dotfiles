@@ -4,16 +4,17 @@ local sidescrolloff = 3
 -- options
 O = {
 	colorscheme = "gruvbox-material",
-	pallete = "mix",
-	background = "dark",
-	contrast = "hard",
+  background = "dark",
+	pallete = "mix", -- mix, material, original
+	contrast = "hard", -- soft, medium, hard
 	-- colors = vim.g.gruvbox_colors,
 	colors = nil,
-	set_scrolloffs = function()
-		vim.o.scrolloff = scrolloff
-		vim.o.sidescrolloff = sidescrolloff
-	end,
 }
+
+_G.set_scrolloffs = function()
+  vim.o.scrolloff = scrolloff
+  vim.o.sidescrolloff = sidescrolloff
+end
 
 -- utils
 U = {}

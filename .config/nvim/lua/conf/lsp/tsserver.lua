@@ -17,12 +17,13 @@ local init_options = {
 
 local on_attach_factory = function(enable_formatting)
 	local on_attach = function(client, bufnr)
+    -- require("utils").tprint(client.server_capabilities)
 		if client.config.flags then
 			client.config.flags.allow_incremental_sync = true
 		end
 		if enable_formatting ~= true then
-			client.resolved_capabilities.document_formatting = false
-			client.resolved_capabilities.document_range_formatting = false
+			client.server_capabilities.documentFormattingProvider = false
+			client.server_capabilities.documentRangeFormattingProvider = false
 		end
 		-- defaults
 		ts_utils.setup({

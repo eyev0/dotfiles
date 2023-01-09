@@ -7,7 +7,7 @@ local types = require("cmp.types")
 local str = require("cmp.utils.str")
 
 -- setup cmp-npm
-require("cmp-npm").setup({})
+-- require("cmp-npm").setup({})
 
 local has_words_before = function()
 	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -38,6 +38,33 @@ local prev_item = cmp.mapping(function()
 	end
 end, { "i", "s" })
 
+local mappings = {
+	["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
+	["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
+	["<C-Space>"] = cmp.mapping(cmp.mapping.complete({}), { "i", "c" }),
+	["<C-y>"] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
+	["<C-e>"] = cmp.mapping(function(fallback)
+		if cmp.visible() then
+			cmp.abort()
+		else
+			cmp.complete()
+		end
+	end),
+	-- ["<C-e>"] = cmp.mapping({
+	-- 	i = cmp.mapping.abort(),
+	-- 	c = cmp.mapping.close(),
+	-- }),
+	["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+	["<C-n>"] = next_item,
+	["<Tab>"] = next_item,
+	["<C-p>"] = prev_item,
+	["<S-Tab>"] = prev_item,
+}
+
+local merge = function(a, b)
+	return vim.tbl_deep_extend("force", {}, a, b)
+end
+
 cmp.setup({
 	preselect = cmp.PreselectMode.Item,
 	snippet = {
@@ -46,21 +73,7 @@ cmp.setup({
 			vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
 		end,
 	},
-	mapping = {
-		["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
-		["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-		["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
-		["<C-y>"] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
-		["<C-e>"] = cmp.mapping({
-			i = cmp.mapping.abort(),
-			c = cmp.mapping.close(),
-		}),
-		["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-		["<C-n>"] = next_item,
-		["<Tab>"] = next_item,
-		["<C-p>"] = prev_item,
-		["<S-Tab>"] = prev_item,
-	},
+	mapping = mappings,
 	-- sorting = default_config.sorting,
 	-- sorting = {
 	-- 	comparators = {
@@ -79,21 +92,25 @@ cmp.setup({
 		priority_weight = 3,
 	},
 	sources = cmp.config.sources({
-		{ name = "nvim_lsp", group_index = 1, priority = 15 },
+    { name = "copilot", group_index = 1, priority = 20 },
+    { name = "nvim_lsp", group_index = 1, priority = 15 },
 		{ name = "vsnip", group_index = 1, priority = 5 },
-		{ name = "buffer", group_index = 2, priority = 2, max_item_count = 3, keyword_length = 4 },
-		{ name = "path", group_index = 2, priority = 1 },
-		{ name = "nvim_lsp_signature_help", group_index = 3 },
-		{ name = "npm", group_index = 4, keyword_length = 4 },
+		{ name = "buffer", group_index = 2, priority = 4, max_item_count = 3, keyword_length = 4 },
+		{ name = "path", group_index = 2, priority = 3 },
+		{ name = "nvim_lsp_signature_help", group_index = 3, priority = 1 },
+		-- { name = "npm", group_index = 4, keyword_length = 4 },
 	}),
+	window = {
+		documentation = merge(cmp.config.window.bordered(), {
+			max_height = 15,
+			max_width = 60,
+		}),
+	},
 	formatting = {
 		format = lspkind.cmp_format({
-			mode = "symbol", -- show only symbol annotations
+			mode = "symbol_text", -- show only symbol annotations
+			preset = "codicons",
 			maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-			-- TODO: show source file in PUM if possible
-			-- print("---------")
-			-- tprint(entry, 2)
-			--
 			-- The function below will be called before any actual modifications from lspkind
 			-- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
 			-- with_text = false,
@@ -122,10 +139,9 @@ cmp.setup({
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline("/", {
 	sources = cmp.config.sources({
-		{ name = "nvim_lsp_document_symbol" },
-	}, {
 		{ name = "buffer" },
 	}),
+	mapping = cmp.mapping.preset.cmdline(mappings),
 })
 
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
@@ -135,4 +151,5 @@ cmp.setup.cmdline(":", {
 		{ name = "nvim_lua", group_index = 1, priority = 3 },
 		{ name = "path", group_index = 2, priority = 2 },
 	}),
+	mapping = cmp.mapping.preset.cmdline(mappings),
 })

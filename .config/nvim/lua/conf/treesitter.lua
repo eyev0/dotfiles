@@ -67,7 +67,7 @@ local config = {
 			},
 		},
 		swap = {
-			enable = true,
+			enable = false,
 			swap_next = {
 				-- ["<leader>a"] = "@parameter.inner",
 			},
@@ -140,8 +140,8 @@ parser_configs.norg_table = {
 }
 
 -- fix for jsonc
-local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-parser_config.jsonc.used_by = "json"
+-- local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+-- parser_config.jsonc.used_by = "json"
 
 require("nvim-treesitter.configs").setup(config)
 

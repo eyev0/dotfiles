@@ -2,7 +2,7 @@
 vim.cmd([[command! PersistenceLoad lua require("persistence").load()]])
 vim.cmd([[command! PersistenceDeleteCurrent lua require("persistence").delete_current()]])
 
-vim.cmd([[autocmd User ChangeNvimCursor normal! :startinsert :stopinsert]])
+-- vim.cmd([[autocmd User ChangeNvimCursor normal! :startinsert :stopinsert]])
 
 require("impatient")
 
@@ -23,6 +23,4 @@ func ClearTempStuff()
 endfun
 ]])
 
-vim.cmd([[
-au VimEnter call ClearTempStuff()
-]])
+-- vim.cmd([[ au VimEnter call ClearTempStuff() ]])

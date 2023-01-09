@@ -50,6 +50,6 @@ require("gitsigns").setup({
 			opts.buffer = bufnr
 			vim.keymap.set(mode, l, r, opts)
 		end
-		_G.set_gitsigns_buf_shortcuts(map, gs)
+		set_gitsigns_buf_shortcuts(map, gs)
 	end,
 })

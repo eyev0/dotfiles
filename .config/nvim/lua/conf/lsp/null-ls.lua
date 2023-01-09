@@ -45,7 +45,7 @@ local sources = {
 	-- 	extra_args = { "--config", "auto" },
 	-- }),
 	null_ls.builtins.diagnostics.checkmake,
-	null_ls.builtins.diagnostics.flake8,
+	-- null_ls.builtins.diagnostics.flake8,
 	null_ls.builtins.diagnostics.gitlint,
 	null_ls.builtins.diagnostics.editorconfig_checker,
 	null_ls.builtins.diagnostics.zsh,
