@@ -1,8 +1,7 @@
-local lsp = vim.lsp
 local get_mode = require("lualine.components.mode")
 
 local function is_lsp_attached()
-	return next(lsp.buf_get_clients()) ~= nil
+	return next(vim.lsp.get_active_clients()) ~= nil
 end
 
 local function get_diagnostics_count(severity)
@@ -21,7 +20,7 @@ end
 
 local function lsp_attached()
 	local count = 0
-	for _, _ in pairs(lsp.buf_get_clients()) do
+	for _, _ in pairs(vim.lsp.get_active_clients()) do
 		count = count + 1
 	end
 	return count > 0 and "  " .. count or ""
@@ -50,11 +49,11 @@ end
 local function position()
 	return string.format("%d/%d:%d", vim.fn.line("."), vim.fn.line("$"), vim.fn.col("."))
 end
----
+
 --- @param trunc_width number trunctates component when screen width is less then trunc_width
 --- @param trunc_len number truncates component to trunc_len number of chars
 --- @param hide_width number hides component when window width is smaller then hide_width
---- @param ellipsis boolean whether to disable adding '...' at end after truncation
+--- @param [ellipsis] boolean whether to disable adding '...' at end after truncation
 --- @return function function that can format the component accordingly
 local function trunc(trunc_width, trunc_len, hide_width, ellipsis)
 	return function(str)
@@ -90,20 +89,6 @@ require("lualine").setup({
 				end,
 				fmt = trunc(90, 4, 30),
 			},
-			-- {
-			-- 	require("noice").api.status.message.get_hl,
-			-- 	cond = require("noice").api.status.message.has,
-			-- },
-			-- {
-			--   require("noice").api.status.command.get,
-			--   cond = require("noice").api.status.command.has,
-			--   color = { fg = "#ff9e64" },
-			-- },
-			-- {
-			--   require("noice").api.status.search.get,
-			--   cond = require("noice").api.status.search.has,
-			--   color = { fg = "#ff9e64" },
-			-- },
 		},
 		lualine_b = {
 			{ "branch", fmt = hide(75) },

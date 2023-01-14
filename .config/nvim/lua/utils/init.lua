@@ -18,21 +18,7 @@ M.tprint = function(tbl, max_depth, depth)
 	end
 end
 
-M.merge_tables = function(target, ...)
-	local tables = { ... }
-	if type(target) == "table" then
-		for _, table in pairs(tables) do
-			if type(table) == "table" then
-				for k, v in pairs(table) do
-					target[k] = v
-				end
-			end
-		end
-	end
-	return target
-end
-
-M.insert_tables = function(target, ...)
+M.tbl_insert_all = function(target, ...)
 	local tables = { ... }
 	if type(target) == "table" then
 		for _, t in pairs(tables) do
@@ -46,6 +32,23 @@ M.insert_tables = function(target, ...)
 	return target
 end
 
-require("utils.trim_whitespace")
+-- clear junk from registers and marks
+M.clear_reg_marks = function()
+	local regs = vim.fn.split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-"', "\zs")
+	for _, reg in ipairs(regs) do
+		vim.fn.setreg(reg, "")
+	end
+	vim.cmd("delm!")
+	vim.cmd.delm("A-Z0-9")
+end
+
+vim.cmd[[
+fun! TrimWhitespace()
+  let l:save = winsaveview()
+  keeppatterns %s/\s\+$//e
+  call winrestview(l:save)
+endfun
+command! TrimWhitespace :call TrimWhitespace()<CR>
+]]
 
 return M

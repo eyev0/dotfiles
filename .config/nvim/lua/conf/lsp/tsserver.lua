@@ -86,7 +86,7 @@ local on_attach_factory = function(enable_formatting)
 		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>lam", ":TSLspRenameFile<CR>", { noremap = true, silent = true })
 
 		-- call regular on_attach
-		_G.lsp_on_attach(client, bufnr)
+		Lsp.on_attach(client, bufnr)
 	end
 	return on_attach
 end
@@ -96,7 +96,7 @@ nvim_lsp.tsserver.setup({
 	-- it from the source if you want to add your own init_options.
 	init_options = init_options,
 	on_attach = on_attach_factory(false),
-	capabilities = _G.lsp_capabilities,
+	capabilities = Lsp.capabilities,
 	-- root_dir = function(startpath)
 	-- 	local r = util.root_pattern(".volar")(startpath)
 	-- 	if r == nil then

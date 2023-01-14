@@ -45,12 +45,13 @@ vim.o.wrapscan = true
 vim.o.report = 0
 vim.o.synmaxcol = 300
 vim.wo.cursorline = true
-set_scrolloffs()
+vim.o.scrolloff = O.scrolloff
+vim.o.sidescrolloff = O.sidescrolloff
 vim.wo.relativenumber = true
 vim.wo.number = true
 -- vim.wo.colorcolumn = "80"
 vim.o.showmode = false
-vim.opt.signcolumn = "yes:1"
+vim.opt.signcolumn = "yes:2"
 vim.opt.clipboard:prepend({ "unnamedplus" })
 vim.opt.shortmess:append("c")
 vim.opt.iskeyword:append("-")
@@ -65,82 +66,5 @@ vim.o.expandtab = true
 vim.o.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.foldlevelstart = 99
-vim.o.splitkeep = nil
+vim.o.splitkeep = "screen"
 -- vim.o.langmap="ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\\"ZXCVBNM<>"
-
--- tmux italics
-vim.cmd([[let &t_ZH="\e[3m"]])
-vim.cmd([[let &t_ZR="\e[23m"]])
-
--- tmux cursor
-vim.cmd([[
-" tmux will only forward escape sequences to the terminal if surrounded by a DCS sequence
-if exists('$TMUX')
-   " set insert mode to a cyan vertical line   
-   let &t_SI .= "\<esc>Ptmux;\<esc>\<esc>[6 q\<esc>\\"
-   let &t_SI .= "\<esc>Ptmux;\<esc>\<esc>]12;cyan\x7\<esc>\\"
-   " set normal mode to a green block
-   let &t_EI .= "\<esc>Ptmux;\<esc>\<esc>[2 q\<esc>\\"
-   let &t_EI .= "\<esc>Ptmux;\<esc>\<esc>]12;green\x7\<esc>\\"
-   " set replace mode to an orange underscore
-   let &t_SR .= "\<esc>Ptmux;\<esc>\<esc>[4 q\<esc>\\"
-   let &t_SR .= "\<esc>Ptmux;\<esc>\<esc>]12;orange\x7\<esc>\\"
-
-   " initialize cursor shape/color on startup (silent !echo approach doesn't seem to work for tmux)
-   augroup ResetCursorShape
-      au!
-      " autocmd VimEnter * startinsert | stopinsert
-      " autocmd VimEnter * normal! :startinsert :stopinsert
-      " autocmd VimEnter * :normal :startinsert :stopinsert
-      " autocmd ChangeNvimCursor * normal! :startinsert :stopinsert
-   augroup END
-
-   " reset cursor when leaving tmux
-   " autocmd VimLeave * silent !echo -ne "\033Ptmux;\033\033[2 q\033\\"
-   " autocmd VimLeave * silent !echo -ne "\033Ptmux;\033\033]12;gray\007\033\\"
-   doautocmd User ChangeNvimCursor
- endif
-]])
-
--- highlight yank for a short period of time
-vim.cmd([[au TextYankPost * silent! lua require'vim.highlight'.on_yank({timeout = 80})]])
-
--- gui stuff
-vim.cmd([[au UIEnter * let g:has_gui=1]])
-vim.cmd([[
-set guioptions-=T
-set guioptions-=m
-set guioptions-=r
-set guioptions-=L
-set guifont=Source\ Code\ Pro\ Medium:h13
-]])
-
--- plugin settings
---
---
--- disable highlighting matching parens
-vim.g.loaded_matchparen = 1
--- firenvim
-vim.g.firenvim_config = {
-	["globalSettings"] = { ["takeover"] = "never" },
-	-- ["localSettings"] = { [".*"] = { ["takeover"] = "never" } },
-}
--- quick-scope
-vim.g.qs_max_chars = 150
-vim.g.qs_lazy_highlight = 1
-vim.g.qs_highlight_on_keys = { "f", "F", "t", "T" }
--- Yoink
-vim.g.yoinkMaxItems = 20
-vim.g.yoinkIncludeDeleteOperations = 1
-vim.g.yoinkMoveCursorToEndOfPaste = 1
-vim.g.yoinkSavePersistently = 0
-if vim.fn.executable("rg") then
-	vim.g.rg_derive_root = "true"
-end
--- tmux-navigator
-vim.g.tmux_navigator_no_mappings = 1
--- vimspector (dir not working)
--- vim.g.vimspector_base_dir = vim.fn.expand("$HOME/.vim/vimspector-config")
--- vim.g.vimspector_install_gadgets = { "debugpy", "vscode-node-debug2" }
---
-vim.g.Illuminate_delay = 30

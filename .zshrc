@@ -122,8 +122,8 @@ export KEYTIMEOUT=1
 alias vim='nvim'
 alias v='nvim'
 alias n='nvim'
-alias ns='nvim -c PersistenceLoad'
-alias nsr='env $(cat base.env | xargs) nvim -c PersistenceLoad'
+alias ns='nvim -c SessionLoad'
+# alias nsr='env $(cat base.env | xargs) nvim -c SessionLoad'
 alias vimdiff='nvim -d'
 
 alias wgu='wg-quick up wg0'
@@ -132,16 +132,13 @@ alias myip='curl ifconfig.me'
 
 alias c='clear'
 alias psv='source venv/bin/activate'
+
 alias al='lsd -alh'
 alias la='lsd -alh'
-alias t='env TERM=screen-256color tmux'
-alias ta='env TERM=screen-256color tmux a'
-alias tkill='tmux kill-server'
 alias ld='lazydocker'
 alias lg='lazygit'
 alias lm='lazynpm'
 alias pm='pnpm'
-alias rn='ranger'
 
 alias yc='yarn clean'
 alias ys='yarn start'

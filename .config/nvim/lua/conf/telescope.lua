@@ -10,11 +10,14 @@ local mappings = {
 		["<C-v>"] = actions.select_vertical + actions.center,
 		["<CR>"] = actions.select_default + actions.center,
 		["<C-s>"] = actions.toggle_selection,
+		["<C-f>"] = actions.to_fuzzy_refine,
 		-- ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
 		["<C-q>"] = actions.smart_send_to_qflist,
 	},
 	n = {
 		["<C-q>"] = actions.smart_send_to_qflist,
+    ["<C-n>"] = actions.move_selection_next,
+    ["<C-p>"] = actions.move_selection_previous,
 	},
 }
 
@@ -22,8 +25,6 @@ require("telescope").setup({
 	defaults = {
 		selection_strategy = "reset",
 		sorting_strategy = "ascending",
-		layout_strategy = "center",
-		layout_config = { mirror = true, prompt_position = "top", scroll_speed = 7, height = 0.45, width = 0.6 },
 		winblend = 0,
 		mappings = mappings,
 		path_display = { truncate = 5 },
@@ -33,11 +34,12 @@ require("telescope").setup({
 		-- wrap_results = true,
 	},
 	extensions = {
-		["ui-select"] = {
-			-- require("telescope.themes").get_dropdown({}),
-			-- require("telescope.themes").get_ivy({}),
-			require("telescope.themes").get_cursor({ wrap_results = true }),
-		},
+		-- handled by dressing.nvim
+		-- ["ui-select"] = {
+		-- 	-- require("telescope.themes").get_dropdown({}),
+		-- 	-- require("telescope.themes").get_ivy({}),
+		-- 	require("telescope.themes").get_cursor({ wrap_results = true }),
+		-- },
 		fzf = {
 			fuzzy = true, -- false will only do exact matching
 			override_generic_sorter = true, -- override the generic sorter
@@ -48,10 +50,13 @@ require("telescope").setup({
 })
 
 telescope.load_extension("fzf")
-telescope.load_extension("ui-select")
+-- telescope.load_extension("ui-select")
 telescope.load_extension("dap")
 telescope.load_extension("harpoon")
 telescope.load_extension("notify")
+telescope.load_extension("noice")
+telescope.load_extension("yank_history")
+pcall(telescope.load_extension, "persisted")
 -- telescope.load_extension("git_worktree")
 
 vim.cmd([[autocmd User TelescopePreviewerLoaded setlocal wrap]])

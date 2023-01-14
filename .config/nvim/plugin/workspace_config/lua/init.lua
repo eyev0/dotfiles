@@ -1,5 +1,6 @@
 local ffi = require("ffi")
 local lfs = require("lfs")
+
 ffi.cdef([[
  int getuid(void);
 ]])
@@ -36,6 +37,8 @@ local function load(files)
 		end
 	end
 end
+
+load({ ".nvim" })
 
 return {
 	load = load,

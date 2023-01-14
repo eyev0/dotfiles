@@ -63,8 +63,8 @@ local config = {
     },
   },
   root_dir = lsputil.root_pattern(".git", ".nvim"),
-  on_attach = _G.lsp_on_attach,
-  capabilities = _G.lsp_capabilities,
+  on_attach = Lsp.on_attach,
+  capabilities = Lsp.capabilities,
 }
 
 require("lspconfig").sumneko_lua.setup(config)

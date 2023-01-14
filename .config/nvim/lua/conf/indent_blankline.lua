@@ -7,7 +7,7 @@ vim.g.indent_blankline_filetype_exclude = {
 	"floaterm",
 	"noice",
 }
-vim.g.indent_blankline_buftype_exclude = { "terminal" }
+vim.g.indent_blankline_buftype_exclude = { "terminal", "quickfix" }
 
 require("indent_blankline").setup({
 	-- for example, context is off by default, use this to turn it on

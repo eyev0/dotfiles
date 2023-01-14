@@ -1,7 +1,7 @@
 require('aerial').setup({
   -- optionally use on_attach to set keymaps when aerial has attached to a buffer
   on_attach = function(bufnr)
-    set_aerial_buf_shortcuts(bufnr)
+    Keymap.set_aerial_buf_shortcuts(bufnr)
   end,
   layout = {
     -- Determines the default direction to open the aerial window. The 'prefer'

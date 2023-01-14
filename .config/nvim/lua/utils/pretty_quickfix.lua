@@ -1,24 +1,16 @@
 local fn = vim.fn
 
-function _G.qftf(info)
+function _G.__quickfixtextfunc(info)
 	local items
-	local ret = {}
-	-- The name of item in list is based on the directory of quickfix window.
-	-- Change the directory for quickfix window make the name of item shorter.
-	-- It's a good opportunity to change current directory in quickfixtextfunc :)
-	--
-	-- local alterBufnr = fn.bufname('#') -- alternative buffer is the buffer before enter qf window
-	-- local root = getRootByAlterBufnr(alterBufnr)
-	-- vim.cmd(('noa lcd %s'):format(fn.fnameescape(root)))
-	--
+	local result = {}
 	if info.quickfix == 1 then
 		items = fn.getqflist({ id = info.id, items = 0 }).items
 	else
 		items = fn.getloclist(info.winid, { id = info.id, items = 0 }).items
 	end
 	local limit = 36
-  -- local delimiter = "│"
-  local delimiter = "|"
+	-- local delimiter = "│"
+	local delimiter = "|"
 	local fnameFmt1, fnameFmt2 = "%-" .. limit .. "s", "…%." .. (limit - 1) .. "s"
 	local validFmt = "%s " .. delimiter .. "%5d:%-3d" .. delimiter .. "%s %s"
 	for i = info.start_idx, info.end_idx do
@@ -47,9 +39,9 @@ function _G.qftf(info)
 		else
 			str = e.text
 		end
-		table.insert(ret, str)
+		table.insert(result, str)
 	end
-	return ret
+	return result
 end
 
-vim.o.qftf = "{info -> v:lua._G.qftf(info)}"
+vim.o.quickfixtextfunc = "{info -> v:lua.__quickfixtextfunc(info)}"

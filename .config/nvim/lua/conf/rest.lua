@@ -10,7 +10,7 @@ require("rest-nvim").setup({
 	-- Highlight request on run
 	highlight = {
 		enabled = true,
-		timeout = 150,
+		timeout = 200,
 	},
 	result = {
 		-- toggle showing URL, HTTP info, headers at top the of result window

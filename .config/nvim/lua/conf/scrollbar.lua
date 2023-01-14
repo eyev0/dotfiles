@@ -1,16 +1,34 @@
 -- local colors = require("colorscheme").colors
 
 require("scrollbar").setup({
-	-- handle = {
-	-- 	-- color = colors.bg_highlight,
-	-- 	color = "grey",
-	-- },
-	-- marks = {
-	-- 	Search = { color = colors.orange },
-	-- 	Error = { color = colors.error },
-	-- 	Warn = { color = colors.warning },
-	-- 	Info = { color = colors.info },
-	-- 	Hint = { color = colors.hint },
-	-- 	Misc = { color = colors.purple },
-	-- },
+	show_in_active_only = false,
+	hide_if_all_visible = true,
+	autocmd = {
+		render = {
+			"BufWinEnter",
+			"TabEnter",
+			"TermEnter",
+			"WinEnter",
+			"CmdwinLeave",
+			"TextChanged",
+			"VimResized",
+			"WinScrolled",
+		},
+		clear = {
+			"BufWinLeave",
+			"TabLeave",
+			"TermLeave",
+			"WinLeave",
+		},
+	},
+	handlers = {
+		cursor = false,
+		diagnostic = true,
+		gitsigns = true,
+		handle = true,
+		search = false,
+		ale = false,
+	},
 })
+
+require("scrollbar.handlers.gitsigns").setup()

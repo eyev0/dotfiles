@@ -1,9 +1,10 @@
 -- local u = require("utils")
+Lsp = {}
 
-_G.lsp_on_attach = function(client, bufnr)
+Lsp.on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 	-- vim.api.nvim_command("setlocal signcolumn=yes:1")
-	set_lsp_buf_shortcuts(client, bufnr)
+	Keymap.set_lsp_buf_shortcuts(client, bufnr)
 	-- require("conf.lspsignature").on_attach()
 	require("illuminate").on_attach(client)
 end
@@ -13,7 +14,7 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown", "plaintext" }
 -- for cmp.nvim
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-_G.lsp_capabilities = capabilities
+Lsp.capabilities = capabilities
 
 -- hover window with borders
 -- vim.cmd([[autocmd! ColorScheme * highlight NormalFloat guibg=#1f2335]])
@@ -96,7 +97,7 @@ local function toggle_diagnostic_float_aug(flag)
 end
 
 local diagnostic_float_active = false
-_G.toggle_diagnostic_float = function()
+Lsp.toggle_diagnostic_float = function()
 	diagnostic_float_active = not diagnostic_float_active
 	if not diagnostic_float_active and diag_float_winid ~= nil then
 		vim.api.nvim_win_close(diag_float_winid, false)
@@ -105,7 +106,7 @@ _G.toggle_diagnostic_float = function()
 end
 
 local diagnostics_virt_lines_switch = false
-_G.toggle_diagnostic_virt_lines = function()
+Lsp.toggle_diagnostic_virt_lines = function()
 	if diagnostics_virt_lines_switch then
 		vim.diagnostic.config({ virtual_lines = false })
 	else
@@ -122,29 +123,14 @@ vim.diagnostic.config({
 	virtual_text = false,
 })
 
-require("neoconf").setup({
-	-- override any of the default settings here
-})
+require("conf.neoconf")
 
-require("neodev").setup({
-	library = {
-		enabled = true, -- when not enabled, neodev will not change any settings to the LSP server
-		-- these settings will be used for your Neovim config directory
-		runtime = true, -- runtime path
-		types = true, -- full signature, docs and completion of vim.api, vim.treesitter, vim.lsp and others
-		-- plugins = true, -- installed opt or start plugins in packpath
-		-- you can also specify the list of plugins to make available as a workspace library
-		plugins = { "noice.nvim", "nvim-treesitter", "plenary.nvim", "telescope.nvim", "nvim-cmp", "neodev.nvim", "packer.nvim", "gitsigns.nvim" },
-	},
-	setup_jsonls = true,
-	-- override = function(root_dir, options) end,
-	lspconfig = true,
-})
+require("conf.neodev")
 
 require("conf.lsp.vuels")
 -- require("conf.lsp.eslint")
 require("conf.lsp.tsserver")
-require("conf.lsp.volar")
+-- require("conf.lsp.volar")
 require("conf.lsp.sumneko")
 -- require("conf.lsp.rust_analyzer")
 require("conf.lsp.rls")
@@ -166,3 +152,15 @@ augroup JdtlsInit
     autocmd FileType java JdtlsStartOrAttach
 augroup end
 ]])
+
+local M = {}
+
+---@class LspClient
+---@field id number
+
+---@class RenameBufferClients
+---@field current_rename_bufnr? number
+---@field clients table<number, LspClient>
+M.buffer_clients = { clients = {}, current_rename_bufnr = nil }
+
+return M

@@ -6,7 +6,6 @@ local root_markers = { "build.gradle", "gradle.build", "pom.xml" }
 local root_dir = setup.find_root(root_markers)
 local home = vim.fn.expand("$HOME")
 local workspace_folder = home .. "/.local/share/eclipse.jdt.ls/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
-local keymap_utils = require("utils.keymap")
 
 vim.cmd("command! JdtlsClearWorkspaceFolder !rm -r " .. workspace_folder)
 
@@ -41,7 +40,7 @@ local config = {
 		client.server_capabilities.documentFormattingProvider = false
 		client.server_capabilities.documentRangeFormattingProvider = false
 
-		_G.lsp_on_attach(client, bufnr)
+		Lsp.on_attach(client, bufnr)
 
 		local function map(mode, lhs, rhs, opts)
 			opts = opts or {}
@@ -54,45 +53,33 @@ local config = {
 			"<Cmd>lua require('jdtls').organize_imports()<CR>",
 			{ noremap = true, silent = true, desc = "Organize imports" }
 		)
-		map({ "n", "v" }, "<leader>laev", function()
-			if keymap_utils.in_vis_mode() then
-				vim.api.nvim_input("<Esc>")
-				require("jdtls").extract_variable(true)
-			else
-				require("jdtls").extract_variable()
-			end
+		map("n", "<leader>laev", function()
+			require("jdtls").extract_variable()
 		end, { noremap = true, silent = true, desc = "jdtls: extract_variable" })
-		map({ "n", "v" }, "<leader>laec", function()
-			if keymap_utils.in_vis_mode() then
-				vim.api.nvim_input("<Esc>")
-				require("jdtls").extract_constant(true)
-			else
-				require("jdtls").extract_constant()
-			end
-		end, { noremap = true, silent = true })
+		map("v", "<leader>laec", function()
+			vim.api.nvim_input("<Esc>")
+			require("jdtls").extract_constant(true)
+		end, { noremap = true, silent = true, desc = "jdtls: extract_constant" })
 		map(
 			"v",
 			"<leader>laem",
 			"<Esc><Cmd>lua require('jdtls').extract_method(true)<CR>",
-			{ noremap = true, silent = true }
+			{ noremap = true, silent = true, desc = "jdtls: extract_method" }
 		)
-		map("n", "<leader>lb", "<Cmd>lua require('jdtls').compile('full')<CR>", { noremap = true, silent = true })
+		map("n", "<leader>ljb", "<Cmd>lua require('jdtls').compile('full')<CR>", { noremap = true, silent = true })
 		map(
 			"n",
-			"<leader>luc",
+			"<leader>ljuc",
 			"<Cmd>lua require('jdtls').update_project_config()<CR>",
-			{ noremap = true, silent = true }
+			{ noremap = true, silent = true, desc = "jdtls: update_project_config" }
 		)
-		map(
-			"n",
-			"<leader>lcl",
-			"<Cmd>!rm -rf .settings .project .classpath .gradle gradlew gradlew.bat bin/<CR>",
-			{ noremap = true, silent = true }
-		)
-		map("n", "<leader>lcw", "<Cmd>JdtlsClearWorkspaceFolder<CR>", { noremap = true, silent = true })
-		map("n", "<leader>ljr", "<Cmd>JdtRestart<CR>", { noremap = true, silent = true })
+		map("n", "<leader>ljcw", function()
+			vim.cmd("JdtlsClearWorkspaceFolder")
+			vim.cmd("!rm -rf .settings .project .classpath .gradle gradlew gradlew.bat bin/")
+		end, { noremap = true, silent = true, desc = "Clear workspace and build files" })
+		map("n", "<leader>ljr", "<Cmd>JdtRestart<CR>", { noremap = true, silent = true, desc = "Restart jdtls" })
 	end,
-	capabilities = _G.lsp_capabilities,
+	capabilities = Lsp.capabilities,
 	init_options = {
 		extendedClientCapabilities = extendedClientCapabilities,
 	},

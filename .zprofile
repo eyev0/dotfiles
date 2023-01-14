@@ -10,8 +10,13 @@ export PATH
 
 export VENVS="$HOME/.venvs"
 export NVM_DIR="$HOME/.nvm"
+
 export EDITOR="/usr/local/bin/nvim"
 export SYSTEMD_EDITOR="/usr/local/bin/nvim"
+# Use nvim as manpager `:h Man`
+export MANPAGER='nvim +Man'
+export MANWIDTH=999
+
 export KITTY_CONF="$HOME/.config/kitty/kitty.conf"
 
 # wayland

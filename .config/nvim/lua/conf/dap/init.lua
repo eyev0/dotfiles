@@ -11,11 +11,11 @@ dap.defaults.fallback.terminal_win_cmd = "tabnew DapConsole"
 dap.defaults.fallback.force_external_terminal = false
 dap.defaults.fallback.external_terminal = {
 	command = "tmux",
-  args = { "split-pane", "-p", "20", "-c", vim.fn.getcwd() },
-  -- args = { "split-pane", "-c", vim.fn.getcwd() },
+	-- FIXME: remain-on-exit on not working
+	args = { "split-pane", "-p", "20", "-c", vim.fn.getcwd(), "';'", "set", "-p", "remain-on-exit", "on" },
+	-- args = { "split-pane", "-c", vim.fn.getcwd() },
 }
--- load a subset of vscode configurations that are supported
--- require("dap.ext.vscode").load_launchjs(nil, { ["pwa-node"] = { "javascript", "typescript" } })
+
 -- autocomplete in repl
 vim.cmd([[au FileType dap-repl lua require('dap.ext.autocompl').attach()]])
 -- sign for breakpoints
@@ -50,24 +50,41 @@ DEBUG_CONFIGS_BASE = {
 	},
 }
 
-local u = require("utils")
 -- merge workspace configs with base configs
-if table.maxn(DEBUG_CONFIGS) > 0 then
-	-- u.tprint(DEBUG_CONFIGS, 3)
-	for _, item in pairs(DEBUG_CONFIGS) do
-		for lang, configs in pairs(item) do
-			if dap.configurations[lang] == nil then
-				dap.configurations[lang] = {}
-			end
-			local merged_configs = {}
-			merged_configs[lang] = {}
-			u.insert_tables(dap.configurations[lang], merged_configs[lang])
-			for _, config in pairs(configs) do
-				table.insert(merged_configs[lang], u.merge_tables({}, DEBUG_CONFIGS_BASE[lang], config))
-			end
-			-- insert all merged configs into dap.configurations.language
-			u.insert_tables(dap.configurations[lang], merged_configs[lang])
+local M = {}
+
+local add_debug_configs = function(new_configs)
+	if vim.tbl_count(new_configs) == 0 then
+		return
+	end
+	for lang, configs in pairs(new_configs) do
+		if dap.configurations[lang] == nil then
+			dap.configurations[lang] = {}
 		end
+		local merged_configs = {}
+		merged_configs[lang] = {}
+		-- merge base lang config with all workspace configs
+		for _, config in pairs(configs) do
+			table.insert(merged_configs[lang], vim.tbl_deep_extend("force", {}, DEBUG_CONFIGS_BASE[lang] or {}, config))
+		end
+		-- insert all merged configs into dap.configurations.language
+		U.tbl_insert_all(dap.configurations[lang], merged_configs[lang])
 	end
 end
--- u.tprint(dap.configurations, 3)
+
+for _, conf in ipairs(DEBUG_CONFIGS) do
+	add_debug_configs(conf)
+end
+
+-- load a subset of vscode configurations that are supported
+if vim.loop.fs_stat(vim.fn.getcwd() .. "/launch.json") then
+	require("dap.ext.vscode").load_launchjs(
+		vim.fn.getcwd() .. "/launch.json",
+		{ ["pwa-node"] = { "javascript", "typescript" } }
+	)
+end
+-- require("dap.ext.vscode").load_launchjs(nil, { ["pwa-node"] = { "javascript", "typescript" } })
+
+M.add_debug_configs = add_debug_configs
+
+return M
