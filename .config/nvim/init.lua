@@ -1,16 +1,10 @@
 -- options
 O = {
-	colorscheme = "gruvbox-material",
-	-- colorscheme = "catppuccin",
-	background = "dark",
-	pallete = "mix", -- mix, material, original
-	contrast = "hard", -- soft, medium, hard
-	-- colors = vim.g.gruvbox_colors,
-	colors = nil,
-	--
 	scrolloff = 9,
 	sidescrolloff = 3,
 }
+
+vim.o.background = "dark"
 
 -- utils
 U = require("utils")
@@ -65,5 +59,4 @@ require("lazy").setup(require("plugins"), opts)
 vim.cmd([[command! SessionLoad lua require("persisted").load()]])
 -- vim.cmd([[command! SessionLoad lua require("persistence").load()]])
 
-require("colorscheme")
 -- keymaps are set in ./after/plugin/keymappings.lua

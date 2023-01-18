@@ -16,33 +16,9 @@ vim.cmd([[
     " autocmd ColorScheme * highlight! link VirtualTextInfo DiagnosticSignInfo
     autocmd ColorScheme * highlight! link VirtualTextWarning DiagnosticSignWarn
     autocmd ColorScheme * highlight! link VirtualTextError DiagnosticSignError
+    autocmd ColorScheme * hi CurSearch ctermfg=235 ctermbg=167 guifg=#282828 guibg=#db4740
+    autocmd ColorScheme * hi Search ctermfg=235 ctermbg=142 guifg=#282828 guibg=#b0b846
   augroup END
 ]])
-
-vim.cmd([[
-fun! SetQsColors()
-  augroup QuickScopeColors
-    autocmd!
-    autocmd ColorScheme * highlight QuickScopePrimary guifg='#afff5f' gui=underline ctermfg=155 cterm=underline
-    autocmd ColorScheme * highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
-  augroup END
-endfun
-call SetQsColors()
-]])
-
-vim.o.background = O.background
--- gruvbox-material
-vim.g.gruvbox_material_foreground = O.pallete
-vim.g.gruvbox_material_background = O.contrast
-vim.g.gruvbox_material_better_performance = 1
-vim.g.gruvbox_material_transparent_background = 1
-vim.g.gruvbox_material_enable_italic = 1
-vim.g.gruvbox_material_visual = "reverse"
-vim.g.gruvbox_material_current_word = "grey background"
--- tokyonight
--- storm or night
-vim.g.tokyonight_style = "storm"
-vim.g.tokyonight_italic_functions = true
-vim.g.tokyonight_dark_sidebar = false
-
-vim.cmd("colorscheme " .. O.colorscheme)
+-- vim.cmd("hi CurSearch cterm=bold ctermfg=142 gui=bold guifg=#b0b846")
+-- IncSearch ctermfg=235 ctermbg=167 guifg=#282828 guibg=#db4740

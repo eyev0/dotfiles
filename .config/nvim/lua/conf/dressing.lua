@@ -42,7 +42,7 @@ require("dressing").setup({
 			local config = {}
 			local extra_width = 20
 			local w = math.max(string.len(opts.prompt or ""), string.len(opts.default or "")) + extra_width
-			if opts.prompt ~= nil and opts.prompt:find("New Name:") ~= nil then
+			if opts.prompt ~= nil and opts.prompt:find("New Name:") ~= nil  or opts.prompt:find("Rename to") ~= nil then
 				config.start_in_insert = false
 				w = math.max(w, 40)
 			end

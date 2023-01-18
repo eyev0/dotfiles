@@ -30,5 +30,5 @@ require("treesitter-context").setup({
 		-- exactly match "impl_item" only)
 		-- rust = true,
 	},
-	-- mode = "topline",
+	mode = "cursor",
 })

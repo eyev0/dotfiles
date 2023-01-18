@@ -1,7 +1,7 @@
 require("utils.pretty_quickfix")
 
 require("bqf").setup({
-	auto_resize_height = true,
+	auto_resize_height = false,
 	preview = {
 		auto_preview = true,
 		win_height = 999,

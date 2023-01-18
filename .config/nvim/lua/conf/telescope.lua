@@ -16,8 +16,8 @@ local mappings = {
 	},
 	n = {
 		["<C-q>"] = actions.smart_send_to_qflist,
-    ["<C-n>"] = actions.move_selection_next,
-    ["<C-p>"] = actions.move_selection_previous,
+		["<C-n>"] = actions.move_selection_next,
+		["<C-p>"] = actions.move_selection_previous,
 	},
 }
 
@@ -46,6 +46,11 @@ require("telescope").setup({
 			override_file_sorter = true, -- override the file sorter
 			case_mode = "smart_case", -- or "ignore_case" or "respect_case"
 		},
+		tmuxinator = {
+			select_action = "switch", -- | 'stop' | 'kill'
+			stop_action = "stop", -- | 'kill'
+			disable_icons = false,
+		},
 	},
 })
 
@@ -57,6 +62,7 @@ telescope.load_extension("notify")
 telescope.load_extension("noice")
 telescope.load_extension("yank_history")
 pcall(telescope.load_extension, "persisted")
+pcall(telescope.load_extension, "tmuxinator")
 -- telescope.load_extension("git_worktree")
 
 vim.cmd([[autocmd User TelescopePreviewerLoaded setlocal wrap]])

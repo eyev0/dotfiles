@@ -42,13 +42,23 @@ M.clear_reg_marks = function()
 	vim.cmd.delm("A-Z0-9")
 end
 
-vim.cmd[[
+-- turn a list into a map with it's values as keys, useful for checking if a value is in a list
+-- { k1, k2, ...} -> { k1 = true, k2 = true, ...}
+M.to_lookup_map = function(t)
+  local new_t = {}
+	for _, v in ipairs(t) do
+		new_t[v] = true
+	end
+	return new_t
+end
+
+vim.cmd([[
 fun! TrimWhitespace()
   let l:save = winsaveview()
   keeppatterns %s/\s\+$//e
   call winrestview(l:save)
 endfun
 command! TrimWhitespace :call TrimWhitespace()<CR>
-]]
+]])
 
 return M

@@ -1,10 +1,12 @@
 vim.o.sessionoptions = "winpos,winsize,help,curdir,folds"
 
 require("persisted").setup({
+  use_git_branch = false,
 	telescope = {
 		before_source = function()
 			-- Close all open buffers
 			-- Thanks to https://github.com/avently
+      vim.cmd("silent FloatermKill")
 			vim.api.nvim_input("<ESC>:%bd<CR>")
 		end,
 		after_source = function(session)

@@ -1,6 +1,6 @@
 -- Setup nvim-cmp.
 local cmp = require("cmp")
--- local compare = require("cmp.config.compare")
+local compare = require("cmp.config.compare")
 -- local default_config = require("cmp.config.default")
 local lspkind = require("lspkind")
 local types = require("cmp.types")
@@ -104,6 +104,17 @@ cmp.setup({
 	mapping = mappings,
 	sorting = {
 		priority_weight = 3,
+		comparators = {
+			compare.offset,
+			compare.exact,
+			compare.score,
+			compare.recently_used,
+			compare.locality,
+			-- require("cmp-under-comparator").under,
+			compare.kind,
+			compare.length,
+			compare.order,
+		},
 	},
 	sources = cmp.config.sources({
 		{ name = "copilot", group_index = 1, priority = 20 },

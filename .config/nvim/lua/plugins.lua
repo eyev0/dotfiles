@@ -75,6 +75,7 @@ return {
 		config = function()
 			require("conf.oil")
 		end,
+		enabled = false,
 	},
 	{
 		"folke/noice.nvim",
@@ -131,13 +132,17 @@ return {
 			require("conf.autopairs")
 		end,
 	},
+	-- tmux
+	-- navigation perks
 	{
 		"christoomey/vim-tmux-navigator",
 		config = function()
 			vim.g.tmux_navigator_no_mappings = 1
 		end,
-	}, -- navigation perks
-	{ "tmux-plugins/vim-tmux" }, -- syntax highlighting for .tmux.conf
+	},
+	-- syntax highlighting for .tmux.conf
+	{ "tmux-plugins/vim-tmux" },
+	{ "danielpieper/telescope-tmuxinator.nvim" },
 	{
 		"ethanholz/nvim-lastplace",
 		config = function()
@@ -199,7 +204,7 @@ return {
 			require("conf.treesitter")
 		end,
 	},
-	{ "mrjones2014/nvim-ts-rainbow", enabled = false },
+	{ "mrjones2014/nvim-ts-rainbow", enabled = true },
 	{ "JoosepAlviste/nvim-ts-context-commentstring" },
 	{ "theHamsta/nvim-treesitter-pairs" },
 	{ "windwp/nvim-ts-autotag" },
@@ -262,11 +267,10 @@ return {
 	{ "hrsh7th/cmp-path" },
 	{ "hrsh7th/cmp-cmdline" },
 	{ "hrsh7th/cmp-omni" },
-	-- { "lukas-reineke/cmp-rg" },
-	{ "tzachar/cmp-fuzzy-buffer", dependencies = { "tzachar/fuzzy.nvim" } },
 	{ "hrsh7th/cmp-nvim-lsp-document-symbol" },
 	{ "hrsh7th/cmp-nvim-lua" },
 	{ "hrsh7th/cmp-nvim-lsp-signature-help" },
+	{ "lukas-reineke/cmp-under-comparator" },
 	{
 		"hrsh7th/cmp-copilot",
 	},
@@ -293,16 +297,17 @@ return {
 		config = function()
 			require("conf.aerial")
 		end,
-		-- TODO: update to neovim 0.9
-		-- when https://github.com/neovim/neovim/issues/21299 is fixed
-		-- commit = "6050ff7130885913ea7a48f882fe3f94d46a23cf",
 	},
 	{
 		"stevearc/stickybuf.nvim",
 		config = function()
 			require("stickybuf").setup({
+				buftype = {
+					help = false,
+				},
 				filetype = {
-					NvimTree = "filetype",
+					-- NvimTree = "filetype",
+          httpResult = "filetype",
 					fugitive = "filetype",
 					DiffviewFiles = "filetype",
 				},
@@ -331,7 +336,7 @@ return {
 		end,
 		enabled = false,
 	},
-	{ "notomo/cmdbuf.nvim", enabled = false },
+	{ "notomo/cmdbuf.nvim" },
 	{
 		"ErichDonGubler/lsp_lines.nvim",
 		config = true,
@@ -373,17 +378,34 @@ return {
 			}
 		end,
 	},
-	{ "sainnhe/gruvbox-material" },
+	{
+		"sainnhe/gruvbox-material",
+		init = function()
+			require("colorscheme")
+		end,
+		config = function()
+			-- gruvbox-material
+			vim.g.gruvbox_material_foreground = "mix" -- mix, material, original
+			vim.g.gruvbox_material_background = "medium" -- soft, medium, hard
+			vim.g.gruvbox_material_better_performance = 1
+			vim.g.gruvbox_material_transparent_background = 0
+			vim.g.gruvbox_material_enable_italic = 1
+			vim.g.gruvbox_material_visual = "reverse"
+			vim.g.gruvbox_material_current_word = "grey background"
+			vim.cmd("colorscheme gruvbox-material")
+		end,
+		enabled = true,
+	},
 	{
 		"catppuccin/nvim",
 		config = function()
 			require("catppuccin").setup({
-				flavour = "macchiato",
+				flavour = "frappe",
 				background = {
 					-- light = "latte",
 					-- dark = "mocha",
 				},
-				transparent_background = true,
+				transparent_background = false,
 				integrations = {
 					aerial = true,
 					notify = true,
@@ -394,7 +416,9 @@ return {
 					},
 				},
 			})
+			vim.cmd("colorscheme catppuccin")
 		end,
+		enabled = false,
 	},
 	{
 		"petertriho/nvim-scrollbar",
@@ -405,6 +429,7 @@ return {
 	{
 		"lewis6991/spaceless.nvim",
 		config = true,
+    enabled = false,
 	},
 	{
 		"github/copilot.vim",
@@ -430,7 +455,7 @@ return {
 		end,
 	},
 	{
-		"workspace_config",
+		-- "workspace_config",
 		dir = vim.fn.stdpath("config") .. "/plugin/workspace_config",
 		dev = true,
 		dependencies = { "mfussenegger/nvim-dap" },

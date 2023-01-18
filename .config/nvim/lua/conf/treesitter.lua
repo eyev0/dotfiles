@@ -4,11 +4,11 @@ local config = {
 		enable = true, -- false will disable the whole extension
 	},
 	indent = {
-		enable = false,
+    enable = false,
 	},
 	rainbow = {
 		enable = true,
-		extended_mode = true, -- Highlight also non-parentheses delimiters, boolean or table: lang -> boolean
+		extended_mode = false, -- Highlight also non-parentheses delimiters, boolean or table: lang -> boolean
 		max_file_lines = 1000, -- Do not enable for files with more than 1000 lines, int
 	},
 	playground = {
@@ -17,10 +17,10 @@ local config = {
 		updatetime = 30, -- Debounced time for highlighting nodes in the playground from source code
 		persist_queries = false, -- Whether the query persists across vim sessions
 	},
-	refactor = {
-		highlight_definitions = { enable = true },
-		highlight_current_scope = { enable = false },
-	},
+	-- refactor = {
+	-- 	-- highlight_definitions = { enable = true },
+	-- 	-- highlight_current_scope = { enable = false },
+	-- },
 	context_commentstring = {
 		enable = true,
 	},
@@ -38,6 +38,15 @@ local config = {
 	},
 	autotag = {
 		enable = true,
+	},
+	incremental_selection = {
+		enable = true,
+		keymaps = {
+			init_selection = "<CR>",
+			node_incremental = "<CR>",
+			scope_incremental = "<S-CR>",
+			node_decremental = "<BS>",
+		},
 	},
 	textobjects = {
 		select = {

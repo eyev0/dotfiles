@@ -3,6 +3,7 @@ require('aerial').setup({
   on_attach = function(bufnr)
     Keymap.set_aerial_buf_shortcuts(bufnr)
   end,
+  backends = { "treesitter", "lsp", "markdown", "man" },
   layout = {
     -- Determines the default direction to open the aerial window. The 'prefer'
     -- options will open the window in the other direction *if* there is a

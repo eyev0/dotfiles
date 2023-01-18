@@ -13,9 +13,9 @@ require("filetype").setup({
 				vim.bo.filetype = "lua"
 				surround.buffer_setup({
 					surrounds = {
-						f = vim.tbl_deep_extend("force", surround_config.default_opts.surrounds["f"], {
-							delete = "^(.-%()().-(%))()$",
-						}),
+						-- f = vim.tbl_deep_extend("force", surround_config.default_opts.surrounds["f"], {
+						-- 	delete = "^(.-%()().-(%))()$",
+						-- }),
 						F = {
 							add = { { "function() " }, { " end" } },
 							find = function()

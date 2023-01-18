@@ -76,6 +76,7 @@ local config = {
 		map("n", "<leader>ljcw", function()
 			vim.cmd("JdtlsClearWorkspaceFolder")
 			vim.cmd("!rm -rf .settings .project .classpath .gradle gradlew gradlew.bat bin/")
+			vim.cmd("JdtRestart")
 		end, { noremap = true, silent = true, desc = "Clear workspace and build files" })
 		map("n", "<leader>ljr", "<Cmd>JdtRestart<CR>", { noremap = true, silent = true, desc = "Restart jdtls" })
 	end,

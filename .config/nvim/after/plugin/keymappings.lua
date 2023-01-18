@@ -23,7 +23,7 @@ map("n", "<C-j>", [[:TmuxNavigateDown<cr>]], { noremap = true, silent = true })
 map("n", "<C-k>", [[:TmuxNavigateUp<cr>]], { noremap = true, silent = true })
 map("n", "<C-l>", [[:TmuxNavigateRight<cr>]], { noremap = true, silent = true })
 -- redraw screen
-map("n", "<M-l>", [[]], { noremap = true, silent = true })
+map("n", "<M-l>", [[<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>]], { noremap = true, silent = true })
 -- buffers stuff
 -- map("n", "<C-w>d", [[:BufDel<CR>]], { noremap = true, silent = true })
 -- tabs stuff
@@ -42,7 +42,7 @@ endfun
 -- Maximizer
 map("n", "<C-w>m", [[:MaximizerToggle!<CR>]], { noremap = true, silent = true })
 --
-map("n", "<C-F12>", ":qa<CR>", { noremap = true, silent = true })
+map("n", "<F36>", ":qa<CR>", { noremap = true, silent = true }) --<C-F12>
 -- resize with C-arrows
 map("", "<C-Up>", [[:resize -3<CR>]], { noremap = true, silent = true })
 map("", "<C-Down>", [[:resize +3<CR>]], { noremap = true, silent = true })
@@ -53,8 +53,8 @@ map("v", "<", "<gv", { noremap = true, silent = true })
 map("v", ">", ">gv", { noremap = true, silent = true })
 -- clear last search
 map("n", "<C-c>", function()
-	vim.fn.setreg("/", "")
-	-- vim.o.nohlsearch = true
+	-- vim.fn.setreg("/", "")
+	vim.cmd.nohlsearch()
 end, { noremap = false, silent = true })
 -- search and J fix
 map("n", "n", function()
@@ -99,22 +99,22 @@ map("t", "<C-]>", "<C-\\><C-n>", { noremap = true, silent = true })
 -- Move selected line / block of text in visual mode
 map("x", "K", ":move '<-2<CR>gv=gv", { noremap = true, silent = true })
 map("x", "J", ":move '>+1<CR>gv=gv", { noremap = true, silent = true })
-map("i", "<C-k>", function()
-	vim.cmd.move(".-2")
-	feedkeys(vim.api.nvim_replace_termcodes("<C-o>", true, false, true) .. "==", "nt", false)
-end, { noremap = true, silent = true })
-map("i", "<C-j>", function()
-	vim.cmd.move(".+1")
-	feedkeys(vim.api.nvim_replace_termcodes("<C-o>", true, false, true) .. "==", "nt", false)
-end, { noremap = true, silent = true })
-map("n", "<leader>k", function()
-	vim.cmd.move(".-2")
-	feedkeys("==", "nt", false)
-end, { noremap = true, silent = true, desc = "Move line up" })
-map("n", "<leader>j", function()
-	vim.cmd.move(".+1")
-	feedkeys("==", "nt", false)
-end, { noremap = true, silent = true, desc = "Move line down" })
+-- map("i", "<C-k>", function()
+-- 	vim.cmd.move(".-2")
+-- 	feedkeys(vim.api.nvim_replace_termcodes("<C-o>", true, false, true) .. "==", "nt", false)
+-- end, { noremap = true, silent = true })
+-- map("i", "<C-j>", function()
+-- 	vim.cmd.move(".+1")
+-- 	feedkeys(vim.api.nvim_replace_termcodes("<C-o>", true, false, true) .. "==", "nt", false)
+-- end, { noremap = true, silent = true })
+-- map("n", "<leader>k", function()
+-- 	vim.cmd.move(".-2")
+-- 	feedkeys("==", "nt", false)
+-- end, { noremap = true, silent = true, desc = "Move line up" })
+-- map("n", "<leader>j", function()
+-- 	vim.cmd.move(".+1")
+-- 	feedkeys("==", "nt", false)
+-- end, { noremap = true, silent = true, desc = "Move line down" })
 -- handy to move around on the line
 map("", "H", [[^]], { noremap = true, silent = true })
 map("", "L", [[$]], { noremap = true, silent = true })
@@ -188,8 +188,21 @@ map("n", "cxx", "<cmd>lua require('substitute.exchange').line()<cr>", { noremap 
 map("x", "X", "<cmd>lua require('substitute.exchange').visual()<cr>", { noremap = true })
 map("n", "cxc", "<cmd>lua require('substitute.exchange').cancel()<cr>", { noremap = true })
 -- quickfix stuff
+local qf_max_height = 7
+local get_qf_height = function(height, max_height)
+	return math.min(math.max(height, 1), max_height)
+end
+---Open quickfix list at the bottom of the screen with max height of qf_max_height
+local function cwindow_bot()
+	local h = #vim.fn.getqflist()
+	if h > 0 then
+		vim.cmd("horizontal bo copen " .. get_qf_height(h, qf_max_height))
+	else
+		vim.cmd("cclose")
+	end
+end
 map("n", "<C-q><C-q>", [[:cclose<CR>]], { noremap = true, silent = true })
-map("n", "<C-q><C-o>", [[:cwindow<CR>]], { noremap = true, silent = true })
+map("n", "<C-q><C-o>", cwindow_bot, { noremap = true, silent = true })
 map("n", "<C-q><C-n>", [[:cnewer<CR>]], { noremap = true, silent = true })
 map("n", "<C-q><C-p>", [[:colder<CR>]], { noremap = true, silent = true })
 map("n", "<C-n>", [[:cnext<CR>]], { noremap = true, silent = true })
@@ -234,15 +247,15 @@ map("n", "<c-u>", function()
 end, { silent = true, expr = true })
 -- lsp
 -- toggle diagnostics
-map("n", "<C-F2>", Lsp.toggle_diagnostic_float, { noremap = true, silent = true })
+map("n", "<F26>", Lsp.toggle_diagnostic_float, { noremap = true, silent = true }) -- C-F2
 map("n", "<F2>", Lsp.toggle_diagnostic_virt_lines, { noremap = true, silent = true })
 map("n", "<leader>le", function()
 	vim.diagnostic.setqflist({ severity = { min = vim.diagnostic.severity.WARN, open = false } })
-	vim.cmd.cwindow()
+	cwindow_bot()
 end, { noremap = true, silent = true, desc = "Diagnostics to qf list" })
 map(
 	"n",
-	"<C-F3>",
+	"<F27>", -- <C-F3>
 	"<cmd>lua vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })<CR>",
 	{ noremap = true, silent = true, desc = "Go to previous diagnostic ERROR" }
 )
@@ -260,18 +273,19 @@ local function set_lsp_buf_shortcuts(_, bufnr)
 	end
 	local on_list = function(options)
 		vim.fn.setqflist({}, " ", options)
+		cwindow_bot()
 		-- open quickfix only if it exists and switch to previous buffer instantly
-		vim.cmd.cwindow()
 		-- vim.api.nvim_exec("cwindow | wincmd p", false)
 	end
 	buf_map("n", "gd", vim.lsp.buf.definition, { noremap = true, silent = true, desc = "Goto Definition" })
 	buf_map("n", "gr", function()
-		---@diagnostic disable-next-line: param-type-mismatch
-		vim.lsp.buf.references(nil, { on_list = on_list })
+		vim.lsp.buf.references({ includeDeclaration = false }, { on_list = on_list })
 	end, { noremap = true, silent = true, desc = "List References" })
 	buf_map("n", "gI", function()
 		vim.lsp.buf.implementation({ on_list = on_list })
 	end, { noremap = true, silent = true, desc = "List Implementations" })
+	buf_map("n", "gCi", vim.lsp.buf.incoming_calls, { noremap = true, silent = true, desc = "List Incoming Calls" })
+	buf_map("n", "gCo", vim.lsp.buf.outgoing_calls, { noremap = true, silent = true, desc = "List Outgoing Calls" })
 	buf_map("n", "K", vim.lsp.buf.hover, { noremap = true, silent = true, desc = "Hover docs" })
 	buf_map(
 		{ "n", "i" },
@@ -330,8 +344,10 @@ local function set_refactor_shortcuts(params)
 		{ noremap = true, silent = true, desc = "refactor: Extract Variable" }
 	)
 end
-local set_refactor_shortcuts_aug_id = vim.api.nvim_create_augroup("RefactoringNvimShortcuts", { clear = true })
-vim.api.nvim_create_autocmd("BufEnter", { group = set_refactor_shortcuts_aug_id, callback = set_refactor_shortcuts })
+vim.api.nvim_create_autocmd("BufEnter", {
+	group = vim.api.nvim_create_augroup("RefactoringNvimShortcuts", {}),
+	callback = set_refactor_shortcuts,
+})
 -- aerial
 local function set_aerial_buf_shortcuts(bufnr)
 	local opts = { noremap = true, silent = true, buffer = bufnr }
@@ -352,15 +368,12 @@ map("n", "<Esc>", function()
 	vim.cmd([[TroubleClose]])
 end, { noremap = true, silent = true })
 -- NvimTree
-map("n", "<leader>nt", [[:NvimTreeToggle<CR>]], { noremap = true, silent = true })
-map("n", "<leader>no", function()
-	require("oil").open(vim.fn.getcwd())
-end, { desc = "Open cwd in oil" })
+map("n", "<leader>n", [[:NvimTreeToggle<CR>]], { noremap = true, silent = true })
 -- floaterm
 map("n", "<F1>", [[:FloatermToggle<CR>]], { noremap = true, silent = true })
 map("t", "<F1>", [[<C-\><C-n>:FloatermToggle<CR>]], { noremap = true, silent = true })
-map("n", "<C-F1>", [[:FloatermNew<CR>]], { noremap = true, silent = true })
-map("t", "<C-F1>", [[<C-\><C-n>:FloatermNew<CR>]], { noremap = true, silent = true })
+map("n", "<F25>", [[:FloatermNew<CR>]], { noremap = true, silent = true }) -- <C-F1>
+map("t", "<F25>", [[<C-\><C-n>:FloatermNew<CR>]], { noremap = true, silent = true }) -- <C-F1>
 map("t", "<C-PageDown>", [[<C-\><C-n>:FloatermPrev<CR>]], { noremap = true, silent = true })
 map("t", "<C-PageUp>", [[<C-\><C-n>:FloatermNext<CR>]], { noremap = true, silent = true })
 map("n", "<C-PageDown>", [[:FloatermPrev<CR>]], { noremap = true, silent = true })
@@ -432,21 +445,25 @@ local function get_visual_selection(escaped)
 	end
 end
 -- grepping
-map("v", "<leader>og", function()
+-- Telescope grep_string search="" only_sort_text=true
+map("v", "<C-f>", function()
 	telescope.live_grep(with_default_opts({
 		default_text = get_visual_selection(true),
 		initial_mode = "normal",
 	}))
 end, { noremap = true, silent = true, desc = "Grep string under cursor" })
+map("n", "<C-f>", function()
+	telescope.live_grep(with_default_opts())
+end, { noremap = true, silent = true, desc = "Live grep" })
 map("n", "<leader>og", function()
 	telescope.grep_string(with_default_opts({ initial_mode = "normal" }))
 end, { noremap = true, silent = true, desc = "Grep string under cursor" })
-map("n", "<leader>of", function()
-	telescope.live_grep(with_default_opts())
-end, { noremap = true, silent = true, desc = "Live grep" })
 map("n", "<leader>os", function()
 	require("telescope").extensions.persisted.persisted(with_default_opts({}))
 end, { noremap = true, silent = true, desc = "View sessions" })
+map("n", "<leader>ox", function()
+	require("telescope").extensions.tmuxinator.projects(require("telescope.themes").get_dropdown({}))
+end, { noremap = true, silent = true, desc = "View tmuxinator projects" })
 map("n", "<leader>om", function()
 	vim.ui.input({ prompt = "Show man page for", completion = "shellcmd" }, function(input)
 		if input ~= nil then
@@ -455,19 +472,13 @@ map("n", "<leader>om", function()
 	end)
 end, { noremap = true, silent = true, desc = "Prompt for man page" })
 map("n", "<leader>oni", function()
-	require("telescope").extensions.noice.noice(with_default_opts({
-		initial_mode = "normal",
-		layout_config = {
-			prompt_position = "bottom",
-		},
-		sorting_strategy = "descending",
-	}))
+	require("telescope").extensions.noice.noice({ initial_mode = "normal", sorting_strategy = "descending" })
 end, { noremap = true, silent = true, desc = "View messages(noice)" })
 map("n", "<leader>onm", function()
 	vim.cmd("NoiceHistory")
 end, { noremap = true, silent = true, desc = "View messages" })
 map("n", "<leader>onf", function()
-	require("telescope").extensions.notify.notify({ initial_mode = "normal" })
+	require("telescope").extensions.notify.notify({ initial_mode = "normal", sorting_strategy = "descending" })
 end, { noremap = true, silent = true, desc = "View notifications" })
 map("n", "<leader>ovb", function()
 	telescope.buffers(with_default_opts({ initial_mode = "normal" }))
@@ -637,6 +648,13 @@ map(
 	[[:FloatermNew --height=0.9 --width=0.7 --wintype=float --name=lazygit --position=center --autoclose=2 lazygit<CR>]],
 	{ noremap = true, silent = true, desc = "Lazygit in floaterm" }
 )
+-- manage dotfiles
+map(
+	"n",
+	"<leader>gm",
+	[[:FloatermNew --height=0.9 --width=0.7 --wintype=float --name=lazygit --position=center --autoclose=2 'lazygit -g expand("$HOME")/.dotfiles -w expand("$HOME")'<CR>]],
+	{ noremap = true, silent = true, desc = "Dotfiles git" }
+)
 -- gitsigns
 local function set_gitsigns_buf_shortcuts(buf_map, gs)
 	-- Navigation
@@ -648,7 +666,7 @@ local function set_gitsigns_buf_shortcuts(buf_map, gs)
 	)
 	buf_map(
 		"n",
-		"<C-F4>",
+		"<F28>", --<C-F4>
 		"&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'",
 		{ noremap = true, silent = true, expr = true, desc = "git: Prev hunk" }
 	)
@@ -711,22 +729,78 @@ map("v", "<leader>ljsp", [[:!jq<CR>]], { noremap = true, silent = true, desc = "
 map("n", "<leader>ljsm", [[:%!jq -c<CR>]], { noremap = true, silent = true, desc = "Minify json" })
 map("v", "<leader>ljsm", [[:!jq -c<CR>]], { noremap = true, silent = true, desc = "Minify json" })
 -- cmdbuf
--- map({ "n" }, "qo", function()
--- 	require("cmdbuf").split_open(vim.o.cmdwinheight)
--- end, { noremap = true, silent = true, nowait = true })
--- map("c", "<C-f>", function()
--- 	require("cmdbuf").split_open(vim.o.cmdwinheight, { line = vim.fn.getcmdline(), column = vim.fn.getcmdpos() })
--- 	feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, false, true), "n", true)
--- end)
--- vim.api.nvim_create_autocmd({ "User" }, {
--- 	group = vim.api.nvim_create_augroup("cmdbuf_setting", {}),
--- 	pattern = { "CmdbufNew" },
--- 	callback = function()
--- 		map("n", "q", [[<Cmd>quit<CR>]], { nowait = true, buffer = true })
--- 		map("n", "dd", [[<Cmd>lua require('cmdbuf').delete()<CR>]], { buffer = true })
--- 	end,
--- })
--- -- open lua command-line window
--- map("n", "ql", function()
--- 	require("cmdbuf").split_open(vim.o.cmdwinheight, { type = "lua/cmd" })
--- end)
+map({ "n", "v" }, "qo", function()
+	require("cmdbuf").split_open(vim.o.cmdwinheight)
+end, { noremap = true, silent = true, nowait = true })
+map("c", "<C-f>", function()
+	require("cmdbuf").split_open(vim.o.cmdwinheight, { line = vim.fn.getcmdline(), column = vim.fn.getcmdpos() })
+	feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, false, true), "n", true)
+end)
+-- open lua command-line window
+map("n", "ql", function()
+	require("cmdbuf").split_open(vim.o.cmdwinheight, { type = "lua/cmd" })
+end, { noremap = true, silent = true, nowait = true })
+-- map("n", "q:", "<NOP>")
+local cmdwin_aug_id = vim.api.nvim_create_augroup("CmdwinHacks", {})
+vim.api.nvim_create_autocmd({ "CmdwinEnter" }, {
+	group = cmdwin_aug_id,
+	callback = function()
+		map("n", "<Esc>", [[<Cmd>quit<CR>]], { noremap = true, silent = true, buffer = true })
+		map("n", "q", [[<Cmd>quit<CR>]], { nowait = true, buffer = true })
+		map("n", "<C-k>", [[<Cmd>quit<CR>]], { nowait = true, buffer = true })
+		vim.cmd("TSBufDisable incremental_selection")
+		vim.cmd("TSContextDisable")
+	end,
+})
+vim.api.nvim_create_autocmd({ "CmdwinLeave" }, {
+	group = cmdwin_aug_id,
+	callback = function()
+		vim.cmd("TSContextEnable")
+	end,
+})
+vim.api.nvim_create_autocmd({ "User" }, {
+	group = vim.api.nvim_create_augroup("cmdbuf_setting", {}),
+	pattern = { "CmdbufNew" },
+	callback = function()
+		map("n", "q", [[<Cmd>quit<CR>]], { nowait = true, buffer = true })
+		map("n", "<Esc>", [[<Cmd>quit<CR>]], { noremap = true, silent = true, buffer = true })
+		map("n", "dd", [[<Cmd>lua require('cmdbuf').delete()<CR>]], { buffer = true })
+		vim.wo.winfixheight = true
+		local sources = {
+			{ name = "nvim_lua", group_index = 1, priority = 3 },
+			{ name = "path", group_index = 2, priority = 2 },
+		}
+		if vim.bo.filetype == "lua" then
+			table.insert(sources, { name = "vsnip", group_index = 1, priority = 10 })
+		else
+			table.insert(sources, { name = "cmdline", group_index = 1, priority = 4 })
+		end
+		require("cmp").setup.buffer({
+			sources = sources,
+		})
+	end,
+})
+-- filetype-specific shortcuts
+local esc_quit_fts = { "help", "NvimTree", "notify", "aerial", "vista_kind" }
+local esc_quit_lookup_t = U.to_lookup_map(esc_quit_fts)
+local esc_tabc_fts = { "fugitive", "DiffviewFiles" }
+local esc_tabc_lookup_t = U.to_lookup_map(esc_tabc_fts)
+vim.api.nvim_create_autocmd("FileType", {
+	group = vim.api.nvim_create_augroup("CustomFiletypeShortcuts", {}),
+	callback = function(opts)
+		if esc_quit_lookup_t[opts.match] ~= nil then
+			-- close only current buffer with Esc
+			vim.keymap.set("n", "<Esc>", ":quit<CR>", { noremap = true, silent = true, nowait = true, buffer = true })
+		elseif opts.match == "qf" then
+			vim.keymap.set("n", "<Esc>", function()
+				vim.cmd.wincmd("p")
+				vim.cmd.cclose()
+			end, { noremap = true, silent = true, nowait = true, buffer = true })
+		elseif esc_tabc_lookup_t[opts.match] ~= nil then
+			-- close current tab
+			vim.keymap.set("n", "<Esc>", function()
+				vim.cmd("tabc! " .. vim.fn.tabpagenr())
+			end, { noremap = true, silent = true, buffer = true })
+		end
+	end,
+})
