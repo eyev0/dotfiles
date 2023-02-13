@@ -89,7 +89,7 @@ require("dressing").setup({
 -- 		if params.match == "DressingInput" then
 -- 			-- print("set filetype")
 -- 			-- vim.bo.filetype = vim.g.lsp_rename_buf_ft
--- 			local c = require("rc.plugins.lsp").buffer_clients
+-- 			local c = require("rc.configs.lsp").buffer_clients
 -- 			if c ~= nil and c.current_rename_bufnr ~= nil then
 -- 				for _, client in ipairs(c.clients[c.current_rename_bufnr]) do
 -- 					vim.lsp.buf_attach_client(params.buf, client.id)

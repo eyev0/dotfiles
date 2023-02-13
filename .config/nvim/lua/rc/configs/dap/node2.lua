@@ -1,5 +1,5 @@
 local dap = require("dap")
-local dap_util = require("rc.plugins.dap.utils")
+local dap_util = require("rc.configs.dap.utils")
 
 dap.adapters.node2 = function(callback, config)
 	if config.preLaunchTask then

@@ -76,6 +76,6 @@ end
 -- to execute the function
 -- colors()
 
-vim.cmd([[command! JesterActions lua require("rc.plugins.dap.jester").picker(require("telescope.themes").get_dropdown{})()]])
+vim.cmd([[command! JesterActions lua require("rc.configs.dap.jester").picker(require("telescope.themes").get_dropdown{})()]])
 
 return { picker = actions_picker }

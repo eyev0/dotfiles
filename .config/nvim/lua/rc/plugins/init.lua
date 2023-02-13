@@ -1,88 +1,132 @@
 return {
+  -- docs in neovim
+  -- { "paretje/nvim-man" },
+  -- dependency packages
+  "nvim-lua/popup.nvim",
+  "nvim-tree/nvim-web-devicons",
+  "rktjmp/lush.nvim",
+  -- neovim/lua development
+  { "folke/neodev.nvim" },
+  { "folke/neoconf.nvim" },
+  { "jbyuki/one-small-step-for-vimkind" },
   {
-    "nathom/filetype.nvim",
+    "miversen33/import.nvim",
     config = function()
-      require("rc.plugins.filetype")
+      require("import")
     end,
   },
+  {
+    "rafcamlet/nvim-luapad",
+    config = function()
+      require("rc.configs.luapad")
+    end,
+  },
+  "nanotee/luv-vimdocs",
+  "milisims/nvim-luaref",
+  -- editing
   "tpope/vim-repeat",
   {
     "kylechui/nvim-surround",
     config = function()
-      require("rc.plugins.nvim-surround")
+      require("rc.configs.nvim-surround")
     end,
   },
   {
     "numToStr/Comment.nvim",
     config = function()
-      require("rc.plugins.comment")
+      require("rc.configs.comment")
     end,
   },
-  -- "tpope/vim-commentary",
-  -- "tpope/vim-unimpaired",
   {
     "gbprod/yanky.nvim",
     config = function()
-      require("rc.plugins.yanky")
+      require("rc.configs.yanky")
     end,
   },
   {
     "gbprod/substitute.nvim",
     config = function()
-      require("rc.plugins.substitute")
+      require("rc.configs.substitute")
+    end,
+  },
+  {
+    "windwp/nvim-autopairs",
+    config = function()
+      require("rc.configs.autopairs")
     end,
   },
   { "sgur/vim-textobj-parameter", dependencies = { "kana/vim-textobj-user" } },
   {
-    "abecodes/tabout.nvim",
+    "lewis6991/spaceless.nvim",
+    config = true,
+  },
+  { "mbbill/undotree" },
+  "lambdalisue/suda.vim",
+  -- filetype-specific
+  {
+    "nathom/filetype.nvim",
     config = function()
-      require("rc.plugins.tabout")
+      require("rc.configs.filetype")
     end,
-    enabled = false,
+  },
+  "neoclide/jsonc.vim",
+  { "gpanders/editorconfig.nvim" },
+  { "chrisbra/csv.vim", ft = "csv" },
+  -- ui/input
+  {
+    "rebelot/heirline.nvim",
+    config = function()
+      require("rc.configs.heirline")
+    end,
+    event = "ColorScheme",
+    dependencies = {
+      "gitsigns.nvim",
+    },
+  },
+  {
+    "petertriho/nvim-scrollbar",
+    config = function()
+      require("rc.configs.scrollbar")
+    end,
+  },
+  {
+    "stevearc/stickybuf.nvim",
+    config = function()
+      require("rc.configs.stickybuf")
+    end,
   },
   "szw/vim-maximizer",
-  "lambdalisue/suda.vim",
-  -- docs
-  "nanotee/luv-vimdocs",
-  "milisims/nvim-luaref",
-  -- deps
-  "nvim-lua/plenary.nvim",
-  "nvim-lua/popup.nvim",
-  "nvim-tree/nvim-web-devicons",
-  "rktjmp/lush.nvim",
-  "neoclide/jsonc.vim",
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    config = function()
+      require("rc.configs.indent_blankline")
+    end,
+  },
+  {
+    "stevearc/dressing.nvim",
+    config = function()
+      require("rc.configs.dressing")
+    end,
+    event = "VimEnter",
+  },
   {
     "folke/which-key.nvim",
     config = function()
-      require("rc.plugins.which-key")
+      require("rc.configs.which-key")
     end,
   },
-  -- {
-  -- 	"cbochs/portal.nvim",
-  -- 	config = function()
-  -- 		require("rc.plugins.portal")
-  -- 	end,
-  -- },
-  "ThePrimeagen/harpoon",
   {
     "nvim-tree/nvim-tree.lua",
     config = function()
-      require("rc.plugins.nvim_tree")
+      require("rc.configs.nvim_tree")
     end,
     tag = "nightly",
     event = "VimEnter",
   },
   {
-    "stevearc/oil.nvim",
-    config = function()
-      require("rc.plugins.oil")
-    end,
-    enabled = false,
-  },
-  {
     "folke/noice.nvim",
     config = function()
-      require("rc.plugins.noice")
+      require("rc.configs.noice")
     end,
     dev = true,
     -- TODO: pull request
@@ -98,42 +142,51 @@ return {
     "folke/todo-comments.nvim",
     dependencies = "nvim-lua/plenary.nvim",
     config = function()
-      require("rc.plugins.todo-comments")
+      require("rc.configs.todo-comments")
     end,
   },
+  -- navigation
+  "ThePrimeagen/harpoon",
   {
-    "hoob3rt/lualine.nvim",
+    "edementyev/jumplist.nvim",
     config = function()
-      require("rc.plugins.lualine")
+      require("jumplist").setup()
     end,
-    enabled = false,
+    dependencies = { "edementyev/vlog.nvim" },
+    dev = true,
   },
-  {
-    "voldikss/vim-floaterm",
-    config = function()
-      require("rc.plugins.floaterm")
-    end,
-    enabled = false,
-  },
+  -- terminal
   {
     "akinsho/toggleterm.nvim",
-    -- tag = "*",
     config = function()
-      require("rc.plugins.toggleterm")
+      require("rc.configs.toggleterm")
     end,
   },
   {
-    "lukas-reineke/indent-blankline.nvim",
+    "chomosuke/term-edit.nvim",
+    version = "1.*",
+    enabled = false,
+  },
+  -- git
+  { "tpope/vim-fugitive" },
+  {
+    "lewis6991/gitsigns.nvim",
     config = function()
-      require("rc.plugins.indent_blankline")
+      require("rc.configs.gitsigns")
+    end,
+    event = "ColorScheme",
+  },
+  {
+    "sindrets/diffview.nvim",
+    config = function()
+      require("rc.configs.diffview")
     end,
   },
-  { "mbbill/undotree" },
   -- quickfix
   {
     "kevinhwang91/nvim-bqf",
     config = function()
-      require("rc.plugins.bqf")
+      require("rc.configs.bqf")
     end,
     -- enabled = false,
     dependencies = {
@@ -143,26 +196,9 @@ return {
       end,
     },
   },
-  {
-    "kwkarlwang/bufjump.nvim",
-    config = function()
-      require("bufjump").setup({
-        forward = nil,
-        backward = nil,
-        on_success = nil,
-      })
-    end,
-    enabled = false,
-  },
-  -- { "gabrielpoca/replacer.nvim" },
-  {
-    "windwp/nvim-autopairs",
-    config = function()
-      require("rc.plugins.autopairs")
-    end,
-  },
+  -- cmdline
+  { "notomo/cmdbuf.nvim" },
   -- tmux
-  -- navigation perks
   {
     "christoomey/vim-tmux-navigator",
     init = function()
@@ -171,36 +207,14 @@ return {
   },
   { "tmux-plugins/vim-tmux" }, -- syntax highlighting for .tmux.conf
   { "danielpieper/telescope-tmuxinator.nvim" },
-  {
-    "ethanholz/nvim-lastplace",
-    config = function()
-      require("rc.plugins.lastplace")
-    end,
-  },
-  { "tpope/vim-fugitive" },
-  {
-    "lewis6991/gitsigns.nvim",
-    config = function()
-      require("rc.plugins.gitsigns")
-    end,
-    event = "ColorScheme",
-  },
-  {
-    "sindrets/diffview.nvim",
-    config = function()
-      require("rc.plugins.diffview")
-    end,
-  },
   -- sql
   { "tpope/vim-dadbod" },
   { "kristijanhusak/vim-dadbod-ui" },
-  -- man
-  -- { "paretje/nvim-man" },
   -- telescope
   {
     "nvim-telescope/telescope.nvim",
     config = function()
-      require("rc.plugins.telescope")
+      require("rc.configs.telescope")
     end,
     dependencies = {
       {
@@ -212,11 +226,23 @@ return {
     },
     event = "VimEnter",
   },
+  -- workspace/sessions
+  {
+    "edementyev/workspace_config.nvim",
+    config = true,
+    dev = true,
+  },
+  {
+    "ethanholz/nvim-lastplace",
+    config = function()
+      require("rc.configs.lastplace")
+    end,
+  },
   {
     "edementyev/persistence.nvim",
     event = "BufReadPre", -- this will only start session saving when an actual file was opened
     config = function()
-      require("rc.plugins.persistence")
+      require("rc.configs.persistence")
     end,
     enabled = true,
   },
@@ -224,15 +250,16 @@ return {
     "olimorris/persisted.nvim",
     event = "BufReadPre",
     config = function()
-      require("rc.plugins.persisted")
+      require("rc.configs.persisted")
     end,
     enabled = false,
   },
+  -- treesitter/editing based on treesitter
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     config = function()
-      require("rc.plugins.treesitter")
+      require("rc.configs.treesitter")
     end,
   },
   { "mrjones2014/nvim-ts-rainbow", enabled = true },
@@ -244,7 +271,7 @@ return {
   {
     "romgrk/nvim-treesitter-context",
     config = function()
-      require("rc.plugins.treesitter.context")
+      require("rc.configs.treesitter.context")
     end,
     dev = true,
     branch = "local",
@@ -255,25 +282,18 @@ return {
     build = ":TSInstall query",
     lazy = true,
   },
-  {
-    "ThePrimeagen/refactoring.nvim",
-    config = true,
-    event = "VimEnter",
-  },
-  {
-    "RRethy/vim-illuminate",
-    config = function()
-      require("rc.plugins.illuminate")
-    end,
-  },
-  { "folke/neodev.nvim" },
-  { "folke/neoconf.nvim" },
-  { "gpanders/editorconfig.nvim" },
-  { "chrisbra/csv.vim", ft = "csv" },
+  -- lsp/lsp-based editing/highlighting
   {
     "neovim/nvim-lspconfig",
     config = function()
-      require("rc.plugins.lsp")
+      require("rc.configs.lsp")
+    end,
+  },
+  { "mfussenegger/nvim-jdtls" },
+  {
+    "jose-elias-alvarez/null-ls.nvim",
+    config = function()
+      require("rc.configs.lsp.null-ls")
     end,
   },
   { "jose-elias-alvarez/nvim-lsp-ts-utils" },
@@ -285,11 +305,41 @@ return {
     commit = "11e08391eeed00effa85ca24ff9d1e0472cbcd6a",
   },
   {
-    "j-hui/fidget.nvim",
+    "kosayoda/nvim-lightbulb",
     config = function()
-      require("rc.plugins.fidget")
+      require("rc.configs.lightbulb")
     end,
   },
+  {
+    "j-hui/fidget.nvim",
+    config = function()
+      require("rc.configs.fidget")
+    end,
+  },
+  {
+    "ThePrimeagen/refactoring.nvim",
+    config = true,
+    event = "VimEnter",
+  },
+  {
+    "RRethy/vim-illuminate",
+    config = function()
+      require("rc.configs.illuminate")
+    end,
+  },
+  {
+    "stevearc/aerial.nvim",
+    config = function()
+      require("rc.configs.aerial")
+    end,
+    -- TODO: lazy load
+    -- lazy = true,
+  },
+  {
+    "ErichDonGubler/lsp_lines.nvim",
+    config = true,
+  },
+  -- completion/snippets
   { "hrsh7th/cmp-nvim-lsp" },
   { "hrsh7th/cmp-buffer" },
   { "hrsh7th/cmp-path" },
@@ -300,6 +350,12 @@ return {
   { "hrsh7th/cmp-nvim-lsp-signature-help" },
   { "lukas-reineke/cmp-under-comparator" },
   {
+    "github/copilot.vim",
+    init = function()
+      vim.g.copilot_no_tab_map = true
+    end,
+  },
+  {
     "hrsh7th/cmp-copilot",
   },
   { "hrsh7th/cmp-vsnip" },
@@ -308,86 +364,47 @@ return {
   {
     "hrsh7th/nvim-cmp",
     config = function()
-      require("rc.plugins.cmp")
+      require("rc.configs.cmp")
     end,
   },
-  { "rafamadriz/friendly-snippets" },
   { "onsails/lspkind.nvim" },
-  { "liuchengxu/vista.vim" },
-  {
-    "jose-elias-alvarez/null-ls.nvim",
-    config = function()
-      require("rc.plugins.lsp.null-ls")
-    end,
-  },
-  {
-    "stevearc/aerial.nvim",
-    config = function()
-      require("rc.plugins.aerial")
-    end,
-    -- TODO: lazy load
-    -- lazy = true,
-  },
-  {
-    "stevearc/stickybuf.nvim",
-    config = function()
-      require("rc.plugins.stickybuf")
-    end,
-  },
-  { "folke/lsp-colors.nvim", enabled = false },
-  { "mfussenegger/nvim-jdtls" },
-  {
-    "kosayoda/nvim-lightbulb",
-    config = function()
-      require("rc.plugins.lightbulb")
-    end,
-  },
-  {
-    "rafcamlet/nvim-luapad",
-    config = function()
-      require("rc.plugins.luapad")
-    end,
-  },
+  { "rafamadriz/friendly-snippets" },
   -- regex
   {
     "bennypowers/nvim-regexplainer",
     config = function()
-      require("rc.plugins.regexplainer")
+      require("rc.configs.regexplainer")
     end,
     enabled = false,
   },
-  { "notomo/cmdbuf.nvim" },
-  {
-    "ErichDonGubler/lsp_lines.nvim",
-    config = true,
-  },
-  { "jbyuki/one-small-step-for-vimkind" },
+  -- debugging
   {
     "mfussenegger/nvim-dap",
     config = function()
-      require("rc.plugins.dap")
+      require("rc.configs.dap")
     end,
   },
   {
     "rcarriga/nvim-dap-ui",
     config = function()
-      require("rc.plugins.dap.ui")
+      require("rc.configs.dap.ui")
     end,
     event = "VimEnter",
   },
   {
     "theHamsta/nvim-dap-virtual-text",
     config = function()
-      require("rc.plugins.dap.virtual-text")
+      require("rc.configs.dap.virtual-text")
     end,
   },
   {
     "David-Kunz/jester",
     config = function()
-      require("rc.plugins.dap.jester")
+      require("rc.configs.dap.jester")
     end,
     event = "VimEnter",
   },
+  -- nvim in browser
   {
     "glacambre/firenvim",
     build = function()
@@ -401,6 +418,8 @@ return {
     end,
     enabled = false,
   },
+  -- colorschemes
+  { "folke/lsp-colors.nvim", enabled = false },
   {
     "sainnhe/gruvbox-material",
     init = function()
@@ -460,72 +479,11 @@ return {
       end
     end,
   },
+  -- REST
   {
-    "rebelot/heirline.nvim",
-    config = function()
-      require("rc.plugins.heirline")
-    end,
-    event = "ColorScheme",
-    dependencies = {
-      "gitsigns.nvim",
-    },
-  },
-  {
-    "chomosuke/term-edit.nvim",
-    -- ft = "toggleterm",
-    version = "1.*",
-    enabled = false,
-  },
-  {
-    "petertriho/nvim-scrollbar",
-    config = function()
-      require("rc.plugins.scrollbar")
-    end,
-  },
-  {
-    "lewis6991/spaceless.nvim",
-    config = true,
-  },
-  {
-    "github/copilot.vim",
-    init = function()
-      vim.g.copilot_no_tab_map = true
-    end,
-  },
-  {
-    -- "NTBBloodbath/rest.nvim",
-    -- dir = "~/dev/nvim/rest.nvim",
-    -- "edementyev/rest.nvim",
-    -- branch = "local",
     "rest-nvim/rest.nvim",
     config = function()
-      require("rc.plugins.rest")
+      require("rc.configs.rest")
     end,
-  },
-  {
-    "stevearc/dressing.nvim",
-    config = function()
-      require("rc.plugins.dressing")
-    end,
-    event = "VimEnter",
-  },
-  {
-    "miversen33/import.nvim",
-    config = function()
-      require("import")
-    end,
-  },
-  {
-    "edementyev/workspace_config.nvim",
-    config = true,
-    dev = true,
-  },
-  {
-    "edementyev/jumplist.nvim",
-    config = function()
-      require("jumplist").setup()
-    end,
-    dependencies = { "edementyev/vlog.nvim" },
-    dev = true,
   },
 }

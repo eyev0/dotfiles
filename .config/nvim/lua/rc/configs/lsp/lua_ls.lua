@@ -67,4 +67,4 @@ local config = {
   capabilities = Lsp.capabilities,
 }
 
-require("lspconfig").sumneko_lua.setup(config)
+require("lspconfig").lua_ls.setup(config)

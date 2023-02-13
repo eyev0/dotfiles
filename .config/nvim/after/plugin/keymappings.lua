@@ -9,7 +9,7 @@ local fn = vim.fn
 local feedkeys = function(keys, mode)
   api.nvim_feedkeys(api.nvim_replace_termcodes(keys, true, true, true), mode, false)
 end
-local qf = require("rc.plugins.qf")
+local qf = require("rc.configs.qf")
 
 Keymap = {}
 
@@ -100,6 +100,18 @@ map("n", "<C-c>", function()
   cmd.nohlsearch()
 end, { noremap = false, silent = true })
 -- search and J fix
+-- map({ "n", "x", "o" }, "n", function()
+--   if fn.getreg("/") ~= "" then
+--     vim.cmd("'Nn'[v:searchforward]")
+--     vim.cmd("normal! zzzv")
+--   end
+-- end, { noremap = true, silent = true })
+-- map({ "n", "x", "o" }, "N", function()
+--   if fn.getreg("/") ~= "" then
+--     vim.cmd("'nN'[v:searchforward]")
+--     vim.cmd("normal! zzzv")
+--   end
+-- end, { noremap = true, silent = true })
 map("n", "n", function()
   if fn.getreg("/") ~= "" then
     feedkeys("nzzzv", "ni")
@@ -512,7 +524,7 @@ map("n", "<leader>n", function()
 end, { noremap = true, silent = true, desc = "NvimTree: Toggle for current scope (global/tab/window)" })
 -- floaterm
 -- local toggleterm = require("toggleterm")
-local terms = require("rc.plugins.toggleterm").terms
+local terms = require("rc.configs.toggleterm").terms
 local term = require("toggleterm.terminal").Terminal:new({
   direction = "float",
   on_create = function()
@@ -696,7 +708,7 @@ map("n", "<leader>ocd", function()
   cmd("cd " .. vim.fn.getcwd(-1, -1))
 end, { noremap = true, silent = true, desc = "Change current tab's dir to !pwd" })
 map("n", "<leader>ods", function()
-  require("rc.plugins.telescope").pickers.dirs()
+  require("rc.configs.telescope").pickers.dirs()
 end, { noremap = true, silent = true, desc = "Open dir" })
 map("n", "<leader>odc", function()
   cmd("$tabnew +tcd\\ " .. fn.stdpath("config") .. " " .. fn.stdpath("config") .. "/lua/rc/init.lua")

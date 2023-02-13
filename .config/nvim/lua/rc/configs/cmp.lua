@@ -140,9 +140,9 @@ local mappings = {
 	end),
 	["<CR>"] = confirm,
 	["<C-n>"] = next_item(false),
-	["<Tab>"] = next_item(true),
+	["<Tab>"] = next_item(false),
 	["<C-p>"] = prev_item(false),
-	["<S-Tab>"] = prev_item(true),
+	["<S-Tab>"] = prev_item(false),
 }
 
 local function merge(a, b)

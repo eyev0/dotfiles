@@ -1,6 +1,6 @@
 local conditions = require("heirline.conditions")
 local utils = require("heirline.utils")
-local c = require("rc.plugins.heirline.components")
+local c = require("rc.configs.heirline.components")
 
 local WinBars = {
   fallthrough = false,

@@ -136,7 +136,7 @@ config.init_options = {
 	bundles = bundles,
 }
 
-vim.cmd([[command! JdtStartOrAttach lua require("rc.plugins.lsp.jdtls").setup()]])
+vim.cmd([[command! JdtStartOrAttach lua require("rc.configs.lsp.jdtls").setup()]])
 
 vim.api.nvim_create_autocmd("FileType", {
 	group = vim.api.nvim_create_augroup("JdtInit", {}),

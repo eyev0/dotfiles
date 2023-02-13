@@ -554,7 +554,7 @@ M.Git = {
   on_click = {
     callback = function()
       vim.defer_fn(function()
-        require("rc.plugins.toggleterm").terms.lazygit:toggle()
+        require("rc.configs.toggleterm").terms.lazygit:toggle()
       end, 100)
     end,
     name = "heirline_git",

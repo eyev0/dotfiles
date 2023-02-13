@@ -157,7 +157,7 @@ parser_configs.norg_table = {
 
 require("nvim-treesitter.configs").setup(config)
 
-require("rc.plugins.treesitter.node").setup({
+require("rc.configs.treesitter.node").setup({
   match = "Search",
   map = { enable = true },
   cmd = true,

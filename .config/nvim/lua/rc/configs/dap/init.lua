@@ -1,26 +1,26 @@
 -- source all global configs
-require("rc.plugins.dap.node2")
-require("rc.plugins.dap.java")
-require("rc.plugins.dap.nlua")
-require("rc.plugins.dap.go")
-require("rc.plugins.dap.python")
+require("rc.configs.dap.node2")
+require("rc.configs.dap.java")
+require("rc.configs.dap.nlua")
+require("rc.configs.dap.go")
+require("rc.configs.dap.python")
 
 local dap = require("dap")
 
 -- dap.defaults.fallback.terminal_win_cmd = "tabnew DapConsole"
-dap.defaults.fallback.terminal_win_cmd = function()
-	local term = require("toggleterm.terminal").Terminal:new({
-    direction = "tab",
-    on_create = function()
-      vim.cmd("startinsert!")
-    end,
-    on_open = function()
-      vim.cmd("startinsert!")
-    end,
-  })
-  return term.bufnr, term.window
-	-- return bufnr, winnr
-end
+-- dap.defaults.fallback.terminal_win_cmd = function()
+-- 	local term = require("toggleterm.terminal").Terminal:new({
+--     direction = "tab",
+--     on_create = function()
+--       vim.cmd("startinsert!")
+--     end,
+--     on_open = function()
+--       vim.cmd("startinsert!")
+--     end,
+--   })
+--   return term.bufnr, term.window
+-- 	-- return bufnr, winnr
+-- end
 dap.defaults.fallback.force_external_terminal = false
 dap.defaults.fallback.external_terminal = {
 	command = "tmux",

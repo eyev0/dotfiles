@@ -1,5 +1,5 @@
 local conditions = require("heirline.conditions")
-local c = require("rc.plugins.heirline.components")
+local c = require("rc.configs.heirline.components")
 
 local DefaultStatusline = {
 	c.ViMode,

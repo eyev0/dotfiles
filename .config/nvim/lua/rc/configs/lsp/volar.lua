@@ -20,7 +20,7 @@ end
 -- u.tprint(capabilities)
 
 require("lspconfig").volar.setup({
-	on_attach = require("rc.plugins.lsp.tsserver").on_attach_factory(true),
+	on_attach = require("rc.configs.lsp.tsserver").on_attach_factory(true),
 	capabilities = Lsp.capabilities,
 	-- capabilities = capabilities,
 	filetypes = { "typescript", "typescriptreact", "vue" },

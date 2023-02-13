@@ -29,7 +29,7 @@ local function last_debug_runs_prompt(opts)
 end
 
 vim.cmd(
-	[[command! DapLastRunsPicker lua require("rc.plugins.dap.file_picker").last_debug_runs_prompt(require("telescope.themes").get_dropdown{})()]]
+	[[command! DapLastRunsPicker lua require("rc.configs.dap.file_picker").last_debug_runs_prompt(require("telescope.themes").get_dropdown{})()]]
 )
 
 return { last_debug_runs_prompt = last_debug_runs_prompt }

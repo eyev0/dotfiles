@@ -35,9 +35,9 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 })
 
 require("heirline").setup({
-	statusline = require("rc.plugins.heirline.statusline"),
-	winbar = require("rc.plugins.heirline.winbar"),
-	tabline = require("rc.plugins.heirline.tabline"),
+	statusline = require("rc.configs.heirline.statusline"),
+	winbar = require("rc.configs.heirline.winbar"),
+	tabline = require("rc.configs.heirline.tabline"),
 })
 
 -- Yep, with heirline we're driving manual!
