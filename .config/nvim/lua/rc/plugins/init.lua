@@ -107,7 +107,7 @@ return {
     config = function()
       require("rc.configs.dressing")
     end,
-    event = "VimEnter",
+    event = "VeryLazy",
   },
   {
     "folke/which-key.nvim",
@@ -186,6 +186,7 @@ return {
     config = function()
       require("rc.configs.lsp.null-ls")
     end,
+    event = "VeryLazy",
   },
   { "jose-elias-alvarez/nvim-lsp-ts-utils" },
   {
@@ -200,6 +201,7 @@ return {
     config = function()
       require("rc.configs.lightbulb")
     end,
+    event = "VeryLazy",
   },
   {
     "j-hui/fidget.nvim",
@@ -210,21 +212,21 @@ return {
   {
     "ThePrimeagen/refactoring.nvim",
     config = true,
-    event = "VimEnter",
+    event = "VeryLazy",
   },
   {
     "RRethy/vim-illuminate",
     config = function()
       require("rc.configs.illuminate")
     end,
+    event = "VeryLazy",
   },
   {
     "stevearc/aerial.nvim",
     config = function()
       require("rc.configs.aerial")
     end,
-    -- TODO: lazy load
-    -- lazy = true,
+    event = "VeryLazy",
   },
   {
     "ErichDonGubler/lsp_lines.nvim",
