@@ -17,17 +17,24 @@ pcall(del, "", "<Space>")
 map("", "<Space>", "<NOP>", { noremap = true, silent = true })
 vim.g.mapleader = " "
 
--- Packer
--- map("n", "<leader>ps", [[:PackerSync<CR>]], { noremap = true })
+-- lazy
 map("n", "<leader>ps", [[:Lazy sync<CR>]], { noremap = true, silent = true })
 map("n", "<leader>pp", [[:Lazy profile<CR>]], { noremap = true, silent = true })
--- map("n", "<Leader>pi", [[:PackerInstall<CR>]], { noremap = true })
--- map("n", "<leader>pc", [[:PackerCompile<CR>]], { noremap = true })
 -- silent dot
 map("n", ".", ".", { noremap = true, silent = true })
 -- silent &
 map("n", "&", ":&&<CR>", { noremap = true, silent = true })
--- easier navigation, also powered by tmux
+-- handy to move around on the line
+map("", "H", [[^]], { noremap = true, silent = true })
+map("", "L", [[$]], { noremap = true, silent = true })
+-- 'whole buffer' operator
+map(
+  { "o", "v" },
+  "ie",
+  "<cmd>exec 'normal! ggVG'<cr>",
+  { noremap = true, silent = true, desc = "Whole buffer" }
+)
+-- easier navigation, powered by tmux plugin
 map({ "n", "t" }, "<C-h>", function()
   vim.cmd("TmuxNavigateLeft")
 end, { noremap = true, silent = true })
@@ -55,16 +62,16 @@ map({ "n", "t" }, "<C-w><C-k>", function()
   vim.cmd("tabnext")
 end, { noremap = true, silent = true })
 map({ "n", "t" }, "<C-w><C-h>", function()
-  vim.cmd("-tabmove")
+  pcall(vim.cmd, "-tabmove")
 end, { noremap = true, silent = true })
 map({ "n", "t" }, "<C-w><C-l>", function()
-  vim.cmd("+tabmove")
+  pcall(vim.cmd, "+tabmove")
 end, { noremap = true, silent = true })
 map({ "n", "t" }, "<C-S-PageUp>", function()
-  vim.cmd("-tabmove")
+  pcall(vim.cmd, "-tabmove")
 end, { noremap = true, silent = true })
 map({ "n", "t" }, "<C-S-PageDown>", function()
-  vim.cmd("+tabmove")
+  pcall(vim.cmd, "+tabmove")
 end, { noremap = true, silent = true })
 map("t", "<C-PageUp>", function()
   vim.cmd("tabprevious")
@@ -72,12 +79,6 @@ end, { noremap = true, silent = true })
 map("t", "<C-PageDown>", function()
   vim.cmd("tabnext")
 end, { noremap = true, silent = true })
--- Maximizer
-map("n", "<C-w>m", [[:MaximizerToggle!<CR>]], { noremap = true, silent = true })
---
-map({ "n", "t" }, "<F36>", function()
-  vim.cmd("qa")
-end, { noremap = true, silent = true }) --<C-F12>
 -- resize with C-arrows
 map({ "", "t" }, "<C-Up>", function()
   vim.cmd("resize -3")
@@ -99,7 +100,6 @@ map("n", "<C-c>", function()
   -- fn.setreg("/", "")
   cmd.nohlsearch()
 end, { noremap = false, silent = true })
--- search and J fix
 -- map({ "n", "x", "o" }, "n", function()
 --   if fn.getreg("/") ~= "" then
 --     vim.cmd("'Nn'[v:searchforward]")
@@ -112,6 +112,7 @@ end, { noremap = false, silent = true })
 --     vim.cmd("normal! zzzv")
 --   end
 -- end, { noremap = true, silent = true })
+-- search and J fix
 map("n", "n", function()
   if fn.getreg("/") ~= "" then
     feedkeys("nzzzv", "ni")
@@ -123,6 +124,63 @@ map("n", "N", function()
   end
 end, { noremap = true, silent = true })
 map("n", "J", [[mzJ`z]], { noremap = true, silent = true })
+-- s for substitute
+local substitute = require("substitute")
+map("n", "s", substitute.operator, { noremap = true, silent = true })
+map("n", "ss", substitute.line, { noremap = true, silent = true })
+map("n", "S", substitute.eol, { noremap = true, silent = true })
+map("x", "s", substitute.visual, { noremap = true, silent = true })
+-- yank-delete
+map({ "n", "x" }, "c", [["_c]], { noremap = true, silent = true })
+map({ "n", "x" }, "d", [["_d]], { noremap = true, silent = true })
+map("n", "dd", [["_dd]], { noremap = true, silent = true })
+map({ "n", "x" }, "D", [["_D]], { noremap = true, silent = true })
+map({ "n", "x" }, "x", [[d]], { noremap = true, silent = true })
+map("n", "xx", [[dd]], { noremap = true, silent = true })
+map("n", "X", [[D]], { noremap = true, silent = true })
+-- yank maps
+map({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
+map({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
+map({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
+map("n", "<PageUp>", [[<plug>(YankyCycleBackward)]], { silent = true })
+map("n", "<PageDown>", [[<plug>(YankyCycleForward)]], { silent = true })
+map({ "n", "x" }, "y", "<Plug>(YankyYank)")
+-- like unimpaired
+map("n", "]p", "<Plug>(YankyPutIndentAfterLinewise)")
+map("n", "[p", "<Plug>(YankyPutIndentBeforeLinewise)")
+map("n", "]P", "<Plug>(YankyPutIndentAfterLinewise)")
+map("n", "[P", "<Plug>(YankyPutIndentBeforeLinewise)")
+map("n", ">p", "<Plug>(YankyPutIndentAfterShiftRight)")
+map("n", "<p", "<Plug>(YankyPutIndentAfterShiftLeft)")
+map("n", ">P", "<Plug>(YankyPutIndentBeforeShiftRight)")
+map("n", "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
+map("n", "=p", "<Plug>(YankyPutAfterFilter)")
+map("n", "=P", "<Plug>(YankyPutBeforeFilter)")
+-- exchange
+local exchange = require("substitute.exchange")
+map("n", "cx", exchange.operator, { noremap = true, silent = true })
+map("n", "cxx", exchange.line, { noremap = true, silent = true })
+map("x", "X", exchange.visual, { noremap = true, silent = true })
+map("n", "cxc", exchange.cancel, { noremap = true, silent = true })
+-- search-replace
+map(
+  "n",
+  "<leader>sr",
+  ":%s/<C-r><C-w>//gcI<Left><Left><Left><Left>",
+  { silent = false, desc = "Search and replace cword" }
+)
+map(
+  "v",
+  "<leader>sr",
+  'y:%s/<C-R>"//gcI<Left><Left><Left><Left>',
+  { silent = false, desc = "Search and replace selection" }
+)
+-- Maximizer
+map("n", "<C-w>m", [[:MaximizerToggle!<CR>]], { noremap = true, silent = true })
+-- quit with <C-F12>
+map({ "n", "t" }, "<F36>", function()
+  vim.cmd("qa")
+end, { noremap = true, silent = true }) --<C-F12>
 -- undo streak breakers
 map("i", ",", [[,<C-g>u]], { noremap = true, silent = true })
 map("i", ".", [[.<C-g>u]], { noremap = true, silent = true })
@@ -152,34 +210,6 @@ map("t", "<C-]>", "<C-\\><C-n>", { noremap = true, silent = true })
 -- Move selected line / block of text in visual mode
 map("x", "K", ":move '<-2<CR>gv=gv", { noremap = true, silent = true })
 map("x", "J", ":move '>+1<CR>gv=gv", { noremap = true, silent = true })
--- map("i", "<C-k>", function()
--- 	cmd.move(".-2")
--- 	feedkeys(api.nvim_replace_termcodes("<C-o>", true, false, true) .. "==", "nt", false)
--- end, { noremap = true, silent = true })
--- map("i", "<C-j>", function()
--- 	cmd.move(".+1")
--- 	feedkeys(api.nvim_replace_termcodes("<C-o>", true, false, true) .. "==", "nt", false)
--- end, { noremap = true, silent = true })
--- map("n", "<leader>k", function()
--- 	cmd.move(".-2")
--- 	feedkeys("==", "nt", false)
--- end, { noremap = true, silent = true, desc = "Move line up" })
--- map("n", "<leader>j", function()
--- 	cmd.move(".+1")
--- 	feedkeys("==", "nt", false)
--- end, { noremap = true, silent = true, desc = "Move line down" })
--- handy to move around on the line
-map("", "H", [[^]], { noremap = true, silent = true })
-map("", "L", [[$]], { noremap = true, silent = true })
--- yank to EOL
-map("n", "Y", [[y$]], { silent = true })
--- 'whole buffer' operator
-map(
-  { "o", "v" },
-  "ie",
-  "<cmd>exec 'normal! ggVG'<cr>",
-  { noremap = true, silent = true, desc = "Whole buffer" }
-)
 -- treesitter unit (node)
 map(
   "x",
@@ -205,46 +235,6 @@ map(
   ':<c-u>lua require"treesitter-unit".select(true)<CR>',
   { noremap = true, silent = true, desc = "Select treesitter node's outer scope" }
 )
--- s for substitute
-map("n", "s", [[<plug>(SubversiveSubstitute)]], { noremap = true, silent = true })
-map("n", "ss", [[<plug>(SubversiveSubstituteLine)]], { noremap = true, silent = true })
-map("n", "S", [[<plug>(SubversiveSubstituteToEndOfLine)]], { noremap = true, silent = true })
--- yank-delete
-map({ "n", "x" }, "c", [["_c]], { noremap = true, silent = true })
-map({ "n", "x" }, "d", [["_d]], { noremap = true, silent = true })
-map("n", "dd", [["_dd]], { noremap = true, silent = true })
-map({ "n", "x" }, "D", [["_D]], { noremap = true, silent = true })
-map({ "n", "x" }, "x", [[d]], { noremap = true, silent = true })
-map("n", "xx", [[dd]], { noremap = true, silent = true })
-map("n", "X", [[D]], { noremap = true, silent = true })
--- yank maps
-map({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
-map({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
-map({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
-map("n", "<PageUp>", [[<plug>(YankyCycleBackward)]], { silent = true })
-map("n", "<PageDown>", [[<plug>(YankyCycleForward)]], { silent = true })
-map({ "n", "x" }, "y", "<Plug>(YankyYank)")
--- like unimpaired
-map("n", "]p", "<Plug>(YankyPutIndentAfterLinewise)")
-map("n", "[p", "<Plug>(YankyPutIndentBeforeLinewise)")
-map("n", "]P", "<Plug>(YankyPutIndentAfterLinewise)")
-map("n", "[P", "<Plug>(YankyPutIndentBeforeLinewise)")
-map("n", ">p", "<Plug>(YankyPutIndentAfterShiftRight)")
-map("n", "<p", "<Plug>(YankyPutIndentAfterShiftLeft)")
-map("n", ">P", "<Plug>(YankyPutIndentBeforeShiftRight)")
-map("n", "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
-map("n", "=p", "<Plug>(YankyPutAfterFilter)")
-map("n", "=P", "<Plug>(YankyPutBeforeFilter)")
--- substitute
-map("n", "s", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
-map("n", "ss", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
-map("n", "S", "<cmd>lua require('substitute').eol()<cr>", { noremap = true })
-map("x", "s", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
--- exchange
-map("n", "cx", "<cmd>lua require('substitute.exchange').operator()<cr>", { noremap = true })
-map("n", "cxx", "<cmd>lua require('substitute.exchange').line()<cr>", { noremap = true })
-map("x", "X", "<cmd>lua require('substitute.exchange').visual()<cr>", { noremap = true })
-map("n", "cxc", "<cmd>lua require('substitute.exchange').cancel()<cr>", { noremap = true })
 -- quickfix stuff
 -- Open quickfix list at the bottom of the screen
 map("n", "<C-q><C-q>", [[:cclose<CR>]], { noremap = true, silent = true })
@@ -342,18 +332,6 @@ map({ "v", "n" }, "<C-q><C-r>", function()
   end
   cmd("cdo s/" .. fn.escape(search, "/") .. "/" .. fn.escape(replacement, "/") .. "/gcI")
 end, { noremap = true, silent = true, desc = "Replace within quickfix entries" })
-map(
-  "n",
-  "<leader>sr",
-  ":%s/<C-r><C-w>//gcI<Left><Left><Left><Left>",
-  { silent = false, desc = "Search and replace cword" }
-)
-map(
-  "v",
-  "<leader>sr",
-  'y:%s/<C-R>"//gcI<Left><Left><Left><Left>',
-  { silent = false, desc = "Search and replace selection" }
-)
 -- TODO: construct substitution command in cmdline with preview, then exit and paste it to cdo
 --
 -- map("c", "<C-q><C-r>", function()
@@ -1200,7 +1178,7 @@ end, { noremap = true, silent = true, desc = "Add new line before current" })
 -- esc
 map("n", "<Esc>", function()
   cmd.cclose()
-  cmd([[Vista!]])
+  -- cmd([[Vista!]])
   cmd([[AerialClose]])
   cmd([[NvimTreeClose]])
   cmd([[TroubleClose]])

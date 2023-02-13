@@ -145,115 +145,6 @@ return {
       require("rc.configs.todo-comments")
     end,
   },
-  -- navigation
-  "ThePrimeagen/harpoon",
-  {
-    "edementyev/jumplist.nvim",
-    config = function()
-      require("jumplist").setup()
-    end,
-    dependencies = { "edementyev/vlog.nvim" },
-    dev = true,
-  },
-  -- terminal
-  {
-    "akinsho/toggleterm.nvim",
-    config = function()
-      require("rc.configs.toggleterm")
-    end,
-  },
-  {
-    "chomosuke/term-edit.nvim",
-    version = "1.*",
-    enabled = false,
-  },
-  -- git
-  { "tpope/vim-fugitive" },
-  {
-    "lewis6991/gitsigns.nvim",
-    config = function()
-      require("rc.configs.gitsigns")
-    end,
-    event = "ColorScheme",
-  },
-  {
-    "sindrets/diffview.nvim",
-    config = function()
-      require("rc.configs.diffview")
-    end,
-  },
-  -- quickfix
-  {
-    "kevinhwang91/nvim-bqf",
-    config = function()
-      require("rc.configs.bqf")
-    end,
-    -- enabled = false,
-    dependencies = {
-      "junegunn/fzf",
-      build = function()
-        vim.fn["fzf#install"]()
-      end,
-    },
-  },
-  -- cmdline
-  { "notomo/cmdbuf.nvim" },
-  -- tmux
-  {
-    "christoomey/vim-tmux-navigator",
-    init = function()
-      vim.g.tmux_navigator_no_mappings = 1
-    end,
-  },
-  { "tmux-plugins/vim-tmux" }, -- syntax highlighting for .tmux.conf
-  { "danielpieper/telescope-tmuxinator.nvim" },
-  -- sql
-  { "tpope/vim-dadbod" },
-  { "kristijanhusak/vim-dadbod-ui" },
-  -- telescope
-  {
-    "nvim-telescope/telescope.nvim",
-    config = function()
-      require("rc.configs.telescope")
-    end,
-    dependencies = {
-      {
-        "folke/trouble.nvim",
-        config = true,
-      },
-      { "nvim-telescope/telescope-dap.nvim" },
-      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-    },
-    event = "VimEnter",
-  },
-  -- workspace/sessions
-  {
-    "edementyev/workspace_config.nvim",
-    config = true,
-    dev = true,
-  },
-  {
-    "ethanholz/nvim-lastplace",
-    config = function()
-      require("rc.configs.lastplace")
-    end,
-  },
-  {
-    "edementyev/persistence.nvim",
-    event = "BufReadPre", -- this will only start session saving when an actual file was opened
-    config = function()
-      require("rc.configs.persistence")
-    end,
-    enabled = true,
-  },
-  {
-    "olimorris/persisted.nvim",
-    event = "BufReadPre",
-    config = function()
-      require("rc.configs.persisted")
-    end,
-    enabled = false,
-  },
   -- treesitter/editing based on treesitter
   {
     "nvim-treesitter/nvim-treesitter",
@@ -262,7 +153,7 @@ return {
       require("rc.configs.treesitter")
     end,
   },
-  { "mrjones2014/nvim-ts-rainbow", enabled = true },
+  { "mrjones2014/nvim-ts-rainbow" },
   { "JoosepAlviste/nvim-ts-context-commentstring" },
   { "theHamsta/nvim-treesitter-pairs" },
   { "windwp/nvim-ts-autotag" },
@@ -374,6 +265,115 @@ return {
     "bennypowers/nvim-regexplainer",
     config = function()
       require("rc.configs.regexplainer")
+    end,
+    enabled = false,
+  },
+  -- navigation
+  "ThePrimeagen/harpoon",
+  {
+    "edementyev/jumplist.nvim",
+    config = function()
+      require("jumplist").setup()
+    end,
+    dependencies = { "edementyev/vlog.nvim" },
+    dev = true,
+  },
+  -- terminal
+  {
+    "akinsho/toggleterm.nvim",
+    config = function()
+      require("rc.configs.toggleterm")
+    end,
+  },
+  {
+    "chomosuke/term-edit.nvim",
+    version = "1.*",
+    enabled = false,
+  },
+  -- git
+  { "tpope/vim-fugitive" },
+  {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require("rc.configs.gitsigns")
+    end,
+    event = "ColorScheme",
+  },
+  {
+    "sindrets/diffview.nvim",
+    config = function()
+      require("rc.configs.diffview")
+    end,
+  },
+  -- quickfix
+  {
+    "kevinhwang91/nvim-bqf",
+    config = function()
+      require("rc.configs.bqf")
+    end,
+    -- enabled = false,
+    dependencies = {
+      "junegunn/fzf",
+      build = function()
+        vim.fn["fzf#install"]()
+      end,
+    },
+  },
+  -- cmdline
+  { "notomo/cmdbuf.nvim" },
+  -- tmux
+  {
+    "christoomey/vim-tmux-navigator",
+    init = function()
+      vim.g.tmux_navigator_no_mappings = 1
+    end,
+  },
+  { "tmux-plugins/vim-tmux" }, -- syntax highlighting for .tmux.conf
+  { "danielpieper/telescope-tmuxinator.nvim" },
+  -- sql
+  { "tpope/vim-dadbod" },
+  { "kristijanhusak/vim-dadbod-ui" },
+  -- telescope
+  {
+    "nvim-telescope/telescope.nvim",
+    config = function()
+      require("rc.configs.telescope")
+    end,
+    dependencies = {
+      {
+        "folke/trouble.nvim",
+        config = true,
+      },
+      { "nvim-telescope/telescope-dap.nvim" },
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    },
+    event = "VimEnter",
+  },
+  -- workspace/sessions
+  {
+    "edementyev/workspace_config.nvim",
+    config = true,
+    dev = true,
+  },
+  {
+    "ethanholz/nvim-lastplace",
+    config = function()
+      require("rc.configs.lastplace")
+    end,
+  },
+  {
+    "edementyev/persistence.nvim",
+    event = "BufReadPre", -- this will only start session saving when an actual file was opened
+    config = function()
+      require("rc.configs.persistence")
+    end,
+    enabled = true,
+  },
+  {
+    "olimorris/persisted.nvim",
+    event = "BufReadPre",
+    config = function()
+      require("rc.configs.persisted")
     end,
     enabled = false,
   },
