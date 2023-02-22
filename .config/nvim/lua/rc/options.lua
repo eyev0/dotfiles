@@ -36,7 +36,6 @@ vim.o.scrolloff = O.scrolloff
 vim.o.sidescrolloff = O.sidescrolloff
 -- vim.wo.colorcolumn = "80"
 vim.o.showmode = false
-vim.opt.signcolumn = "yes:2"
 -- vim.opt.signcolumn = "number"
 vim.opt.clipboard:prepend({ "unnamedplus" })
 vim.opt.shortmess:append("c")
@@ -60,6 +59,7 @@ vim.o.jumpoptions = "stack"
 -- vim.o.statuscolumn = "%s%=%{v:relnum?v:relnum:v:lnum} "
 vim.o.relativenumber = true
 vim.o.number = true
+vim.o.signcolumn = "yes:2"
 vim.o.fillchars = "eob: "
 
 -- disable statuscolumn in non-file buffers

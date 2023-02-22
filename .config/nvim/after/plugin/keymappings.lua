@@ -1,5 +1,6 @@
 -- local map = vim.api.nvim_set_keymap
-local i = require("import")
+-- local i = require("import")
+
 local map = vim.keymap.set
 local del = vim.keymap.del
 local utils = require("rc.utils.keymap")
@@ -95,7 +96,6 @@ end, { noremap = true, silent = true })
 -- better indenting
 map("v", "<", "<gv", { noremap = true, silent = true })
 map("v", ">", ">gv", { noremap = true, silent = true })
--- clear last search
 map("n", "<C-c>", function()
   -- fn.setreg("/", "")
   cmd.nohlsearch()
@@ -235,6 +235,18 @@ map(
   ':<c-u>lua require"treesitter-unit".select(true)<CR>',
   { noremap = true, silent = true, desc = "Select treesitter node's outer scope" }
 )
+map(
+  "n",
+  "tn",
+  require("illuminate").goto_next_reference,
+  { noremap = true, silent = true, desc = "Go to next node reference" }
+)
+map(
+  "n",
+  "tp",
+  require("illuminate").goto_prev_reference,
+  { noremap = true, silent = true, desc = "Go to prev node reference" }
+)
 -- quickfix stuff
 -- Open quickfix list at the bottom of the screen
 map("n", "<C-q><C-q>", [[:cclose<CR>]], { noremap = true, silent = true })
@@ -245,52 +257,50 @@ end, { noremap = true, silent = true, desc = "Next qf list" })
 map("n", "<C-q><C-p>", function()
   cmd("colder")
 end, { noremap = true, silent = true, desc = "Prev qf list" })
----@type Jumplist
-local jumplist
-i.import("jumplist", function(j)
-  jumplist = j
-end)
--- changelist stuff g, g;
--- map("n", "<C-S-O>", function()
---   ---@diagnostic disable-next-line: param-type-mismatch
---   pcall(cmd, "normal! g;")
--- end, { noremap = true, silent = true, desc = "Jump to prev change" })
--- map("n", "<S-Tab>", function() -- <C-S-I>
---   ---@diagnostic disable-next-line: param-type-mismatch
---   pcall(cmd, "normal! g,")
--- end, { noremap = true, silent = true, desc = "Jump to next change" })
--- map("n", "<S-NL>", jumplist.jump_next, { noremap = true, silent = true, desc = "Jumplist next" }) -- <C-S-J>
--- map("n", "<C-S-K>", jumplist.jump_prev, { noremap = true, silent = true, desc = "Jumplist prev" })
--- map("n", "<S-Tab>", jumplist.jump_next, { noremap = true, silent = true, desc = "Jumplist next" }) -- <C-S-J>
--- map("n", "<C-S-O>", jumplist.jump_prev, { noremap = true, silent = true, desc = "Jumplist prev" })
-map("n", "<C-S-L>", function()
-  vim.notify("Entries: " .. #jumplist.get_list() .. "\n" .. vim.inspect(jumplist.get_list()))
-end, { noremap = true, silent = true, desc = "Jumplist prev" })
-map("n", "<C-S-H>", function()
-  vim.notify(
-    "Current: " .. jumplist.get_current_jump_idx() .. "\n" .. vim.inspect({ jumplist.get_current_jump() })
-  )
-end, { noremap = true, silent = true, desc = "Jumplist prev" })
+local ok_bufjump, bufjump = pcall(require, "bufjump")
+if ok_bufjump then
+  map("n", "<C-S-O>", bufjump.backward, { noremap = true, silent = true, desc = "Jumplist prev file" })
+  map("n", "<S-Tab>", bufjump.forward, { noremap = true, silent = true, desc = "Jumplist next file" }) -- <C-S-I>
+end
+-- local jumplist
+-- pcall(function()
+--   ---@type Jumplist
+--   i.import("jumplist", function(j)
+--     jumplist = j
+--   end)
+--   -- map("n", "<C-i>", jumplist.jump_next, { noremap = true, silent = true, desc = "Jumplist next" })
+--   -- map("n", "<C-o>", jumplist.jump_prev, { noremap = true, silent = true, desc = "Jumplist prev" })
+--   map("n", "<S-Tab>", jumplist.jump_next_file, { noremap = true, silent = true, desc = "Jumplist next file" }) -- <C-S-I>
+--   map("n", "<C-S-O>", jumplist.jump_prev_file, { noremap = true, silent = true, desc = "Jumplist prev file" })
+--   map("n", "<C-S-L>", function()
+--     vim.notify("Entries: " .. #jumplist.get_list() .. "\n" .. vim.inspect(jumplist.get_list()))
+--   end, { noremap = true, silent = true, desc = "Jumplist prev" })
+--   map("n", "<C-S-H>", function()
+--     vim.notify(
+--       "Current: " .. jumplist.get_current_jump_idx() .. "\n" .. vim.inspect({ jumplist.get_current_jump() })
+--     )
+--   end, { noremap = true, silent = true, desc = "Jumplist prev" })
+-- end)
 map("n", "<C-n>", function()
+  if #vim.fn.getqflist() == 0 then
+    return
+  end
+  -- pcall(jumplist.mark)
   if #vim.fn.getqflist() == 1 then
     cmd("cfirst")
-  else
-    ---@diagnostic disable-next-line: param-type-mismatch
-    if not pcall(cmd, "cnext") then
-      ---@diagnostic disable-next-line: param-type-mismatch
-      pcall(cmd, "cfirst")
-    end
+  elseif not pcall(cmd, "cnext") then
+    pcall(cmd, "cfirst")
   end
 end, { noremap = true, silent = true, desc = "Go to next item in qf" })
 map("n", "<C-p>", function()
+  if #vim.fn.getqflist() == 0 then
+    return
+  end
+  -- pcall(jumplist.mark)
   if #vim.fn.getqflist() == 1 then
     cmd("cfirst")
-  else
-    ---@diagnostic disable-next-line: param-type-mismatch
-    if not pcall(cmd, "cprevious") then
-      ---@diagnostic disable-next-line: param-type-mismatch
-      pcall(cmd, "clast")
-    end
+  elseif not pcall(cmd, "cprevious") then
+    pcall(cmd, "clast")
   end
 end, { noremap = true, silent = true, desc = "Go to prev item in qf" })
 map("n", "<C-S-N>", function()
@@ -347,6 +357,11 @@ map("n", "<leader>vsbt", [[:set bt=]], { noremap = true, silent = false })
 map("n", "<leader>vsso", function()
   vim.o.scrolloff = O.scrolloff
   vim.o.sidescrolloff = O.sidescrolloff
+end, { noremap = true, silent = true, desc = "Reset scrolloff" })
+map("n", "<leader>vssc", function()
+  vim.o.relativenumber = true
+  vim.o.number = true
+  vim.o.signcolumn = O.signcolumn
 end, { noremap = true, silent = true, desc = "Reset scrolloff" })
 -- noice scrolling through hover docs
 map("n", "<c-d>", function()
@@ -520,6 +535,9 @@ map({ "n", "t" }, "<End>", toggleterm, { noremap = true, silent = true })
 map({ "n", "t" }, "<C-End>", function()
   toggleterm(nil, "tab")
 end, { noremap = true, silent = true })
+map({ "n", "t" }, "<C-S-End>", function()
+  toggleterm(16, "horizontal")
+end, { noremap = true, silent = true })
 -- Telescope - opener
 local find_files_opts = {
   layout_strategy = "horizontal",
@@ -604,12 +622,12 @@ map("n", "<C-s>", function()
 end, { noremap = true, silent = true, desc = "Live grep" })
 map(
   "n",
-  "<leader>m",
+  "<leader>mn",
   ":NoiceHistory<CR>",
   { noremap = true, silent = true, desc = "View all noice messages" }
 )
-map("n", "<leader>omm", ":messages<CR>", { noremap = true, silent = true, desc = "View :messages" })
-map("n", "<leader>omf", function()
+map("n", "<leader>mm", ":messages<CR>", { noremap = true, silent = true, desc = "View :messages" })
+map("n", "<leader>mf", function()
   telescope.extensions.notify.notify({
     initial_mode = "normal",
     sorting_strategy = "descending",
@@ -643,7 +661,7 @@ map("n", "<leader>ovn", function()
     end
   end)
 end, { noremap = true, silent = true, desc = "Prompt for man page" })
-map("n", "<leader>ovh", function()
+map("n", "<leader>?", function()
   telescope_builtin.help_tags(with_default_opts())
 end, { noremap = true, silent = true, desc = "View help tags" })
 map("n", "<leader>ovo", function()
@@ -682,62 +700,23 @@ map("n", "<leader>ltd", function()
   -- qf.trigger()
 end, { noremap = true, silent = true, desc = "Todos" })
 -- open config dir
-map("n", "<leader>ocd", function()
-  cmd("cd " .. vim.fn.getcwd(-1, -1))
+map("n", "<leader>ocp", function()
+  cmd("tcd " .. vim.fn.getcwd(-1, -1))
 end, { noremap = true, silent = true, desc = "Change current tab's dir to !pwd" })
+map("n", "<leader>ocd", function()
+  vim.ui.input({ prompt = "Cd to:", completion = "file", default = vim.fn.getcwd(-1, -1) }, function(input)
+    if input ~= nil then
+      if vim.loop.fs_realpath(input) then
+        cmd("cd " .. input)
+      else
+        vim.notify("Not a directory: " .. input, vim.log.levels.ERROR)
+      end
+    end
+  end)
+end, { noremap = true, silent = true, desc = "Prompt to change global directory" })
 map("n", "<leader>ods", function()
   require("rc.configs.telescope").pickers.dirs()
 end, { noremap = true, silent = true, desc = "Open dir" })
-map("n", "<leader>odc", function()
-  cmd("$tabnew +tcd\\ " .. fn.stdpath("config") .. " " .. fn.stdpath("config") .. "/lua/rc/init.lua")
-end, { noremap = true, silent = true, desc = "Open config/nvim dir in tab" })
-local function open_dir(dir_to_open, open_in_tmux)
-  if dir_to_open == nil then
-    return
-  end
-  open_in_tmux = open_in_tmux ~= nil and open_in_tmux or false
-  -- trim trailing slash
-  dir_to_open = string.gsub(dir_to_open, "/$", "")
-  if vim.loop.fs_realpath(dir_to_open) then
-    if open_in_tmux then
-      local name = fn.fnamemodify(dir_to_open, ":t")
-      if #name == 0 then
-        name = "new_window"
-      end
-      cmd("!tmux new-window -n " .. name .. " -c " .. dir_to_open .. " ';' set -w remain-on-exit off")
-    else
-      cmd("$tabnew +tcd\\ " .. dir_to_open)
-    end
-  else
-    print("Invalid directory")
-  end
-end
--- prompt for plugin dir and open in tab
-map("n", "<leader>odp", function()
-  vim.ui.input({
-    prompt = "Enter directory to open: ",
-    default = O.pluginspath .. "/",
-    completion = "file",
-  }, open_dir)
-end, { noremap = true, silent = true, desc = "Open lazy/plugin dir in tab" })
--- prompt for work dir and open in tab
-map("n", "<leader>odw", function()
-  vim.ui.input({
-    prompt = "Enter directory to open: ",
-    default = fn.expand("$HOME/dev/sbl/"),
-    completion = "file",
-  }, open_dir)
-end, { noremap = true, silent = true, desc = "Open work dir in tab" })
--- prompt for dir and open in separate tmux window
-map("n", "<leader>odt", function()
-  vim.ui.input({
-    prompt = "Enter directory to open: ",
-    default = fn.expand("$HOME") .. "/",
-    completion = "file",
-  }, function(input)
-    open_dir(input, true)
-  end)
-end, { noremap = true, silent = true, desc = "Open dir in separate tmux window" })
 -- debug actions
 local dap = require("dap")
 local dapui = require("dapui")
@@ -809,19 +788,15 @@ map("n", "<leader>du", function()
     vim.notify_once("No active debug session", vim.log.levels.WARN)
   end
   dapui.toggle()
-end, { noremap = true, silent = true })
-map("n", "<leader>de", function()
+end, { noremap = true, silent = true, desc = "dapui: Toggle interface" })
+map({ "n", "x" }, "<leader>de", function()
   ---@diagnostic disable-next-line: missing-parameter
   dapui.eval()
-end, { noremap = true, silent = true })
-map("v", "<leader>de", function()
-  ---@diagnostic disable-next-line: missing-parameter
-  dapui.eval()
-end, { noremap = true, silent = true })
+end, { noremap = true, silent = true, desc = "dapui: Eval" })
 map("n", "<leader>df", function()
   ---@diagnostic disable-next-line: missing-parameter
   dapui.float_element()
-end, { noremap = true, silent = true })
+end, { noremap = true, silent = true, desc = "dapui: Show element in float" })
 -- debug jest
 map("n", "<leader>dj", [[:JesterActions<CR>]], { noremap = true, silent = true })
 -- telescope dap

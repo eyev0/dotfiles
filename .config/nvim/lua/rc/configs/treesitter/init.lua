@@ -1,5 +1,6 @@
 local config = {
   ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ignore_install = { "comment" },
   highlight = {
     enable = true, -- false will disable the whole extension
     disable = function(_, buf)
@@ -82,50 +83,6 @@ local config = {
         ["as"] = "@statement.outer",
         ["al"] = "@loop.outer",
         ["il"] = "@loop.inner",
-        -- Or you can define your own textobjects like this
-        -- ["iF"] = {
-        --   python = "(function_definition) @function",
-        -- },
-      },
-    },
-    swap = {
-      enable = false,
-      swap_next = {
-        -- ["<leader>a"] = "@parameter.inner",
-      },
-      swap_previous = {
-        -- ["<leader>A"] = "@parameter.inner",
-      },
-    },
-    move = {
-      enable = false,
-      goto_next_start = {
-        ["]f"] = "@function.outer",
-        ["]]"] = "@class.outer",
-        -- ["]c"] = "@call.outer",
-        ["]b"] = "@block.outer",
-        ["]s"] = "@statement.outer",
-      },
-      goto_next_end = {
-        ["]F"] = "@function.outer",
-        ["]["] = "@class.outer",
-        -- ["]C"] = "@call.outer",
-        ["]B"] = "@block.outer",
-        ["]S"] = "@statement.outer",
-      },
-      goto_previous_start = {
-        ["[f"] = "@function.outer",
-        ["[["] = "@class.outer",
-        -- ["[c"] = "@call.outer",
-        ["[b"] = "@block.outer",
-        ["[s"] = "@statement.outer",
-      },
-      goto_previous_end = {
-        ["[F"] = "@function.outer",
-        ["[]"] = "@class.outer",
-        -- ["[C"] = "@call.outer",
-        ["[B"] = "@block.outer",
-        ["[S"] = "@statement.outer",
       },
     },
   },
@@ -157,9 +114,9 @@ parser_configs.norg_table = {
 
 require("nvim-treesitter.configs").setup(config)
 
-require("rc.configs.treesitter.node").setup({
-  match = "Search",
-  map = { enable = true },
-  cmd = true,
-  -- heavy = true,
-})
+-- require("rc.configs.treesitter.node").setup({
+--   match = "Search",
+--   map = { enable = true },
+--   cmd = true,
+--   -- heavy = true,
+-- })

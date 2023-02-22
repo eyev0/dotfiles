@@ -9,7 +9,6 @@ local DefaultStatusline = {
 	c.FileNameBlockFactory(true, 0.20),
 	c.Space,
 	c.Git,
-	c.Space,
 	c.Diagnostics,
 	c.Align,
 	-- c.Navic,

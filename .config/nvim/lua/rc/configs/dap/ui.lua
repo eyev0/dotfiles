@@ -52,5 +52,4 @@ dap.listeners.before.event_exited["dapui_config"] = function()
 	dapui.close()
 end
 
--- HACK: wtf?
 dap.defaults.fallback.terminal_win_cmd = "tabnew DapConsole"

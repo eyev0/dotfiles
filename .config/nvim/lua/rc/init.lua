@@ -12,6 +12,7 @@ vim.g.did_load_filetypes = 1
 O = {
   scrolloff = 9,
   sidescrolloff = 3,
+  signcolumn = "yes:2",
   colorscheme = "catppuccin",
   lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim",
   pluginspath = vim.fn.stdpath("data") .. "/lazy",

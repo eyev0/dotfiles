@@ -1,12 +1,17 @@
 local lsputil = require("lspconfig.util")
 
--- local runtime_path = vim.split(package.path, ";")
--- table.insert(runtime_path, "lua/?.lua")
--- table.insert(runtime_path, "lua/?/init.lua")
+local minor_version = 6
+local patch_version = 11
+local version = ("3.%d.%d"):format(minor_version, patch_version)
+local lua_ls_path = ("%s/.local/lsp/lua-prebuilt/%s/bin/lua-language-server"):format(vim.env.HOME, version)
 
 local config = {
+  cmd = { lua_ls_path },
   settings = {
     Lua = {
+      misc = {
+        executablePath = lua_ls_path,
+      },
       runtime = {
         version = "LuaJIT",
         special = {

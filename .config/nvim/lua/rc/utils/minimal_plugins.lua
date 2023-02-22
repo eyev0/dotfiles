@@ -72,7 +72,7 @@ return {
   {
     "jose-elias-alvarez/null-ls.nvim",
     config = function()
-      require("rc.configs.lsp.null-ls")
+      require("rc.configs.lsp.ls.null-ls")
     end,
   },
   -- completion

@@ -6,10 +6,17 @@ local A = vim.api
 local util = require("nvim-treesitter.ts_utils")
 
 local M = {}
-M._internal = {}
+
+---@class Match
+---@field window number
+---@field id number
+local matches = {}
+local match_state = {}
+
 M._config = {
   match = "IncSearch",
   single = "Visual",
+  -- TODO: query for current node's type exactly
   query = "(%s) @_",
   cmd = false,
   heavy = false,
@@ -112,18 +119,15 @@ end
 
 local function _cycle(apply, position)
   if not apply then
-    if not M._internal.match_state or #M._internal.matches < 1 then
+    if not match_state.current or #matches < 1 then
       return
     end
-    if not M._internal.match_state.current then
-      return
-    end
-    position = M._internal.match_state.current.position
-    local total = #M._internal.match_state.nodes
+    position = match_state.current.position
+    local total = #match_state.nodes
     return math.min(math.max(1, position), total), total
   end
-  M._internal.match_state.current.position = position
-  local node = M._internal.match_state.nodes[position]
+  match_state.current.position = position
+  local node = match_state.nodes[position]
   A.nvim_win_set_cursor(0, { node[1] + 1, node[2] })
 end
 
@@ -147,73 +151,64 @@ function M.cycle_prev()
   _cycle(true, position - 1)
 end
 
--- TODO: store window/buf info and delete appropriately
 function M.match(match_string)
   local window = vim.api.nvim_get_current_win()
   local buf = vim.api.nvim_win_get_buf(window)
-  if M._internal.matches and #M._internal.matches > 0 then
-    M.unmatch(window)
+  if #matches > 0 then
+    M.clear_matches()
   end
-  if M._internal.match_state and #M._internal.match_state > 0 then
-    M.unmatch(window)
-  end
-
+  --
   local search_node = T.get_node_at_cursor(window)
   if not search_node then
     return
   end
-
-  local curse = util.get_node_at_cursor(window)
-  if curse then
-    curse = {
-      range = { curse:range() },
-      type = curse:type(),
-      data = Q.get_node_text(curse, buf),
+  local cursor_node = util.get_node_at_cursor(window)
+  if cursor_node then
+    cursor_node = {
+      range = { cursor_node:range() },
+      type = cursor_node:type(),
+      data = Q.get_node_text(cursor_node, buf),
     }
   end
-
+  --
   local query = string.format(M._config.query, search_node)
   local root = T.get_parser(buf):parse()[1]:root()
   local parsed = Q.parse_query(vim.bo.filetype, query)
-  M._internal.match_state = { nodes = {}, current = curse }
-  M._internal.matches = vim.F.if_nil(M._internal.matches, {})
-
+  match_state = { nodes = {}, current = cursor_node }
+  --
   ---@diagnostic disable-next-line: missing-parameter
   for _, node, _ in parsed:iter_captures(root, query) do
-    if not curse then
+    if not cursor_node then
       break
     end
-    local data = Q.get_node_text(node, 0)
-    if match_string == curse.data or data == curse.data then
-      table.insert(M._internal.match_state.nodes, { node:range() })
-      -- TODO: window to match id mapping to delete appropriately
-      table.insert(M._internal.matches, vim.fn.matchadd(M._config.match, data))
+    local data = Q.get_node_text(node, buf)
+    if match_string == cursor_node.data or data == cursor_node.data then
+      table.insert(match_state.nodes, { node:range() })
+      table.insert(matches, { window = window, id = vim.fn.matchadd(M._config.match, data) })
     end
   end
-
-  if curse then
-    for index, info in ipairs(M._internal.match_state.nodes) do
+  --
+  if cursor_node then
+    for index, info in ipairs(match_state.nodes) do
       if
-        info[1] == curse.range[1]
-        and info[2] == curse.range[2]
-        and info[3] == curse.range[3]
-        and info[4] == curse.range[4]
+        info[1] == cursor_node.range[1]
+        and info[2] == cursor_node.range[2]
+        and info[3] == cursor_node.range[3]
+        and info[4] == cursor_node.range[4]
       then
-        M._internal.match_state.current.position = index
+        match_state.current.position = index
         break
       end
     end
   end
 end
 
-function M.unmatch(window)
-  M._internal.matches = vim.F.if_nil(M._internal.matches, {})
-  M._internal.match_state = vim.F.if_nil(M._internal.match_state, {})
-  for _, identity in ipairs(M._internal.matches) do
-    vim.fn.matchdelete(identity, window or 0)
+function M.clear_matches()
+  for _, match in ipairs(matches) do
+    vim.fn.matchdelete(match.id, match.window)
   end
-  M._internal.matches = nil
-  M._internal.match_state = nil
+  matches = {}
+  match_state = {}
 end
 
 function M.cmd()
@@ -224,7 +219,7 @@ function M.cmd()
     M.cycle_prev()
   end, { desc = M._config.map.items[2][4] })
   A.nvim_create_user_command("NodeRm", function()
-    M.unmatch()
+    M.clear_matches()
   end, { desc = M._config.map.items[3][4] })
   A.nvim_create_user_command("NodeMh", function(...)
     M.match((...).fargs[1])
@@ -233,8 +228,8 @@ function M.cmd()
     nargs = "?",
   })
   A.nvim_create_user_command("NodeTg", function()
-    if M._internal.match_state then
-      M.unmatch()
+    if match_state.current ~= nil then
+      M.clear_matches()
     else
       pcall(M.match)
     end

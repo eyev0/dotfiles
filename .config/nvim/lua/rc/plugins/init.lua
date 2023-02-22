@@ -101,6 +101,14 @@ return {
     config = function()
       require("rc.configs.indent_blankline")
     end,
+    enabled = false,
+  },
+  {
+    "echasnovski/mini.indentscope",
+    version = "*",
+    config = function()
+      require("rc.configs.mini.intentscope")
+    end,
   },
   {
     "stevearc/dressing.nvim",
@@ -184,7 +192,7 @@ return {
   {
     "jose-elias-alvarez/null-ls.nvim",
     config = function()
-      require("rc.configs.lsp.null-ls")
+      require("rc.configs.lsp.ls.null-ls")
     end,
     event = "VeryLazy",
   },
@@ -209,6 +217,7 @@ return {
       require("rc.configs.fidget")
     end,
   },
+  { "lvimuser/lsp-inlayhints.nvim" },
   {
     "ThePrimeagen/refactoring.nvim",
     config = true,
@@ -241,12 +250,13 @@ return {
   { "hrsh7th/cmp-nvim-lsp-document-symbol" },
   { "hrsh7th/cmp-nvim-lua" },
   { "hrsh7th/cmp-nvim-lsp-signature-help" },
-  { "lukas-reineke/cmp-under-comparator" },
+  -- { "lukas-reineke/cmp-under-comparator" },
   {
     "github/copilot.vim",
     init = function()
       vim.g.copilot_no_tab_map = true
     end,
+    enabled = false,
   },
   {
     "hrsh7th/cmp-copilot",
@@ -273,12 +283,25 @@ return {
   -- navigation
   "ThePrimeagen/harpoon",
   {
+    "echasnovski/mini.jump",
+    version = "*",
+    config = function()
+      require("rc.configs.mini.jump")
+    end,
+  },
+  {
     "edementyev/jumplist.nvim",
+    -- commit = "1fa9a5187a452f0b90ed5b407db16d0c32c2352f",
     config = function()
       require("jumplist").setup()
     end,
     dependencies = { "edementyev/vlog.nvim" },
     dev = true,
+    enabled = true,
+  },
+  {
+    "kwkarlwang/bufjump.nvim",
+    config = true,
   },
   -- terminal
   {
@@ -294,6 +317,7 @@ return {
   },
   -- git
   { "tpope/vim-fugitive" },
+  { "tpope/vim-rhubarb" },
   {
     "lewis6991/gitsigns.nvim",
     config = function()
@@ -399,6 +423,8 @@ return {
       require("rc.configs.dap.virtual-text")
     end,
   },
+  -- tests
+  -- TODO: replace with neotest
   {
     "David-Kunz/jester",
     config = function()
@@ -406,6 +432,24 @@ return {
     end,
     event = "VimEnter",
   },
+  {
+    "nvim-neotest/neotest",
+    config = function()
+      require("neotest").setup({
+        adapters = {
+          require("neotest-jest")({
+            jestCommand = "npm test --",
+            -- jestConfigFile = "custom.jest.config.ts",
+            env = { CI = true },
+            -- cwd = function(path)
+            --   return vim.fn.getcwd(-1, -1)
+            -- end,
+          }),
+        },
+      })
+    end,
+  },
+  { "haydenmeade/neotest-jest" },
   -- nvim in browser
   {
     "glacambre/firenvim",
