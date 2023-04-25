@@ -61,15 +61,14 @@ require("telescope").setup({
   },
 })
 
-telescope.load_extension("fzf")
+pcall(telescope.load_extension, "fzf")
 -- telescope.load_extension("ui-select")
-telescope.load_extension("dap")
-telescope.load_extension("harpoon")
-telescope.load_extension("notify")
-telescope.load_extension("noice")
-telescope.load_extension("yank_history")
-telescope.load_extension("aerial")
-
+pcall(telescope.load_extension, "dap")
+pcall(telescope.load_extension, "harpoon")
+pcall(telescope.load_extension, "notify")
+pcall(telescope.load_extension, "noice")
+pcall(telescope.load_extension, "yank_history")
+pcall(telescope.load_extension, "aerial")
 pcall(telescope.load_extension, "persisted")
 pcall(telescope.load_extension, "tmuxinator")
 -- telescope.load_extension("git_worktree")

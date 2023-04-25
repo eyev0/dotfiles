@@ -9,9 +9,6 @@ local config = {
   cmd = { lua_ls_path },
   settings = {
     Lua = {
-      misc = {
-        executablePath = lua_ls_path,
-      },
       runtime = {
         version = "LuaJIT",
         special = {
@@ -34,7 +31,7 @@ local config = {
         callSnippet = "Replace",
       },
       diagnostics = {
-        workspaceDelay = -1,
+        -- workspaceDelay = -1,
       },
       workspace = {
         -- library = {
@@ -68,8 +65,6 @@ local config = {
     },
   },
   root_dir = lsputil.root_pattern(".git", ".nvim", ".luacheckrc", ".stylua.toml"),
-  on_attach = Lsp.on_attach,
-  capabilities = Lsp.capabilities,
 }
 
-require("lspconfig").lua_ls.setup(config)
+require("lspconfig").lua_ls.setup(Lsp.make_config(config))

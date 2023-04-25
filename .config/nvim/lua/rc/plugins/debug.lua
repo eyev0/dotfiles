@@ -1,6 +1,4 @@
 return {
-  -- docs in neovim
-  -- { "paretje/nvim-man" },
   -- dependency packages
   "nvim-lua/popup.nvim",
   "nvim-lua/plenary.nvim",
@@ -88,14 +86,13 @@ return {
     event = "VeryLazy",
   },
   -- ui/input
-  {
-    "rebelot/heirline.nvim",
-    config = function()
-      require("rc.configs.heirline")
-    end,
-    event = "ColorScheme",
-    -- commit = "750a112",
-  },
+  -- {
+  --   "rebelot/heirline.nvim",
+  --   config = function()
+  --     require("rc.configs.heirline")
+  --   end,
+  --   event = "ColorScheme",
+  -- },
   {
     "petertriho/nvim-scrollbar",
     config = function()
@@ -143,7 +140,7 @@ return {
       require("rc.configs.todo-comments")
     end,
   },
-  -- treesitter/editing based on treesitter
+  -- treesitter
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
@@ -220,35 +217,6 @@ return {
     event = "VeryLazy",
   },
   {
-    "SmiteshP/nvim-navbuddy",
-    config = function()
-      require("nvim-navbuddy").setup({
-        window = {
-          size = { height = "30%", width = "90%" },
-          position = { row = "95%", col = "20%" },
-          scrolloff = 3, -- scrolloff value within navbuddy window
-          sections = {
-            left = {
-              size = "20%",
-              border = nil, -- You can set border style for each section individually as well.
-            },
-            mid = {
-              size = "20%",
-              border = nil,
-            },
-            right = {
-              -- No size option for right most section. It fills to
-              -- remaining area.
-              border = nil,
-              preview = "leaf", -- Right section can show previews too.
-              -- Options: "leaf", "always" or "never"
-            },
-          },
-        },
-      })
-    end,
-  },
-  {
     "ErichDonGubler/lsp_lines.nvim",
     config = true,
   },
@@ -280,16 +248,6 @@ return {
           rename_session = "r",
           delete_session = "d",
         },
-      })
-    end,
-  },
-  {
-    "james1236/backseat.nvim",
-    config = function()
-      require("backseat").setup({
-        -- Alternatively, set the env var $OPENAI_API_KEY by putting "export OPENAI_API_KEY=sk-xxxxx" in your ~/.bashrc
-        openai_api_key = vim.env.OPENAI_API_KEY, -- Get yours from platform.openai.com/account/api-keys
-        openai_model_id = "gpt-3.5-turbo", --gpt-4 (If you do not have access to a model, it says "The model does not exist")
       })
     end,
   },
@@ -345,11 +303,6 @@ return {
       require("rc.configs.toggleterm")
     end,
   },
-  {
-    "chomosuke/term-edit.nvim",
-    version = "1.*",
-    enabled = false,
-  },
   -- git
   { "tpope/vim-fugitive" },
   { "tpope/vim-rhubarb" },
@@ -397,8 +350,8 @@ return {
   { "tmux-plugins/vim-tmux" }, -- syntax highlighting for .tmux.conf
   { "danielpieper/telescope-tmuxinator.nvim" },
   -- sql
-  { "tpope/vim-dadbod" },
-  { "kristijanhusak/vim-dadbod-ui" },
+  -- { "tpope/vim-dadbod" },
+  -- { "kristijanhusak/vim-dadbod-ui" },
   -- telescope
   {
     "nvim-telescope/telescope.nvim",
@@ -429,14 +382,6 @@ return {
       require("rc.configs.persistence")
     end,
     enabled = true,
-  },
-  {
-    "olimorris/persisted.nvim",
-    event = "BufReadPre",
-    config = function()
-      require("rc.configs.persisted")
-    end,
-    enabled = false,
   },
   -- debugging
   {
@@ -484,6 +429,7 @@ return {
       })
     end,
     event = "VeryLazy",
+    enabled = false,
   },
   { "haydenmeade/neotest-jest" },
   -- nvim in browser
@@ -549,7 +495,7 @@ return {
           integrations = {
             aerial = true,
             notify = true,
-            noice = true,
+            -- noice = true,
             indent_blankline = {
               enabled = true,
               colored_indent_levels = false,
@@ -577,10 +523,6 @@ return {
     config = function()
       require("rc.configs.rest")
     end,
-    -- dependencies = {
-    --   "rest-nvim/tree-sitter-http",
-    --   commit = "2c6c44574031263326cb1e51658bbc0c084326e7",
-    -- },
   },
   -- plugins in dev
   {
@@ -599,19 +541,16 @@ return {
       require("rc.configs.noice")
     end,
     -- dev = true,
-    -- TODO: pull request fix scrollbar
-    --
+    -- TODO: pull request
+    -- fix scrollbar
     -- branch = "local",
-    -- enabled = false,
     -- dir = O.pluginspath .. "/noice.nvim",
   },
   {
     "edementyev/jumplist.nvim",
     dev = true,
-    branch = "main",
-    config = function()
-      require("rc.configs.jumplist")
-    end,
+    branch = "dev",
+    config = true,
     dependencies = {
       "edementyev/vlog.nvim",
     },
@@ -621,6 +560,9 @@ return {
     config = function()
       require("rc.configs.diffview")
     end,
+    -- dev = true,
+    -- branch = "local",
+    -- dir = O.pluginspath .. "/diffview.nvim",
   },
   {
     "edementyev/workspace_config.nvim",
@@ -628,3 +570,4 @@ return {
     dev = true,
   },
 }
+

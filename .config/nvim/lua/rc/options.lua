@@ -19,7 +19,7 @@ vim.o.ttimeout = false
 vim.o.shiftround = true
 vim.o.mouse = "a"
 vim.o.laststatus = 3
--- vim.o.cmdheight = 2
+vim.o.cmdheight = 2
 vim.o.title = true
 vim.o.wrap = false
 vim.o.linebreak = true
@@ -106,3 +106,77 @@ set guioptions-=r
 set guioptions-=L
 set guifont=Source\ Code\ Pro\ Medium:h13
 ]])
+
+local M = {}
+
+-- toggle options
+function M.get_value(option)
+  print("STORED_" .. string.upper(option), " ", vim.g["STORED_" .. string.upper(option)])
+  return vim.g["STORED_" .. string.upper(option)]
+end
+function M.set_value(option, value)
+  vim.g["STORED_" .. string.upper(option)] = value
+end
+function M.toggle_or_set_scoped(option, scope, value)
+  return pcall(function()
+    local new_value
+    if scope == "o" then
+      new_value = vim.F.if_nil(value, not vim[scope][option])
+      vim[scope][option] = new_value
+      M.set_value(option, new_value)
+    elseif scope == "wo" then
+      new_value = vim.F.if_nil(value, not vim[scope][vim.api.nvim_get_current_win()][option])
+      vim[scope][vim.api.nvim_get_current_win()][option] = new_value
+    elseif scope == "bo" then
+      new_value = vim.F.if_nil(value, not vim[scope][vim.api.nvim_get_current_buf()][option])
+      vim[scope][vim.api.nvim_get_current_buf()][option] = new_value
+    end
+    return new_value
+  end)
+end
+function M.toggle_or_set(option, value)
+  return function()
+    local ok, new_value, scope
+    for _, _scope in ipairs({ "bo", "wo", "o" }) do
+      ok, new_value = M.toggle_or_set_scoped(option, _scope, value)
+      -- vim.notify(("%s %s"):format(scope, tostring(new_value)))
+      if ok then
+        scope = _scope
+        break
+      end
+    end
+    if not ok then
+      vim.notify("Option not found: " .. option)
+      return
+    else
+      vim.notify(("Option set: %s.%s=%s"):format(scope, option, tostring(new_value)))
+    end
+  end
+end
+-- restore options from shada
+function M.restore_options()
+  local options = {
+    "wrap",
+    "cursorcolumn",
+    "cursorline",
+    "ignorecase",
+    "list",
+    "number",
+    "relativenumber",
+    "spell",
+  }
+  for _, option in ipairs(options) do
+    if M.get_value(option) ~= nil then
+      M.toggle_or_set(option, M.get_value(option))
+    end
+  end
+end
+
+-- not working
+-- autocmd("User", {
+--   pattern = "VeryLazy",
+--   group = augroup("CustomRestoreOptions", {}),
+--   callback = M.restore_options,
+-- })
+
+return M

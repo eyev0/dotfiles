@@ -1,6 +1,11 @@
 -- disable highlighting matching parens
 vim.g.loaded_matchparen = 1
-vim.g.did_load_filetypes = 1
+vim.g.do_filetype_lua = true
+vim.g.did_load_filetypes = 0
+
+pcall(vim.keymap.del, "", "<Space>")
+vim.keymap.set("", "<Space>", "<NOP>", { noremap = true, silent = true })
+vim.g.mapleader = " "
 
 ---@alias ColorschemeOption "gruvbox-material" | "catppuccin"
 
@@ -17,6 +22,7 @@ O = {
   lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim",
   pluginspath = vim.fn.stdpath("data") .. "/lazy",
   devpath = vim.env.HOME .. "/dev/nvim/plugins",
+  copilot = true, -- TODO: create coroutine that fetches "curl -s ipinfo.io | jq '.country'" and store it, than await it and turn Copilot on
 }
 
 ENV = {
@@ -27,6 +33,9 @@ vim.o.background = "dark"
 
 _G.autocmd = vim.api.nvim_create_autocmd
 _G.augroup = vim.api.nvim_create_augroup
+_G.feedkeys = function(keys, mode)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, true, true), mode, false)
+end
 _G.pprint = function(...)
   print(vim.inspect(...))
 end
@@ -78,7 +87,9 @@ local opts = {
     },
   },
 }
-require("lazy").setup(require("rc.plugins"), opts)
+
+local plugins = MY_CONFIG_DEBUG ~= nil and require("rc.plugins.debug") or require("rc.plugins")
+require("lazy").setup(plugins, opts)
 
 -- command to load session
 -- vim.cmd([[command! SessionLoad lua require("persisted").load()]])

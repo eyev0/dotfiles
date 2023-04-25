@@ -1,4 +1,1 @@
-require("lspconfig").graphql.setup({
-	on_attach = Lsp.on_attach,
-	capabilities = Lsp.capabilities,
-})
+require("lspconfig").graphql.setup(Lsp.make_config())

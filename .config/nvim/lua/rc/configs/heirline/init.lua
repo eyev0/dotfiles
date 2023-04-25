@@ -38,6 +38,17 @@ require("heirline").setup({
 	statusline = require("rc.configs.heirline.statusline"),
 	winbar = require("rc.configs.heirline.winbar"),
 	tabline = require("rc.configs.heirline.tabline"),
+  opts = {
+  disable_winbar_cb = function(args)
+    local buf = args.buf
+    local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
+    local filetype = vim.tbl_contains({ "gitcommit", "fugitive", "noice" }, vim.bo[buf].filetype)
+    if buftype or filetype then
+      vim.opt_local.winbar = nil
+    end
+  end
+
+  }
 })
 
 -- Yep, with heirline we're driving manual!

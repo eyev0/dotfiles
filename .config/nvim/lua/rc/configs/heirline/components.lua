@@ -119,9 +119,17 @@ M.Snippets = {
 
 M.MacroRecording = {
   provider = function()
-    return " " .. require("noice").api.status.mode.get()
+    return " "
+      .. vim.F.if_nil(
+        vim.F.npcall(function()
+          return require("noice").api.status.mode.get()
+        end),
+        ""
+      )
   end,
-  condition = require("noice").api.status.mode.has,
+  condition = vim.F.npcall(function()
+    return require("noice").api.status.mode.has()
+  end),
   hl = { fg = "#ff9e64" },
 }
 
@@ -327,7 +335,9 @@ M.HelpFileName = {
 }
 
 M.Navic = {
-  condition = require("nvim-navic").is_available,
+  condition = function()
+    return require("nvim-navic").is_available()
+  end,
   static = {
     -- create a type highlight map
     type_hl = {
@@ -416,7 +426,7 @@ M.Navic = {
     return self.child:eval()
   end,
   hl = { fg = "gray" },
-  update = "CursorHold",
+  update = { "CursorHold" },
 }
 
 M.Navic = { flexible = 3, M.Navic, { provider = "" } }
@@ -642,7 +652,7 @@ M.WinBufNrs = {
   provider = function()
     local bufnr = vim.api.nvim_get_current_buf()
     local winnr = vim.api.nvim_get_current_win()
-    return string.format("win:%d/buf:%d", bufnr, winnr)
+    return string.format("win:%d/buf:%d", winnr, bufnr)
   end,
 }
 

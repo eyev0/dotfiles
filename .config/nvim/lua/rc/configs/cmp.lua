@@ -3,8 +3,8 @@ local cmp = require("cmp")
 local compare = require("cmp.config.compare")
 -- local default_config = require("cmp.config.default")
 local lspkind = require("lspkind")
--- local types = require("cmp.types")
--- local str = require("cmp.utils.str")
+local types = require("cmp.types")
+local str = require("cmp.utils.str")
 
 ---@diagnostic disable-next-line: unused-local, unused-function
 local function has_words_before()
@@ -145,12 +145,15 @@ local mappings = {
   ["<S-Tab>"] = prev_item(false),
 }
 
+-- pcall(function()
+--   mappings = require("langmapper.utils").trans_dict(mappings)
+-- end)
+
 local function merge(a, b)
   return vim.tbl_deep_extend("force", {}, a, b)
 end
 
 local sources = {
-  -- { name = "copilot", group_index = 1, priority = 20 },
   { name = "nvim_lsp", group_index = 1, priority = 15 },
   { name = "vsnip", group_index = 1, priority = 10 },
   -- { name = "rg", group_index = 2, priority = 5, max_item_count = 2, keyword_length = 3 },
@@ -159,6 +162,9 @@ local sources = {
   -- { name = "nvim_lsp_signature_help", group_index = 3, priority = 1 },
   -- { name = "npm", group_index = 4, keyword_length = 4 },
 }
+if O.copilot then
+  table.insert(sources, 1, { name = "copilot", group_index = 1, priority = 20 })
+end
 
 cmp.setup({
   -- enabled = function()
@@ -200,32 +206,33 @@ cmp.setup({
   formatting = {
     fields = { "abbr", "kind", "menu" },
     format = lspkind.cmp_format({
-    	mode = "symbol_text",
-    	preset = "codicons",
-    	symbol_map = {
-    		copilot = "",
-    	},
-    	maxwidth = 62, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-    	-- The function below will be called before any actual modifications from lspkind
-    	-- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
-    	-- before = function(entry, item)
-    	-- 	-- Get the full snippet (and only keep first line)
-    	-- 	local word = entry:get_insert_text()
-    	-- 	if entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet then
-    	-- 		word = vim.lsp.util.parse_snippet(word)
-    	-- 	end
-    	-- 	word = str.oneline(word)
-    	-- 	if
-    	-- 		entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet
-    	-- 		and string.sub(item.abbr, -1, -1) == "~"
-    	-- 	then
-    	-- 		word = "~" .. word .. "~"
-    	-- 	end
-    	-- 	if string.len(word) > 0 then
-    	-- 		item.abbr = word
-    	-- 	end
-    	-- 	return item
-    	-- end,
+      mode = "symbol_text",
+      preset = "codicons",
+      symbol_map = {
+        copilot = "",
+      },
+      maxwidth = 62, -- prevent the popup from showing more than provided characters
+      ellipsis_char = "..",
+      -- The function below will be called before any actual modifications from lspkind
+      -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
+      before = function(entry, item)
+        -- Get the full snippet (and only keep first line)
+        local word = entry:get_insert_text()
+        if entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet then
+          word = vim.lsp.util.parse_snippet(word)
+        end
+        word = str.oneline(word)
+        if
+          entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet
+          and string.sub(item.abbr, -1, -1) == "~"
+        then
+          word = "~" .. word .. "~"
+        end
+        if string.len(word) > 0 then
+          item.abbr = word
+        end
+        return item
+      end,
     }),
   },
 })

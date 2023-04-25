@@ -44,3 +44,4 @@ export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 # gsettings set org.gnome.desktop.peripherals.keyboard delay 230
 
 source $HOME/.sbl
+source $HOME/.openai

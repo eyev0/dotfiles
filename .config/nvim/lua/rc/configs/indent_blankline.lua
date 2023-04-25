@@ -43,7 +43,7 @@ autocmd("BufEnter", {
     if
       vim.tbl_contains(set_threshold_filetypes, vim.bo[opts.buf].filetype) and vim.fn.line("$") > max_lines
     then
-      vim.bo.indent_blankline_enabled = false
+      vim.b[opts.buf].indent_blankline_enabled = false
     end
   end,
 })

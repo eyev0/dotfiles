@@ -1,4 +1,1 @@
-require("lspconfig").gopls.setup({
-	on_attach = Lsp.on_attach,
-	capabilities = Lsp.capabilities,
-})
+require("lspconfig").gopls.setup(Lsp.make_config())

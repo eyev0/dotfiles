@@ -8,10 +8,20 @@ local surround_config = require("nvim-surround.config")
 
 require("filetype").setup({
   overrides = {
+    extensions = {
+      sh = "sh",
+      c = "c",
+      h = "c",
+      env = "sh",
+    },
+    literal = {
+      [".dap-config"] = "lua",
+      [".nvim"] = "lua",
+    },
+    complex = {
+      [".*vscode/launch.json"] = "jsonc",
+    },
     function_extensions = {
-      env = function()
-        vim.bo.filetype = "sh"
-      end,
       lua = function()
         vim.bo.filetype = "lua"
         surround.buffer_setup({
@@ -92,19 +102,6 @@ require("filetype").setup({
             },
           },
         })
-      end,
-    },
-    function_literal = {
-      [".dap-config"] = function()
-        vim.bo.filetype = "lua"
-      end,
-      [".nvim"] = function()
-        vim.bo.filetype = "lua"
-      end,
-    },
-    function_complex = {
-      [".*vscode/launch.json"] = function()
-        vim.bo.filetype = "jsonc"
       end,
     },
   },

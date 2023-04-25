@@ -22,13 +22,14 @@ vim.opt.runtimepath:prepend(lazypath)
 -- install plugins
 local plugins = {
   "folke/tokyonight.nvim",
-  -- {
-  --   "folke/noice.nvim",
-  --   dependencies = {
-  --     "MunifTanjim/nui.nvim",
-  --     -- "rcarriga/nvim-notify",
-  --   },
-  -- },
+  {
+    "folke/noice.nvim",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    },
+    config = true,
+  },
 }
 require("lazy").setup(plugins, {
   root = root .. "/plugins",

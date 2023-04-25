@@ -2,6 +2,7 @@ local api = vim.api
 local cmd = vim.cmd
 
 require("rc.utils.pretty_quickfix")
+local jumplist = require("rc.utils.jumplist")
 
 local aug_id = augroup("CustomQfHeight", {})
 
@@ -23,13 +24,12 @@ function M.open(n_items, jump, keep_focus, set_mark)
   set_mark = vim.F.if_nil(set_mark, true)
   if n_items > 0 then
     if jump and set_mark then
-      M.set_jumplist()
+      jumplist.mark()
     end
     cmd("horizontal bo copen " .. get_qf_height(n_items))
     if not keep_focus then
       if jump then
-        api.nvim_feedkeys(api.nvim_replace_termcodes("<CR>", true, false, true), "", true)
-        -- cmd("cfirst")
+        feedkeys("<CR>", "")
       else
         cmd("wincmd p")
       end
@@ -41,11 +41,7 @@ end
 
 ---@param index number
 function M.jump(index)
-  if index == 1 then
-    cmd("cfirst")
-  else
-    -- todo
-  end
+  cmd("cfirst " .. (index or 1))
 end
 
 function M.win_has_item(item, win)
@@ -56,18 +52,6 @@ end
 
 ---@type number | nil
 M.buf = nil
-
-function M.set_jumplist(buf, line, col)
-  cmd("normal! m`")
-  local cursor
-  if line == nil and col == nil then
-    cursor = api.nvim_win_get_cursor(0)
-  else
-    cursor = { line, col }
-  end
-  buf = buf or api.nvim_win_get_buf(api.nvim_get_current_win())
-  return api.nvim_buf_set_mark(buf, "`", cursor[1], cursor[2], {})
-end
 
 autocmd("BufWinEnter", {
   group = aug_id,
@@ -80,9 +64,7 @@ autocmd("BufWinEnter", {
       -- vim.bo.buflisted = false
       -- vim.bo.errorformat = [[%f\|%l\ col\ %c\|%m]]
       api.nvim_win_set_height(0, get_qf_height(#vim.fn.getqflist()))
-      api.nvim_win_call(0, function()
-        vim.cmd("wincmd J")
-      end)
+      vim.cmd("wincmd J")
       require("todo-comments.highlight").highlight_win(0, true)
     end
   end,

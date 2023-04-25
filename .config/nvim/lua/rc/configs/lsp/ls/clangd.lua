@@ -1,4 +1,5 @@
-require("lspconfig").clangd.setup({
-  on_attach = Lsp.on_attach,
-  capabilities = Lsp.capabilities,
-})
+require("lspconfig").clangd.setup(Lsp.make_config({
+  capabilities = {
+    offsetEncoding = "utf-16",
+  },
+}))

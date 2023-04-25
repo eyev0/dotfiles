@@ -20,6 +20,11 @@ vim.cmd([[
     " autocmd ColorScheme * hi CurSearch ctermfg=235 ctermbg=167 guifg=#282828 guibg=#db4740
     " autocmd ColorScheme * hi Search ctermfg=235 ctermbg=142 guifg=#282828 guibg=#b0b846
   augroup END
+  augroup QuickscopeColors
+    autocmd!
+    autocmd ColorScheme * highlight QuickScopePrimary guifg='#afff5f' gui=underline ctermfg=155 cterm=underline
+    autocmd ColorScheme * highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
+  augroup END
 ]])
 -- vim.cmd("hi CurSearch cterm=bold ctermfg=142 gui=bold guifg=#b0b846")
 -- IncSearch ctermfg=235 ctermbg=167 guifg=#282828 guibg=#db4740

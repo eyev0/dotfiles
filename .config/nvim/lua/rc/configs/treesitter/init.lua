@@ -4,10 +4,16 @@ local config = {
   highlight = {
     enable = true, -- false will disable the whole extension
     disable = function(_, buf)
-      local max_filesize = 1000 * 1024 -- 100 KB
+      local max_filesize = 3 * 1024 * 1024
       local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
       if ok and stats and stats.size > max_filesize then
+        vim.notify_once(
+          ("treesitter is disabled in file %s"):format(vim.api.nvim_buf_get_name(buf)),
+          vim.log.levels.WARN
+        )
         return true
+      else
+        return false
       end
     end,
     additional_vim_regex_highlighting = false,
@@ -53,7 +59,7 @@ local config = {
     keymaps = {
       init_selection = "<CR>",
       node_incremental = "<CR>",
-      scope_incremental = "<S-CR>",
+      -- scope_incremental = "<S-CR>",
       node_decremental = "<BS>",
     },
   },
@@ -108,15 +114,4 @@ parser_configs.norg_table = {
   },
 }
 
--- fix for jsonc
--- local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
--- parser_config.jsonc.used_by = "json"
-
 require("nvim-treesitter.configs").setup(config)
-
--- require("rc.configs.treesitter.node").setup({
---   match = "Search",
---   map = { enable = true },
---   cmd = true,
---   -- heavy = true,
--- })

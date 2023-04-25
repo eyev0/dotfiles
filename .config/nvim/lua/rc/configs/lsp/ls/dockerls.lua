@@ -1,4 +1,1 @@
-require("lspconfig").dockerls.setup({
-  on_attach = Lsp.on_attach,
-  capabilities = Lsp.capabilities,
-})
+require("lspconfig").dockerls.setup(Lsp.make_config())

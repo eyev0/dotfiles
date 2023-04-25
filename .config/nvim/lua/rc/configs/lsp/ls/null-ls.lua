@@ -34,7 +34,7 @@ local sources = {
 	}),
 	null_ls.builtins.formatting.xmllint,
 	null_ls.builtins.formatting.google_java_format,
-	-- null_ls.builtins.formatting.rustfmt,
+	null_ls.builtins.formatting.rustfmt,
 	null_ls.builtins.formatting.black,
 	-- diagnostics
 	null_ls.builtins.diagnostics.eslint_d.with({
@@ -63,7 +63,7 @@ local sources = {
 
 local defaults = {
 	cmd = { "nvim" },
-	debounce = 250,
+	debounce = 100,
 	debug = false,
 	default_timeout = 5000,
 	diagnostics_format = "#{m}",
@@ -81,4 +81,4 @@ local defaults = {
 	sources = sources,
 }
 
-null_ls.setup(defaults)
+null_ls.setup(Lsp.make_config(defaults))

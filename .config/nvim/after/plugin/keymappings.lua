@@ -1,23 +1,17 @@
--- local map = vim.api.nvim_set_keymap
--- local i = require("import")
-
 local map = vim.keymap.set
-local del = vim.keymap.del
 local utils = require("rc.utils.keymap")
 local api = vim.api
 local cmd = vim.cmd
 local fn = vim.fn
-local feedkeys = function(keys, mode)
-  api.nvim_feedkeys(api.nvim_replace_termcodes(keys, true, true, true), mode, false)
-end
-local qf = require("rc.configs.qf")
+local qf = require("rc.utils.qf")
+local jumplist = require("rc.utils.jumplist")
 
 Keymap = {}
 
-pcall(del, "", "<Space>")
-map("", "<Space>", "<NOP>", { noremap = true, silent = true })
-vim.g.mapleader = " "
-
+-- debug
+if MY_CONFIG_DEBUG ~= nil then
+  return
+end
 -- lazy
 map("n", "<leader>ps", [[:Lazy sync<CR>]], { noremap = true, silent = true })
 map("n", "<leader>pp", [[:Lazy profile<CR>]], { noremap = true, silent = true })
@@ -35,6 +29,10 @@ map(
   "<cmd>exec 'normal! ggVG'<cr>",
   { noremap = true, silent = true, desc = "Whole buffer" }
 )
+-- quit with <C-F12>
+map({ "n", "t" }, "<F36>", function()
+  vim.cmd("qa")
+end, { noremap = true, silent = true }) --<C-F12>
 -- easier navigation, powered by tmux plugin
 map({ "n", "t" }, "<C-h>", function()
   vim.cmd("TmuxNavigateLeft")
@@ -112,18 +110,11 @@ end, { noremap = false, silent = true })
 --     vim.cmd("normal! zzzv")
 --   end
 -- end, { noremap = true, silent = true })
--- search and J fix
-map("n", "n", function()
-  if fn.getreg("/") ~= "" then
-    feedkeys("nzzzv", "ni")
-  end
-end, { noremap = true, silent = true })
-map("n", "N", function()
-  if fn.getreg("/") ~= "" then
-    feedkeys("Nzzzv", "ni")
-  end
-end, { noremap = true, silent = true })
+-- after positioning J fix
 map("n", "J", [[mzJ`z]], { noremap = true, silent = true })
+-- jumplist mutation
+map("n", "k", [[(v:count > 5 ? "m'" . v:count : "") . 'k']], { noremap = true, silent = true, expr = true })
+map("n", "j", [[(v:count > 5 ? "m'" . v:count : "") . 'j']], { noremap = true, silent = true, expr = true })
 -- s for substitute
 local substitute = require("substitute")
 map("n", "s", substitute.operator, { noremap = true, silent = true })
@@ -177,10 +168,6 @@ map(
 )
 -- Maximizer
 map("n", "<C-w>m", [[:MaximizerToggle!<CR>]], { noremap = true, silent = true })
--- quit with <C-F12>
-map({ "n", "t" }, "<F36>", function()
-  vim.cmd("qa")
-end, { noremap = true, silent = true }) --<C-F12>
 -- undo streak breakers
 map("i", ",", [[,<C-g>u]], { noremap = true, silent = true })
 map("i", ".", [[.<C-g>u]], { noremap = true, silent = true })
@@ -196,9 +183,6 @@ map("i", "<", [[<<C-g>u]], { noremap = true, silent = true })
 map("i", ">", [[><C-g>u]], { noremap = true, silent = true })
 map("i", ":", [[:<C-g>u]], { noremap = true, silent = true })
 map("i", "<CR>", [[<CR><C-g>u]], { noremap = true, silent = true })
--- jumplist mutation
-map("n", "k", [[(v:count > 5 ? "m'" . v:count : "") . 'k']], { noremap = true, silent = true, expr = true })
-map("n", "j", [[(v:count > 5 ? "m'" . v:count : "") . 'j']], { noremap = true, silent = true, expr = true })
 -- hacking search with visual mode
 -- search within current selection (prompt)
 map("x", "/i", [[<Esc>/\%V]], { noremap = true, silent = true })
@@ -257,35 +241,59 @@ end, { noremap = true, silent = true, desc = "Next qf list" })
 map("n", "<C-q><C-p>", function()
   cmd("colder")
 end, { noremap = true, silent = true, desc = "Prev qf list" })
-local ok_bufjump, bufjump = pcall(require, "bufjump")
-if ok_bufjump then
-  map("n", "<C-S-O>", bufjump.backward, { noremap = true, silent = true, desc = "Jumplist prev file" })
-  map("n", "<S-Tab>", bufjump.forward, { noremap = true, silent = true, desc = "Jumplist next file" }) -- <C-S-I>
-end
--- local jumplist
--- pcall(function()
---   ---@type Jumplist
---   i.import("jumplist", function(j)
---     jumplist = j
---   end)
---   -- map("n", "<C-i>", jumplist.jump_next, { noremap = true, silent = true, desc = "Jumplist next" })
---   -- map("n", "<C-o>", jumplist.jump_prev, { noremap = true, silent = true, desc = "Jumplist prev" })
---   map("n", "<S-Tab>", jumplist.jump_next_file, { noremap = true, silent = true, desc = "Jumplist next file" }) -- <C-S-I>
---   map("n", "<C-S-O>", jumplist.jump_prev_file, { noremap = true, silent = true, desc = "Jumplist prev file" })
---   map("n", "<C-S-L>", function()
---     vim.notify("Entries: " .. #jumplist.get_list() .. "\n" .. vim.inspect(jumplist.get_list()))
---   end, { noremap = true, silent = true, desc = "Jumplist prev" })
---   map("n", "<C-S-H>", function()
---     vim.notify(
---       "Current: " .. jumplist.get_current_jump_idx() .. "\n" .. vim.inspect({ jumplist.get_current_jump() })
---     )
---   end, { noremap = true, silent = true, desc = "Jumplist prev" })
--- end)
+pcall(function()
+  local jump = require("jumplist.jump")
+  local extmarks = require("jumplist.extmarks")
+  print("jumplist.nvim is present")
+  map("n", "<C-i>", jump.jump_next, { noremap = true, silent = true, desc = "Jumplist next" })
+  map("n", "<C-o>", jump.jump_prev, { noremap = true, silent = true, desc = "Jumplist prev" })
+  map("n", "<S-Tab>", "<C-i>", { noremap = true, silent = true }) -- <C-S-I>
+  map("n", "<C-S-O>", "<C-o>", { noremap = true, silent = true })
+  map("n", "n", function()
+    if fn.getreg("/") ~= "" then
+      jump.mark()
+      feedkeys("nzzzv", "ni")
+    end
+  end, { noremap = true, silent = true })
+  map("n", "N", function()
+    if fn.getreg("/") ~= "" then
+      jump.mark()
+      feedkeys("Nzzzv", "ni")
+    end
+  end, { noremap = true, silent = true })
+  -- _G._jumplist_nvim_mark = jump.mark
+  -- map(
+  --   "n",
+  --   "k",
+  --   [[v:count > 5 ? ":v:lua._jumplist_nvim_mark() | :normal! " . v:count . "k<CR>" : "k"]],
+  --   { noremap = true, silent = true, expr = true }
+  -- )
+  -- map(
+  --   "n",
+  --   "j",
+  --   [[v:count > 5 ? ":v:lua._jumplist_nvim_mark() | :normal! " . v:count . "j<CR>" : "j"]],
+  --   { noremap = true, silent = true, expr = true }
+  -- )
+  -- map("n", "<S-Tab>", _jumplist_nvim.jump_next_file, { noremap = true, silent = true, desc = "Jumplist next file" }) -- <C-S-I>
+  -- map("n", "<C-S-O>", _jumplist_nvim.jump_prev_file, { noremap = true, silent = true, desc = "Jumplist prev file" })
+  -- map("n", "<S-Tab>", _jumplist_nvim.jump_next, { noremap = true, silent = true, desc = "Jumplist next" }) -- <C-S-I>
+  -- map("n", "<C-S-O>", _jumplist_nvim.jump_prev, { noremap = true, silent = true, desc = "Jumplist prev" })
+  map("n", "<leader>jl", function()
+    vim.notify("Entries: " .. #jump.jumplist .. "\n" .. vim.inspect(jump.jumplist))
+  end, { noremap = true, silent = true, desc = "jumplist entries" })
+  map("n", "<leader>jc", function()
+    vim.notify("Current: " .. jump.get_current_jump_idx() .. "\n" .. vim.inspect({ jump.get_current_jump() }))
+  end, { noremap = true, silent = true, desc = "jumplist current entry" })
+  map("n", "<leader>jm", function()
+    vim.notify("Marks: " .. vim.inspect(extmarks.get_extmarks()))
+  end, { noremap = true, silent = true, desc = "jumplist extmarks" })
+  map("n", "<leader>jd", jump.init, { noremap = true, silent = true, desc = "jumplist clear" })
+end)
 map("n", "<C-n>", function()
   if #vim.fn.getqflist() == 0 then
     return
   end
-  -- pcall(jumplist.mark)
+  jumplist.mark()
   if #vim.fn.getqflist() == 1 then
     cmd("cfirst")
   elseif not pcall(cmd, "cnext") then
@@ -296,7 +304,7 @@ map("n", "<C-p>", function()
   if #vim.fn.getqflist() == 0 then
     return
   end
-  -- pcall(jumplist.mark)
+  jumplist.mark()
   if #vim.fn.getqflist() == 1 then
     cmd("cfirst")
   elseif not pcall(cmd, "cprevious") then
@@ -364,13 +372,14 @@ map("n", "<leader>vssc", function()
   vim.o.signcolumn = O.signcolumn
 end, { noremap = true, silent = true, desc = "Reset scrolloff" })
 -- noice scrolling through hover docs
+local has_noice = pcall(require, "noice")
 map("n", "<c-d>", function()
-  if not require("noice.lsp").scroll(4) then
+  if not has_noice or not require("noice.lsp").scroll(4) then
     return "<c-d>"
   end
 end, { silent = true, expr = true })
 map("n", "<c-u>", function()
-  if not require("noice.lsp").scroll(-4) then
+  if not has_noice or not require("noice.lsp").scroll(-4) then
     return "<c-u>"
   end
 end, { silent = true, expr = true })
@@ -509,7 +518,12 @@ local function set_aerial_buf_shortcuts(bufnr)
   map("n", "}", require("aerial").next, opts)
 end
 Keymap.set_aerial_buf_shortcuts = set_aerial_buf_shortcuts
-map("n", "<leader>ls", "<cmd>AerialToggle!<CR>", { noremap = true, silent = true })
+-- local aerial_config = require("rc.configs.aerial")
+map("n", "<leader>ls", function()
+  -- aerial_config.setup("sideview")
+  -- cmd("AerialToggle!")
+  cmd("Navbuddy")
+end, { noremap = true, silent = true, desc = "Toggle lsp symbols list" })
 -- NvimTree
 local nvim_tree = require("nvim-tree.api").tree
 map("n", "<leader>n", function()
@@ -613,6 +627,7 @@ map("n", "<C-f>", function()
   telescope_builtin.live_grep(with_default_opts())
 end, { noremap = true, silent = true, desc = "Live grep" })
 map("n", "<C-s>", function()
+  -- aerial_config.setup("telescope")
   telescope.extensions.aerial.aerial(with_default_opts({
     sorting_strategy = "descending",
     layout_config = {
@@ -737,19 +752,19 @@ end, { noremap = true, silent = true })
 -- map("n", "<leader>dr", dap.terminate, { noremap = true, silent = true })
 map("n", "<F6>", function()
   if dap.session() ~= nil then
-    qf.set_jumplist()
+    jumplist.mark()
     dap.step_over()
   end
 end, { noremap = true, silent = true })
 map("n", "<F5>", function()
   if dap.session() ~= nil then
-    qf.set_jumplist()
+    jumplist.mark()
     dap.step_into()
   end
 end, { noremap = true, silent = true })
 map("n", "<F7>", function()
   if dap.session() ~= nil then
-    qf.set_jumplist()
+    jumplist.mark()
     dap.step_out()
   end
 end, { noremap = true, silent = true })
@@ -810,11 +825,12 @@ map("n", "<leader>dlc", [[:Telescope dap commands<CR>]], { noremap = true, silen
 -- :Telescope dap variables
 -- :Telescope dap frames
 -- dadbod
-map("n", "<leader>ddu", [[:DBUIToggle<CR>]], { noremap = true, silent = true })
+-- map("n", "<leader>ddu", [[:DBUIToggle<CR>]], { noremap = true, silent = true })
 -- scratch buffers
 map("n", "<leader>llf", [[:vsplit | e /tmp/scratch<CR>]], { noremap = true, silent = true })
 map("n", "<leader>llx", [[:Luapad<CR>]], { noremap = true, silent = true, desc = "Toggle Luapad" })
 map("n", "<leader>llr", [[:LuaRun<CR>]], { noremap = true, silent = true, desc = "Lua: run current file" })
+map("n", "<leader>c", [[:ChatGPT<CR>]], { noremap = true, silent = true, desc = "Ask ChatGPT" })
 map(
   "n",
   "<leader>llir",
@@ -1084,59 +1100,33 @@ map(
   [[:s/\%V\\u\(\x\{4\}\)/\=nr2char('0x'.submatch(1))/<CR>]],
   { noremap = true, silent = true, desc = "Decode unicode character" }
 )
--- toggle options
-local function toggle_scoped(option, scope)
-  return pcall(function()
-    local new_value
-    if scope == "o" then
-      new_value = not vim[scope][option]
-      vim[scope][option] = new_value
-    elseif scope == "wo" then
-      new_value = not vim[scope][api.nvim_get_current_win()][option]
-      vim[scope][api.nvim_get_current_win()][option] = new_value
-    elseif scope == "bo" then
-      new_value = not vim[scope][api.nvim_get_current_buf()][option]
-      vim[scope][api.nvim_get_current_buf()][option] = new_value
-    end
-    return new_value
-  end)
-end
-local function toggle(option)
-  return function()
-    local ok, new_value, scope
-    for _, _scope in ipairs({ "o", "wo", "bo" }) do
-      ok, new_value = toggle_scoped(option, _scope)
-      -- vim.notify(("%s %s"):format(scope, tostring(new_value)))
-      if ok then
-        scope = _scope
-        break
-      end
-    end
-    if not ok then
-      vim.notify("Option not found: " .. option)
-      return
-    else
-      vim.notify(("Option set: %s.%s=%s"):format(scope, option, tostring(new_value)))
-    end
-  end
-end
--- TODO: store in shada globals (vim.g.UPPERCASE_VAR)
-map("n", "\\w", toggle("wrap"), { noremap = true, silent = true, desc = "Toggle wrap" })
-map("n", "\\C", toggle("cursorcolumn"), { noremap = true, silent = true, desc = "Toggle cursorcolumn" })
-map("n", "\\c", toggle("cursorline"), {
+local options = require("rc.options")
+map("n", "\\w", options.toggle_or_set("wrap"), { noremap = true, silent = true, desc = "Toggle wrap" })
+map(
+  "n",
+  "\\C",
+  options.toggle_or_set("cursorcolumn"),
+  { noremap = true, silent = true, desc = "Toggle cursorcolumn" }
+)
+map("n", "\\c", options.toggle_or_set("cursorline"), {
   noremap = true,
   silent = true,
   desc = "Toggle cursorline",
 })
-map("n", "\\i", toggle("ignorecase"), {
+map("n", "\\i", options.toggle_or_set("ignorecase"), {
   noremap = true,
   silent = true,
   desc = "Toggle ignorecase",
 })
-map("n", "\\l", toggle("list"), { noremap = true, silent = true, desc = "Toggle list" })
-map("n", "\\n", toggle("number"), { noremap = true, silent = true, desc = "Toggle number" })
-map("n", "\\r", toggle("relativenumber"), { noremap = true, silent = true, desc = "Toggle relativenumber" })
-map("n", "\\s", toggle("spell"), { noremap = true, silent = true, desc = "Toggle spell" })
+map("n", "\\l", options.toggle_or_set("list"), { noremap = true, silent = true, desc = "Toggle list" })
+map("n", "\\n", options.toggle_or_set("number"), { noremap = true, silent = true, desc = "Toggle number" })
+map(
+  "n",
+  "\\r",
+  options.toggle_or_set("relativenumber"),
+  { noremap = true, silent = true, desc = "Toggle relativenumber" }
+)
+map("n", "\\s", options.toggle_or_set("spell"), { noremap = true, silent = true, desc = "Toggle spell" })
 map("n", "\\b", function()
   vim.g.heirline_show_winbufnrs = not vim.g.heirline_show_winbufnrs
 end, { noremap = true, silent = true, desc = "Toggle show win/buf numbers in winbar" })
@@ -1198,3 +1188,7 @@ autocmd("BufEnter", {
     end
   end,
 })
+
+pcall(function()
+  require("langmapper").automapping({ buffer = false })
+end)
