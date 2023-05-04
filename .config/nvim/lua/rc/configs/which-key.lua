@@ -1,4 +1,4 @@
-pcall(function()
+if pcall(require, "langmapper") then
   local lmu = require("langmapper.utils")
   local view = require("which-key.view")
   local execute = view.execute
@@ -9,7 +9,7 @@ pcall(function()
     prefix_i = lmu.translate_keycode(prefix_i, "default", "ru")
     execute(prefix_i, mode, buf)
   end
-end)
+end
 
 -- local presets = require('which-key.plugins.presets')
 -- presets.operators = lmu.trans_dict(presets.operators)

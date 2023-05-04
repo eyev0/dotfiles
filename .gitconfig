@@ -30,3 +30,9 @@
 
 [merge]
     tool = nvimdiff
+
+; [url "ssh://git@github.com/"]
+; 	insteadOf = https://github.com/
+
+[url "ssh://git@gitlab.tp.sblogistica.ru/"]
+	insteadOf = https://gitlab.tp.sblogistica.ru/

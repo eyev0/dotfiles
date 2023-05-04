@@ -19,7 +19,7 @@ require("neodev").setup({
       "jumplist.nvim",
       -- "import.nvim",
       -- "nvim-dap",
-      -- "nvim-dap-ui",
+      "nvim-dap-ui",
 		},
 		-- plugins = {
 		-- 	"nvim-treesitter",

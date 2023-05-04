@@ -3,9 +3,9 @@ local c = require("rc.configs.heirline.components")
 
 local DefaultStatusline = {
 	c.ViMode,
-	c.Space,
-	c.WorkDir,
-	c.Space,
+	-- c.Space,
+	-- c.WorkDir,
+	-- c.Space,
 	c.FileNameBlockFactory(true, 0.20),
 	c.Space,
 	c.Git,

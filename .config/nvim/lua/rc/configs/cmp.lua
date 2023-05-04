@@ -123,6 +123,7 @@ end
 -- no tags please
 vim.keymap.set("i", "<C-n>", "<NOP>")
 vim.keymap.set("i", "<C-p>", "<NOP>")
+vim.keymap.set("i", "<C-y>", "<NOP>")
 -- remap omnifunc
 vim.keymap.set("i", "<C-x><C-o>", cmp.complete, { noremap = true, silent = true })
 
@@ -145,9 +146,15 @@ local mappings = {
   ["<S-Tab>"] = prev_item(false),
 }
 
--- pcall(function()
---   mappings = require("langmapper.utils").trans_dict(mappings)
--- end)
+if pcall(require, "langmapper") then
+  local keymap = require("cmp.utils.keymap")
+  local origin_set_map = keymap.set_map
+  local utils = require("langmapper.utils")
+  keymap.set_map = function(bufnr, mode, lhs, rhs, opts)
+    origin_set_map(bufnr, mode, lhs, rhs, opts)
+    origin_set_map(bufnr, mode, utils.translate_keycode(lhs, "default", "ru"), rhs, opts)
+  end
+end
 
 local function merge(a, b)
   return vim.tbl_deep_extend("force", {}, a, b)
@@ -162,14 +169,15 @@ local sources = {
   -- { name = "nvim_lsp_signature_help", group_index = 3, priority = 1 },
   -- { name = "npm", group_index = 4, keyword_length = 4 },
 }
+
 if O.copilot then
   table.insert(sources, 1, { name = "copilot", group_index = 1, priority = 20 })
 end
 
 cmp.setup({
-  -- enabled = function()
-  -- 	return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
-  -- end,
+  enabled = function()
+    return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
+  end,
   preselect = cmp.PreselectMode.Item,
   snippet = {
     expand = function(args)

@@ -13,6 +13,7 @@ vim.o.autowrite = true
 vim.o.writebackup = false
 vim.o.undofile = true
 vim.opt.undodir = vim.fn.expand("$HOME/.vim/undodir")
+vim.o.sessionoptions = "buffers,curdir,folds,help,tabpages,winsize,winpos,localoptions"
 vim.o.updatetime = 100
 vim.o.timeoutlen = 300
 vim.o.ttimeout = false
@@ -54,13 +55,29 @@ vim.o.foldlevelstart = 99
 vim.o.splitkeep = "screen"
 vim.o.switchbuf = "usetab,uselast"
 vim.o.jumpoptions = "stack"
--- vim.o.langmap="ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\\"ZXCVBNM<>"
 -- vim.o.statuscolumn = "%=%{v:relnum?v:relnum:0} %{v:lnum}│"
 -- vim.o.statuscolumn = "%s%=%{v:relnum?v:relnum:v:lnum} "
 vim.o.relativenumber = true
 vim.o.number = true
 vim.o.signcolumn = "yes:2"
 vim.o.fillchars = "eob: "
+
+-- langmap
+local function escape(str)
+  -- You need to escape these characters to work correctly
+  local escape_chars = [[;,."|\]]
+  return vim.fn.escape(str, escape_chars)
+end
+-- Recommended to use lua template string
+local en = [[`qwertyuiop[]asdfghjkl;'zxcvbnm,.]]
+local ru = [[ёйцукенгшщзхъфывапролджэячсмитьбю]]
+local en_shift = [[~QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>]]
+local ru_shift = [[ËЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ]]
+vim.opt.langmap = vim.fn.join({
+  -- | `to` should be first     | `from` should be second
+  escape(ru_shift) .. ";" .. escape(en_shift),
+  escape(ru) .. ";" .. escape(en),
+}, ",")
 
 -- disable statuscolumn in non-file buffers
 local relnum_ignore_filetypes = { "NvimTree", "fugitive", "DiffviewFiles", "DiffviewFileHistory" }

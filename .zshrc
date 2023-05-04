@@ -113,9 +113,7 @@ export KEYTIMEOUT=1
 
 alias vim='nvim'
 alias n='nvim'
-alias ns='nvim -c SessionLoad'
 alias np='nvim --headless "+Lazy sync" +qa'
-# alias nsr='env $(cat base.env | xargs) nvim -c SessionLoad'
 alias vimdiff='nvim -d'
 
 alias wgu='wg-quick up wg0'
@@ -147,7 +145,7 @@ alias yw='yarn watch'
 alias yb='yarn build'
 alias yd='yarn dev'
 
-alias dotconf='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
+alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 alias lgd='lazygit -g $HOME/.dotfiles -w $HOME'
 
 alias p='pass'

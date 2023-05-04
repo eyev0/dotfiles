@@ -9,6 +9,8 @@ vim.g.mapleader = " "
 
 ---@alias ColorschemeOption "gruvbox-material" | "catppuccin"
 
+local pluginspath = vim.fn.stdpath("data") .. "/lazy"
+
 --- options
 ---@class Options
 ---@field scrolloff number
@@ -18,18 +20,19 @@ O = {
   scrolloff = 9,
   sidescrolloff = 3,
   signcolumn = "yes:2",
-  colorscheme = "catppuccin",
+  colorscheme = "gruvbox-material",
+  background = "light",
   lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim",
-  pluginspath = vim.fn.stdpath("data") .. "/lazy",
+  pluginspath = pluginspath,
   devpath = vim.env.HOME .. "/dev/nvim/plugins",
-  copilot = true, -- TODO: create coroutine that fetches "curl -s ipinfo.io | jq '.country'" and store it, than await it and turn Copilot on
+  copilot = true,
 }
 
 ENV = {
   PYTHON_MODULE = "app",
 }
 
-vim.o.background = "dark"
+vim.o.background = O.background
 
 _G.autocmd = vim.api.nvim_create_autocmd
 _G.augroup = vim.api.nvim_create_augroup
@@ -64,6 +67,7 @@ if not vim.loop.fs_stat(O.lazypath) then
 end
 vim.opt.rtp:prepend(O.lazypath)
 local opts = {
+  root = O.pluginspath,
   defaults = { lazy = false },
   install = { missing = true },
   dev = {
@@ -88,12 +92,20 @@ local opts = {
   },
 }
 
-local plugins = MY_CONFIG_DEBUG ~= nil and require("rc.plugins.debug") or require("rc.plugins")
+local plugins
+if DEBUG_CONFIG then
+  print("DEBUG_CONFIG")
+  plugins = require("rc.plugins.debug")
+elseif IS_FIRENVIM then
+  plugins = require("rc.plugins.firenvim")
+else
+  plugins = require("rc.plugins")
+end
 require("lazy").setup(plugins, opts)
 
 -- command to load session
 -- vim.cmd([[command! SessionLoad lua require("persisted").load()]])
-vim.cmd([[command! SessionLoad lua require("persistence").load()]])
+-- vim.cmd([[command! SessionLoad lua require("persistence").load()]])
 
 U.clear_reg_marks()
 -- keymaps are set in ./after/plugin/keymappings.lua

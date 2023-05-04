@@ -119,21 +119,24 @@ M.Snippets = {
 
 M.MacroRecording = {
   provider = function()
-    return " "
-      .. vim.F.if_nil(
-        vim.F.npcall(function()
-          return require("noice").api.status.mode.get()
-        end),
-        ""
-      )
+    return vim.F.if_nil(
+      vim.F.npcall(function()
+        return require("noice").api.status.mode.get() .. " "
+      end),
+      ""
+    )
   end,
   condition = vim.F.npcall(function()
     return require("noice").api.status.mode.has()
   end),
-  hl = { fg = "#ff9e64" },
+  hl = { fg = "red", bold = true },
 }
 
-M.ViMode = { utils.surround({ "", "" }, "bright_bg", { M.ViMode, M.Snippets }), M.MacroRecording }
+M.ViMode = {
+  utils.surround({ "", "" }, "bright_fg", { M.ViMode, M.Snippets }),
+  M.Space,
+  M.MacroRecording,
+}
 
 M.WorkDir = {
   update = { "BufEnter", "DirChanged" },
@@ -147,7 +150,7 @@ M.WorkDir = {
     local trail = cwd:sub(-1) == "/" and "" or "/"
     return icon .. cwd .. trail
   end,
-  hl = { fg = "blue", bold = true },
+  hl = { fg = "orange", bold = true },
 }
 
 M.FileType = {

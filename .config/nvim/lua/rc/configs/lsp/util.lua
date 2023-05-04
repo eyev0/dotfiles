@@ -8,16 +8,16 @@ Lsp.on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
   Keymap.set_lsp_buf_shortcuts(client, bufnr)
   if client.server_capabilities.documentSymbolProvider then
-    local ok, navic = pcall(require, "nvim-navic")
-    if ok then
-      vim.b[bufnr].navic_lazy_update_context = true
-      -- navic.attach(client, bufnr)
-    end
-    local navbuddy
-    ok, navbuddy = pcall(require, "nvim-navbuddy")
-    if ok then
-      navbuddy.attach(client, bufnr)
-    end
+    -- local ok, navic = pcall(require, "nvim-navic")
+    -- if ok then
+    --   vim.b[bufnr].navic_lazy_update_context = true
+    --   -- navic.attach(client, bufnr)
+    -- end
+    -- local navbuddy
+    -- ok, navbuddy = pcall(require, "nvim-navbuddy")
+    -- if ok then
+    --   navbuddy.attach(client, bufnr)
+    -- end
   end
   require("lsp-inlayhints").on_attach(client, bufnr)
   -- pcall(function()
@@ -28,11 +28,8 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown", "plaintext" }
--- for cmp.nvim
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
--- on_list handler
---
 ---@param options table qf {what} table, see :h setqflist-what
 ---@param open boolean? Open quickfix? (default = true)
 ---@param jump boolean? Jump to first entry? (default = true)

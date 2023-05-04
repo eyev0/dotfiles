@@ -1,3 +1,3 @@
 require("jumplist").setup({
-  max_entries = 200,
+  max_entries = 500,
 })

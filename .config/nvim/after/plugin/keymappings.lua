@@ -9,9 +9,9 @@ local jumplist = require("rc.utils.jumplist")
 Keymap = {}
 
 -- debug
-if MY_CONFIG_DEBUG ~= nil then
-  return
-end
+-- if DEBUG_CONFIG ~= nil then
+--   return
+-- end
 -- lazy
 map("n", "<leader>ps", [[:Lazy sync<CR>]], { noremap = true, silent = true })
 map("n", "<leader>pp", [[:Lazy profile<CR>]], { noremap = true, silent = true })
@@ -245,10 +245,10 @@ pcall(function()
   local jump = require("jumplist.jump")
   local extmarks = require("jumplist.extmarks")
   print("jumplist.nvim is present")
-  map("n", "<C-i>", jump.jump_next, { noremap = true, silent = true, desc = "Jumplist next" })
-  map("n", "<C-o>", jump.jump_prev, { noremap = true, silent = true, desc = "Jumplist prev" })
-  map("n", "<S-Tab>", "<C-i>", { noremap = true, silent = true }) -- <C-S-I>
-  map("n", "<C-S-O>", "<C-o>", { noremap = true, silent = true })
+  -- map("n", "<C-i>", jump.jump_next, { noremap = true, silent = true, desc = "Jumplist next" })
+  -- map("n", "<C-o>", jump.jump_prev, { noremap = true, silent = true, desc = "Jumplist prev" })
+  -- map("n", "<S-Tab>", "<C-i>", { noremap = true, silent = true }) -- <C-S-I>
+  -- map("n", "<C-S-O>", "<C-o>", { noremap = true, silent = true })
   map("n", "n", function()
     if fn.getreg("/") ~= "" then
       jump.mark()
@@ -521,8 +521,8 @@ Keymap.set_aerial_buf_shortcuts = set_aerial_buf_shortcuts
 -- local aerial_config = require("rc.configs.aerial")
 map("n", "<leader>ls", function()
   -- aerial_config.setup("sideview")
-  -- cmd("AerialToggle!")
-  cmd("Navbuddy")
+  cmd("AerialToggle!")
+  -- cmd("Navbuddy")
 end, { noremap = true, silent = true, desc = "Toggle lsp symbols list" })
 -- NvimTree
 local nvim_tree = require("nvim-tree.api").tree
@@ -545,13 +545,13 @@ local function toggleterm(size, direction)
   direction = vim.F.if_nil(direction, "float")
   term:toggle(size, direction)
 end
-map({ "n", "t" }, "<End>", toggleterm, { noremap = true, silent = true })
-map({ "n", "t" }, "<C-End>", function()
+map({ "n", "t" }, "<F1>", toggleterm, { noremap = true, silent = true })
+map({ "n", "t" }, "<F25>", function()
   toggleterm(nil, "tab")
 end, { noremap = true, silent = true })
-map({ "n", "t" }, "<C-S-End>", function()
-  toggleterm(16, "horizontal")
-end, { noremap = true, silent = true })
+-- map({ "n", "t" }, "<C-S-End>", function()
+--   toggleterm(16, "horizontal")
+-- end, { noremap = true, silent = true })
 -- Telescope - opener
 local find_files_opts = {
   layout_strategy = "horizontal",
@@ -736,10 +736,14 @@ end, { noremap = true, silent = true, desc = "Open dir" })
 local dap = require("dap")
 local dapui = require("dapui")
 map("n", "<F8>", function()
-  if dap.session() == nil then
-    pcall(dapui.close)
+  if vim.bo.filetype == "http" then
+    cmd("RestNvimRun")
+  else
+    if dap.session() == nil then
+      pcall(dapui.close)
+    end
+    dap.continue()
   end
-  dap.continue()
 end, { noremap = true, silent = true })
 map("n", "<F32>", function()
   pcall(dapui.close)
@@ -802,7 +806,7 @@ map("n", "<leader>du", function()
   if dap.session() == nil then
     vim.notify_once("No active debug session", vim.log.levels.WARN)
   end
-  dapui.toggle()
+  dapui.toggle({ reset = true })
 end, { noremap = true, silent = true, desc = "dapui: Toggle interface" })
 map({ "n", "x" }, "<leader>de", function()
   ---@diagnostic disable-next-line: missing-parameter
@@ -815,10 +819,10 @@ end, { noremap = true, silent = true, desc = "dapui: Show element in float" })
 -- debug jest
 map("n", "<leader>dj", [[:JesterActions<CR>]], { noremap = true, silent = true })
 -- telescope dap
-map("n", "<leader>dlb", [[:Telescope dap list_breakpoints<CR>]], { noremap = true, silent = true })
-map("n", "<leader>dlv", [[:Telescope dap variables<CR>]], { noremap = true, silent = true })
-map("n", "<leader>dlf", [[:Telescope dap configurations<CR>]], { noremap = true, silent = true })
-map("n", "<leader>dlc", [[:Telescope dap commands<CR>]], { noremap = true, silent = true })
+map("n", "<leader>dob", [[:Telescope dap list_breakpoints<CR>]], { noremap = true, silent = true })
+map("n", "<leader>dov", [[:Telescope dap variables<CR>]], { noremap = true, silent = true })
+map("n", "<leader>dof", [[:Telescope dap configurations<CR>]], { noremap = true, silent = true })
+map("n", "<leader>doc", [[:Telescope dap commands<CR>]], { noremap = true, silent = true })
 -- :Telescope dap commands
 -- :Telescope dap configurations
 -- :Telescope dap list_breakpoints
@@ -1189,6 +1193,6 @@ autocmd("BufEnter", {
   end,
 })
 
-pcall(function()
-  require("langmapper").automapping({ buffer = false })
-end)
+if pcall(require, "langmapper") then
+  require("langmapper").automapping({ global = true, buffer = false })
+end

@@ -1,4 +1,5 @@
-vim.o.sessionoptions = "winpos,winsize,help,curdir,folds,tabpages"
+-- vim.o.sessionoptions = "winpos,winsize,help,curdir,folds,tabpages"
+vim.o.sessionoptions = "buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 require("persisted").setup({
   use_git_branch = false,
