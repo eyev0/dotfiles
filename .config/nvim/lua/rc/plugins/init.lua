@@ -103,18 +103,19 @@ return {
     config = function()
       require("rc.configs.noice")
     end,
-    -- dev = true,
+    dev = true,
+    dir = O.devpath .. "/noice.nvim",
     -- TODO: pull request fix scrollbar
     --
     -- branch = "local",
     -- enabled = false,
-    -- dir = O.pluginspath .. "/noice.nvim",
   },
   {
     "rebelot/heirline.nvim",
     config = function()
       require("rc.configs.heirline")
     end,
+    cond = not IS_FIRENVIM,
     event = "ColorScheme",
     -- commit = "750a112",
   },
@@ -172,7 +173,7 @@ return {
     config = function()
       require("rc.configs.treesitter")
     end,
-    commit = "eedc5198a1b4bb1b08ae6d4f64f3d76e376957aa",
+    -- commit = "eedc5198a1b4bb1b08ae6d4f64f3d76e376957aa",
     event = "VeryLazy",
   },
   { "mrjones2014/nvim-ts-rainbow", event = "VeryLazy" },
@@ -210,6 +211,7 @@ return {
       require("rc.configs.lsp.ls.null-ls")
     end,
     event = "VeryLazy",
+    dependencies = { "neovim/nvim-lspconfig" },
   },
   { "jose-elias-alvarez/nvim-lsp-ts-utils" },
   {
@@ -218,6 +220,31 @@ return {
       require("nvim-navic").setup({ highlight = true })
     end,
     -- commit = "11e08391eeed00effa85ca24ff9d1e0472cbcd6a",
+  },
+  {
+    "simrat39/rust-tools.nvim",
+    config = function()
+      local rt = require("rust-tools")
+      local extension_path = vim.env.HOME .. "/.vscode/extensions/vadimcn.vscode-lldb-1.9.1"
+      local codelldb_path = extension_path .. "/adapter/codelldb"
+      local liblldb_path = extension_path .. "/lldb/lib/liblldb"
+      local this_os = vim.loop.os_uname().sysname
+      -- The liblldb extension is .so for linux and .dylib for macOS
+      liblldb_path = liblldb_path .. (this_os == "Linux" and ".so" or ".dylib")
+      rt.setup({
+        dap = {
+          adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
+        },
+        server = {
+          on_attach = function(_, bufnr)
+            -- Hover actions
+            vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
+            -- Code action groups
+            vim.keymap.set("n", "<leader>lac", rt.code_action_group.code_action_group, { buffer = bufnr })
+          end,
+        },
+      })
+    end,
   },
   {
     "kosayoda/nvim-lightbulb",
@@ -262,7 +289,7 @@ return {
     init = function()
       vim.g.copilot_no_tab_map = true
     end,
-    enabled = O.copilot,
+    -- enabled = O.copilot,
   },
   {
     "jackMort/ChatGPT.nvim",
@@ -307,6 +334,18 @@ return {
     "hrsh7th/nvim-cmp",
     config = function()
       require("rc.configs.cmp")
+    end,
+  },
+  {
+    "saecki/crates.nvim",
+    tag = "v0.3.0",
+    config = function()
+      require("crates").setup({
+        null_ls = {
+          enabled = true,
+          name = "crates.nvim",
+        },
+      })
     end,
   },
   { "onsails/lspkind.nvim" },
@@ -419,6 +458,7 @@ return {
   },
   {
     "rmagatti/auto-session",
+    commit = "21033c6815f249a7839c3a85fc8a6b44d74925c9",
     config = function()
       require("auto-session").setup({
         log_level = "error",
@@ -570,8 +610,33 @@ return {
     config = function()
       vim.g.firenvim_config = {
         -- globalSettings = { takeover = "never", cmdline = "none" },
-        localSettings = { [".*"] = { takeover = "empty", cmdline = "none" } },
+        localSettings = {
+          [".*"] = {
+            takeover = "never",
+            cmdline = "none",
+            filename = "/tmp/{hostname}_{pathname%14}.{extension}",
+          },
+        },
       }
+      vim.o.signcolumn = "auto"
+      vim.o.guifont = "Source Code Pro Medium:h10"
+      autocmd({ "BufEnter" }, {
+        pattern = "github.com_*.txt",
+        command = "set filetype=markdown",
+      })
+      -- autocmd({ "TextChanged", "TextChangedI" }, {
+      --   group = augroup("FirenvimConfig", {}),
+      --   callback = function()
+      --     if vim.g.timer_started == true then
+      --       return
+      --     end
+      --     vim.g.timer_started = true
+      --     vim.fn.timer_start(10000, function()
+      --       vim.g.timer_started = false
+      --       vim.cmd("w")
+      --     end)
+      --   end,
+      -- })
     end,
   },
   -- REST

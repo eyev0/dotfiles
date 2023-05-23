@@ -161,18 +161,16 @@ local function merge(a, b)
 end
 
 local sources = {
+  { name = "copilot", group_index = 1, priority = 20 },
   { name = "nvim_lsp", group_index = 1, priority = 15 },
   { name = "vsnip", group_index = 1, priority = 10 },
   -- { name = "rg", group_index = 2, priority = 5, max_item_count = 2, keyword_length = 3 },
   { name = "buffer", group_index = 2, priority = 5, max_item_count = 3, keyword_length = 3 },
   { name = "path", group_index = 2, priority = 3 },
+  { name = "crates", group_index = 2, priority = 3  },
   -- { name = "nvim_lsp_signature_help", group_index = 3, priority = 1 },
   -- { name = "npm", group_index = 4, keyword_length = 4 },
 }
-
-if O.copilot then
-  table.insert(sources, 1, { name = "copilot", group_index = 1, priority = 20 })
-end
 
 cmp.setup({
   enabled = function()

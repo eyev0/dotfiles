@@ -2,6 +2,10 @@
 vim.cmd([[
   augroup DiagnosticsHighlighting
     autocmd!
+    " autocmd ColorScheme * highlight! link DiagnosticLineNrError ErrorMsg
+    " autocmd ColorScheme * highlight! link DiagnosticLineNrError WarningMsg
+    " autocmd ColorScheme * highlight! link DiagnosticLineNrInfo InfoFloat
+    " autocmd ColorScheme * highlight! link DiagnosticLineNrHint HintFloat
     autocmd ColorScheme * highlight! DiagnosticLineNrError guibg=#51202A guifg=#FF0000 gui=bold
     autocmd ColorScheme * highlight! DiagnosticLineNrWarn guibg=#51412A guifg=#FFA500 gui=bold
     autocmd ColorScheme * highlight! DiagnosticLineNrInfo guibg=#1E535D guifg=#00FFFF gui=bold

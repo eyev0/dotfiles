@@ -1,3 +1,6 @@
+DEBUG_CONFIG = vim.env.NVIM_DEBUG_MY_CONFIG == 1 and true or false
+IS_FIRENVIM = vim.g.started_by_firenvim ~= nil or vim.env.NVIM_FIRENVIM == 1
+
 -- disable highlighting matching parens
 vim.g.loaded_matchparen = 1
 vim.g.do_filetype_lua = true
@@ -25,7 +28,7 @@ O = {
   lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim",
   pluginspath = pluginspath,
   devpath = vim.env.HOME .. "/dev/nvim/plugins",
-  copilot = true,
+  -- copilot = true,
 }
 
 ENV = {
@@ -96,8 +99,6 @@ local plugins
 if DEBUG_CONFIG then
   print("DEBUG_CONFIG")
   plugins = require("rc.plugins.debug")
-elseif IS_FIRENVIM then
-  plugins = require("rc.plugins.firenvim")
 else
   plugins = require("rc.plugins")
 end

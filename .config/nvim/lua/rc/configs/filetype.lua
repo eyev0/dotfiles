@@ -20,6 +20,8 @@ require("filetype").setup({
     },
     complex = {
       [".*vscode/launch.json"] = "jsonc",
+      [".*waybar/config"] = "jsonc",
+      [".*sway/config"] = "sh",
     },
     function_extensions = {
       lua = function()

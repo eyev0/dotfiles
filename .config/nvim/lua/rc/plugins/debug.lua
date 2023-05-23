@@ -226,7 +226,7 @@ return {
     init = function()
       vim.g.copilot_no_tab_map = true
     end,
-    enabled = O.copilot,
+    -- enabled = O.copilot,
   },
   {
     "jackMort/ChatGPT.nvim",

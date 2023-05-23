@@ -241,54 +241,37 @@ end, { noremap = true, silent = true, desc = "Next qf list" })
 map("n", "<C-q><C-p>", function()
   cmd("colder")
 end, { noremap = true, silent = true, desc = "Prev qf list" })
-pcall(function()
-  local jump = require("jumplist.jump")
-  local extmarks = require("jumplist.extmarks")
-  print("jumplist.nvim is present")
-  -- map("n", "<C-i>", jump.jump_next, { noremap = true, silent = true, desc = "Jumplist next" })
-  -- map("n", "<C-o>", jump.jump_prev, { noremap = true, silent = true, desc = "Jumplist prev" })
-  -- map("n", "<S-Tab>", "<C-i>", { noremap = true, silent = true }) -- <C-S-I>
-  -- map("n", "<C-S-O>", "<C-o>", { noremap = true, silent = true })
-  map("n", "n", function()
-    if fn.getreg("/") ~= "" then
-      jump.mark()
-      feedkeys("nzzzv", "ni")
-    end
-  end, { noremap = true, silent = true })
-  map("n", "N", function()
-    if fn.getreg("/") ~= "" then
-      jump.mark()
-      feedkeys("Nzzzv", "ni")
-    end
-  end, { noremap = true, silent = true })
-  -- _G._jumplist_nvim_mark = jump.mark
-  -- map(
-  --   "n",
-  --   "k",
-  --   [[v:count > 5 ? ":v:lua._jumplist_nvim_mark() | :normal! " . v:count . "k<CR>" : "k"]],
-  --   { noremap = true, silent = true, expr = true }
-  -- )
-  -- map(
-  --   "n",
-  --   "j",
-  --   [[v:count > 5 ? ":v:lua._jumplist_nvim_mark() | :normal! " . v:count . "j<CR>" : "j"]],
-  --   { noremap = true, silent = true, expr = true }
-  -- )
-  -- map("n", "<S-Tab>", _jumplist_nvim.jump_next_file, { noremap = true, silent = true, desc = "Jumplist next file" }) -- <C-S-I>
-  -- map("n", "<C-S-O>", _jumplist_nvim.jump_prev_file, { noremap = true, silent = true, desc = "Jumplist prev file" })
-  -- map("n", "<S-Tab>", _jumplist_nvim.jump_next, { noremap = true, silent = true, desc = "Jumplist next" }) -- <C-S-I>
-  -- map("n", "<C-S-O>", _jumplist_nvim.jump_prev, { noremap = true, silent = true, desc = "Jumplist prev" })
-  map("n", "<leader>jl", function()
-    vim.notify("Entries: " .. #jump.jumplist .. "\n" .. vim.inspect(jump.jumplist))
-  end, { noremap = true, silent = true, desc = "jumplist entries" })
-  map("n", "<leader>jc", function()
-    vim.notify("Current: " .. jump.get_current_jump_idx() .. "\n" .. vim.inspect({ jump.get_current_jump() }))
-  end, { noremap = true, silent = true, desc = "jumplist current entry" })
-  map("n", "<leader>jm", function()
-    vim.notify("Marks: " .. vim.inspect(extmarks.get_extmarks()))
-  end, { noremap = true, silent = true, desc = "jumplist extmarks" })
-  map("n", "<leader>jd", jump.init, { noremap = true, silent = true, desc = "jumplist clear" })
-end)
+-- TODO: C-S-O/I - previous/next window jump
+local win_list = {}
+local threshold = 100
+local function push_win(win)
+  if table.maxn(win_list) >= threshold then
+    table.remove(win_list, 0)
+  end
+  table.insert(win_list, win)
+end
+autocmd("BufWinEnter", {
+  group = augroup("RecordVisitedWinIds", {}),
+  callback = function()
+    local win = api.nvim_get_current_win()
+    -- print(win)
+    push_win(win)
+  end,
+})
+-- local current_pos = table.maxn(win_list)
+map("n", "<C-S-O>", function()
+
+end, { noremap = true, silent = true })
+map("n", "n", function()
+  if fn.getreg("/") ~= "" then
+    feedkeys("nzzzv", "ni")
+  end
+end, { noremap = true, silent = true })
+map("n", "N", function()
+  if fn.getreg("/") ~= "" then
+    feedkeys("Nzzzv", "ni")
+  end
+end, { noremap = true, silent = true })
 map("n", "<C-n>", function()
   if #vim.fn.getqflist() == 0 then
     return
@@ -587,7 +570,7 @@ map({ "n", "i" }, "<C-g>", function()
   if vim.bo.filetype == "TelescopePrompt" then
     -- toggle mode
     mode = mode == "git" and "files" or "git"
-    feedkeys("<C-c>", "t")
+    feedkeys("<C-c>", "n")
   else
     mode = default_mode
   end
@@ -738,6 +721,13 @@ local dapui = require("dapui")
 map("n", "<F8>", function()
   if vim.bo.filetype == "http" then
     cmd("RestNvimRun")
+  elseif vim.bo.filetype == "rust" then
+    if dap.session() == nil then
+      pcall(dapui.close)
+      cmd("RustDebuggables")
+    else
+      dap.continue()
+    end
   else
     if dap.session() == nil then
       pcall(dapui.close)
@@ -1010,8 +1000,32 @@ map("n", "<M-h>", function()
 end, { noremap = true, silent = true, desc = "Harpoon file 6" })
 -- rest
 map("n", "<leader>lhe", [[:RestSelectEnv ]], { noremap = true, silent = false })
-map("n", "<leader>lhr", [[<cmd>RestNvimRun<CR>]], { noremap = true, silent = true })
-map("n", "<leader>lhp", [[<cmd>RestNvimPreview<CR>]], { noremap = true, silent = true })
+local function get_win(name)
+  local win_list = api.nvim_list_wins()
+  for _, win in ipairs(win_list) do
+    if fn.fnamemodify(api.nvim_buf_get_name(api.nvim_win_get_buf(win)), ":t") == name then
+      return win
+    end
+  end
+  return nil
+end
+map("n", "<leader>lhr", function()
+  local win = get_win("rest_nvim_results")
+  -- print(win)
+  if win ~= nil then
+    -- api.nvim_win_hide(win)
+    local buf = api.nvim_win_get_buf(win)
+    vim.bo[buf].modifiable = true
+    api.nvim_buf_set_lines(buf, 0, -1, false, {})
+    vim.bo[buf].modifiable = false
+  end
+  -- redirect not working for this, probably async output
+  cmd("RestNvimRun")
+end, { noremap = true, silent = true })
+-- map("n", "<leader>lhp", [[<cmd>RestNvimPreview<CR>]], { noremap = true, silent = true })
+map("n", "<leader>lhp", function()
+  require("noice").redirect("RestNvimPreview")
+end, { desc = "RestNvimPreview" })
 map("n", "<leader>lhl", [[<cmd>RestNvimRunLast<CR>]], { noremap = true, silent = true })
 -- prettify json
 map("n", "<leader>ljsp", [[:%!jq<CR>]], { noremap = true, silent = true, desc = "Prettify json" })
@@ -1025,16 +1039,7 @@ map("c", "<C-t>", function()
   require("noice").redirect(fn.getcmdline(), { { filter = { event = "msg_show" }, view = "notify" } })
   feedkeys("<C-c>", "n")
 end, { desc = "Redirect Cmdline" })
--- cmdbuf
--- TODO: update cmdbuf history after executing command in or outside of cmdbuf
--- this requires remapping <CR> in cmdline to add getcmdline() to cmdbuf history
 --
--- vim.api.nvim_create_autocmd({ "CmdlineLeave" }, {
---   -- buffer = bufnr,
---   callback = function()
---     self:load(vim.fn.getcmdline())
---   end,
--- })
 local cmdbuf = require("cmdbuf")
 map({ "n", "v" }, "qo", function()
   cmdbuf.split_open(vim.o.cmdwinheight)
@@ -1051,15 +1056,21 @@ local cmdwin_aug_id = api.nvim_create_augroup("CmdwinHacks", {})
 local function cmdwin_maps()
   map("n", "<Esc>", [[<Cmd>quit<CR>]], { noremap = true, silent = true, buffer = true })
   map("n", "q", [[<Cmd>quit<CR>]], { nowait = true, buffer = true })
-  map({ "n", "i" }, "<C-t>", function()
-    local cursor = api.nvim_win_get_cursor(0)
-    local line = api.nvim_buf_get_lines(0, cursor[1] - 1, cursor[1], false)[1]
-    local ft = vim.bo.filetype
-    local command = ft == "lua" and ("lua " .. line) or line
-    vim.notify(command)
-    cmd("stopinsert")
-    require("noice").redirect(command, { { filter = { event = "msg_show" }, view = "notify" } })
-  end, { noremap = true, silent = true, desc = "Redirect Cmdline", buffer = true })
+  map(
+    { "n", "i" },
+    "<C-t>",
+    function()
+      local cursor = api.nvim_win_get_cursor(0)
+      local line = api.nvim_buf_get_lines(0, cursor[1] - 1, cursor[1], false)[1]
+      local command = vim.bo.filetype == "lua" and ("lua " .. line) or line
+      vim.notify(command)
+      cmd("stopinsert")
+      cmd("wincmd p")
+      require("noice").redirect(command, { { filter = { event = "msg_show" }, view = "notify" } })
+      cmd("wincmd p")
+    end,
+    { noremap = true, silent = true, desc = "Execute command under cursor in previous buffer", buffer = true }
+  )
 end
 api.nvim_create_autocmd({ "CmdwinEnter" }, {
   group = cmdwin_aug_id,
