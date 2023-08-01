@@ -16,7 +16,7 @@ require("neodev").setup({
       -- "heirline.nvim",
       -- "nvim-tree.lua",
       "nvim-lspconfig",
-      "jumplist.nvim",
+      -- "jumplist.nvim",
       -- "import.nvim",
       -- "nvim-dap",
       "nvim-dap-ui",

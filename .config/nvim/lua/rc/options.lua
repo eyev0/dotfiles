@@ -1,5 +1,7 @@
 -- neovim python api
 vim.g.python3_host_prog = "$HOME/.venvs/neovim/bin/python"
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
 
 vim.o.completeopt = "menuone,noselect,preview"
 

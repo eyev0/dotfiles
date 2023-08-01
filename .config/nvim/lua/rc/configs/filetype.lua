@@ -17,6 +17,8 @@ require("filetype").setup({
     literal = {
       [".dap-config"] = "lua",
       [".nvim"] = "lua",
+      [".profile"] = "zsh",
+      [".zpath"] = "zsh",
     },
     complex = {
       [".*vscode/launch.json"] = "jsonc",

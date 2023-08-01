@@ -12,6 +12,21 @@ Keymap = {}
 -- if DEBUG_CONFIG ~= nil then
 --   return
 -- end
+-- casual save
+map({ "n", "i" }, "<C-s>", function()
+  if utils.is_ins_mode() then
+    feedkeys("<C-o>:w<CR>", "n")
+  else
+    cmd("w")
+  end
+end, { noremap = true, silent = true })
+map({ "n", "i" }, "<C-S-S>", function()
+  if utils.is_ins_mode() then
+    feedkeys("<C-o>:wa<CR>", "n")
+  else
+    cmd("wa")
+  end
+end, { noremap = true, silent = true })
 -- lazy
 map("n", "<leader>ps", [[:Lazy sync<CR>]], { noremap = true, silent = true })
 map("n", "<leader>pp", [[:Lazy profile<CR>]], { noremap = true, silent = true })
@@ -31,6 +46,7 @@ map(
 )
 -- quit with <C-F12>
 map({ "n", "t" }, "<F36>", function()
+  pcall(vim.cmd, "wa")
   vim.cmd("qa")
 end, { noremap = true, silent = true }) --<C-F12>
 -- easier navigation, powered by tmux plugin
@@ -259,9 +275,7 @@ autocmd("BufWinEnter", {
   end,
 })
 -- local current_pos = table.maxn(win_list)
-map("n", "<C-S-O>", function()
-
-end, { noremap = true, silent = true })
+map("n", "<C-S-O>", function() end, { noremap = true, silent = true })
 map("n", "n", function()
   if fn.getreg("/") ~= "" then
     feedkeys("nzzzv", "ni")
@@ -345,10 +359,10 @@ end, { noremap = true, silent = true, desc = "Replace within quickfix entries" }
 map("n", "<leader>vsft", [[:set ft=]], { noremap = true, silent = false })
 map("n", "<leader>vsbt", [[:set bt=]], { noremap = true, silent = false })
 -- sometimes scrolloff gets messed up for no obvious reason
-map("n", "<leader>vsso", function()
-  vim.o.scrolloff = O.scrolloff
-  vim.o.sidescrolloff = O.sidescrolloff
-end, { noremap = true, silent = true, desc = "Reset scrolloff" })
+-- map("n", "<leader>vsso", function()
+--   vim.o.scrolloff = O.scrolloff
+--   vim.o.sidescrolloff = O.sidescrolloff
+-- end, { noremap = true, silent = true, desc = "Reset scrolloff" })
 map("n", "<leader>vssc", function()
   vim.o.relativenumber = true
   vim.o.number = true
@@ -575,7 +589,10 @@ map({ "n", "i" }, "<C-g>", function()
     mode = default_mode
   end
   if mode == "git" then
-    local has_git = pcall(telescope_builtin.git_files, find_files_opts)
+    local has_git = pcall(
+      telescope_builtin.git_files,
+      vim.tbl_extend("keep", find_files_opts, { show_untracked = true })
+    )
     if not has_git then
       telescope_builtin.find_files(find_files_opts)
     end
@@ -609,7 +626,7 @@ end, { noremap = true, silent = true, desc = "Grep selected string" })
 map("n", "<C-f>", function()
   telescope_builtin.live_grep(with_default_opts())
 end, { noremap = true, silent = true, desc = "Live grep" })
-map("n", "<C-s>", function()
+map("n", "<C-x>", function()
   -- aerial_config.setup("telescope")
   telescope.extensions.aerial.aerial(with_default_opts({
     sorting_strategy = "descending",
@@ -998,9 +1015,18 @@ end, { noremap = true, silent = true, desc = "Harpoon file 5" })
 map("n", "<M-h>", function()
   goto_harpooned(6)
 end, { noremap = true, silent = true, desc = "Harpoon file 6" })
+map("n", "<M-j>", function()
+  goto_harpooned(7)
+end, { noremap = true, silent = true, desc = "Harpoon file 6" })
+map("n", "<M-z>", function()
+  goto_harpooned(8)
+end, { noremap = true, silent = true, desc = "Harpoon file 6" })
+map("n", "<M-x>", function()
+  goto_harpooned(9)
+end, { noremap = true, silent = true, desc = "Harpoon file 6" })
 -- rest
 map("n", "<leader>lhe", [[:RestSelectEnv ]], { noremap = true, silent = false })
-local function get_win(name)
+local function get_win_by_name(name)
   local win_list = api.nvim_list_wins()
   for _, win in ipairs(win_list) do
     if fn.fnamemodify(api.nvim_buf_get_name(api.nvim_win_get_buf(win)), ":t") == name then
@@ -1010,7 +1036,7 @@ local function get_win(name)
   return nil
 end
 map("n", "<leader>lhr", function()
-  local win = get_win("rest_nvim_results")
+  local win = get_win_by_name("rest_nvim_results")
   -- print(win)
   if win ~= nil then
     -- api.nvim_win_hide(win)

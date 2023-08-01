@@ -39,7 +39,8 @@ dap.configurations.go = {
 		name = "Debug",
 		request = "launch",
 		program = "${file}",
-    console = "externalConsole",
+		console = "integratedTerminal",
+    -- console = "externalConsole",
 	},
 	{
 		type = "go",

@@ -5,9 +5,10 @@ local qf = require("rc.utils.qf")
 local jumplist = require("rc.utils.jumplist")
 
 Lsp.on_attach = function(client, bufnr)
+  ---@diagnostic disable-next-line: redundant-parameter
   vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
   Keymap.set_lsp_buf_shortcuts(client, bufnr)
-  if client.server_capabilities.documentSymbolProvider then
+  -- if client.server_capabilities.documentSymbolProvider then
     -- local ok, navic = pcall(require, "nvim-navic")
     -- if ok then
     --   vim.b[bufnr].navic_lazy_update_context = true
@@ -18,7 +19,7 @@ Lsp.on_attach = function(client, bufnr)
     -- if ok then
     --   navbuddy.attach(client, bufnr)
     -- end
-  end
+  -- end
   require("lsp-inlayhints").on_attach(client, bufnr)
   -- pcall(function()
   -- end)

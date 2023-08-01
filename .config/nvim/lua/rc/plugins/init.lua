@@ -166,6 +166,48 @@ return {
       require("rc.configs.todo-comments")
     end,
   },
+  {
+    "shortcuts/no-neck-pain.nvim",
+    enabled = false,
+    config = function()
+      require("no-neck-pain").setup({
+        -- The width of the focused window that will be centered. When the terminal width is less than the `width` option, the side buffers won't be created.
+        --- @type integer|"textwidth"|"colorcolumn"
+        width = 170,
+        -- width = "textwidth",
+        autocmds = {
+          -- When `true`, enables the plugin when you start Neovim.
+          -- If the main window is  a side tree (e.g. NvimTree) or a dashboard, the command is delayed until it finds a valid window.
+          -- The command is cleaned once it has successfuly ran once.
+          --- @type boolean
+          enableOnVimEnter = true,
+          -- When `true`, enables the plugin when you enter a new Tab.
+          -- note: it does not trigger if you come back to an existing tab, to prevent unwanted interfer with user's decisions.
+          --- @type boolean
+          enableOnTabEnter = true,
+        },
+        --- Common options that are set to both side buffers.
+        --- See |NoNeckPain.bufferOptions| for option scoped to the `left` and/or `right` buffer.
+        --- @type table
+        buffers = {
+          -- When `true`, the side buffers will be named `no-neck-pain-left` and `no-neck-pain-right` respectively.
+          --- @type boolean
+          setNames = false,
+          -- Leverages the side buffers as notepads, which work like any Neovim buffer and automatically saves its content at the given `location`.
+          -- note: quitting an unsaved scratchpad buffer is non-blocking, and the content is still saved.
+          --- see |NoNeckPain.bufferOptionsScratchpad|
+          scratchPad = {
+            enabled = false,
+          },
+        },
+        -- integrations = {
+        --   NvimTree = {
+        --     reopen = false,
+        --   },
+        -- },
+      })
+    end,
+  },
   -- treesitter/editing based on treesitter
   {
     "nvim-treesitter/nvim-treesitter",
@@ -189,7 +231,7 @@ return {
     end,
     -- dev = true,
     -- branch = "local",
-    -- dir = O.pluginspath .. "/nvim-treesitter-context",
+    dir = O.devpath .. "/nvim-treesitter-context",
     event = "VeryLazy",
   },
   {
@@ -219,6 +261,7 @@ return {
     config = function()
       require("nvim-navic").setup({ highlight = true })
     end,
+    enabled = false,
     -- commit = "11e08391eeed00effa85ca24ff9d1e0472cbcd6a",
   },
   {
@@ -236,15 +279,66 @@ return {
           adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
         },
         server = {
+          standalone = false,
+          settings = {
+            ["rust-analyzer"] = {
+              cargo = {
+                buildScripts = {
+                  enable = true,
+                },
+              },
+              procMacro = {
+                enable = true,
+              },
+              checkOnSave = {
+                allFeatures = true,
+                overrideCommand = {
+                  "cargo",
+                  "clippy",
+                  "--workspace",
+                  "--message-format=json",
+                  "--all-targets",
+                  "--all-features",
+                },
+              },
+            },
+          },
           on_attach = function(_, bufnr)
             -- Hover actions
-            vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
+            -- vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
             -- Code action groups
-            vim.keymap.set("n", "<leader>lac", rt.code_action_group.code_action_group, { buffer = bufnr })
+            -- vim.keymap.set("n", "<leader>lac", rt.code_action_group.code_action_group, { buffer = bufnr })
+            vim.keymap.set(
+              "n",
+              "<leader>lro",
+              ":!cargo fix --offline --allow-dirty --broken-code --quiet<CR>",
+              { buffer = bufnr, desc = "cargo fix" }
+            )
+            vim.keymap.set("n", "<leader>lrb", function()
+              vim.cmd("wa")
+              require("noice").redirect(
+                "!cargo build",
+                { { filter = { event = "msg_show" }, view = "split" } }
+              )
+            end, { buffer = bufnr, desc = "cargo build" })
+            vim.keymap.set("n", "<leader>lrf", function()
+              vim.cmd("wa")
+              require("noice").redirect(
+                "!cargo fmt -- ./**/*.rs",
+                { { filter = { event = "msg_show" }, view = "split" } }
+              )
+            end, { buffer = bufnr, desc = "cargo fmt" })
           end,
+        },
+        tools = {
+          inlay_hints = {
+            auto = false,
+          },
         },
       })
     end,
+    enabled = true,
+    -- event = "VeryLazy",
   },
   {
     "kosayoda/nvim-lightbulb",
@@ -255,6 +349,7 @@ return {
   },
   {
     "j-hui/fidget.nvim",
+    tag = "legacy",
     config = function()
       require("rc.configs.fidget")
     end,

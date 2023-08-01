@@ -80,11 +80,6 @@ require("noice").setup({
             kind = "emsg",
             find = "E486",
           },
-          -- {
-          --   event = "msg_show",
-          --   kind = "wmsg",
-          --   find = "warning: multiple different client offset_encodings detected for buffer, this is not supported yet",
-          -- },
         },
       },
       opts = { skip = true },

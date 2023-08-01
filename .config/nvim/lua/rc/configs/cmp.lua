@@ -167,14 +167,17 @@ local sources = {
   -- { name = "rg", group_index = 2, priority = 5, max_item_count = 2, keyword_length = 3 },
   { name = "buffer", group_index = 2, priority = 5, max_item_count = 3, keyword_length = 3 },
   { name = "path", group_index = 2, priority = 3 },
-  { name = "crates", group_index = 2, priority = 3  },
+  { name = "crates", group_index = 2, priority = 3 },
   -- { name = "nvim_lsp_signature_help", group_index = 3, priority = 1 },
   -- { name = "npm", group_index = 4, keyword_length = 4 },
 }
 
 cmp.setup({
   enabled = function()
-    return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
+    return not (
+        vim.api.nvim_buf_get_option(0, "buftype") == "prompt"
+        or vim.api.nvim_buf_get_option(0, "filetype") == "no-neck-pain"
+      ) or require("cmp_dap").is_dap_buffer()
   end,
   preselect = cmp.PreselectMode.Item,
   snippet = {
