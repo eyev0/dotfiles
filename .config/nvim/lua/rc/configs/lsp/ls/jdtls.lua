@@ -19,7 +19,6 @@ extendedClientCapabilities.resolveAdditionalTextEditsSupport = true
 local initialized = false
 
 local config = {
-  -- cmd = { "java-lsp.sh", workspace_folder },
   -- filetypes = { "java" },
   flags = {
     allow_incremental_sync = true,
@@ -120,7 +119,7 @@ local config = {
       },
       project = {
         referencedLibraries = {
-          -- "/home/yev/dev/sbl/core/java/build/libs/java-5.0.cc0fac44.jar",
+          -- "/home/yev/dev/sbl/core/java/build/libs/java-5.0.70a5b053-sources.jar",
         },
       },
       sources = {
@@ -142,17 +141,20 @@ local config = {
   },
 }
 
-local jdtls_version = 1.21
+local jdtls_version = 1.31
 local jdtls_home = home .. ("/.local/lsp/jdtls-prebuilt/%s"):format(jdtls_version)
--- local lombok_jar = home .. "/.local/jar/lombok-1.18.24.jar"
+local lombok_jar = home .. "/.local/jar/lombok-1.18.30.jar"
+local java_version = "17.0.10"
+local java_provider = "oracle"
+local java_executable = home .. ("/.sdkman/candidates/java/%s-%s/bin/java"):format(java_version, java_provider)
 
 vim.env.GRADLE_HOME = home .. "/.sdkman/candidates/gradle/current"
 
 config.cmd = {
   -- 'GRADLE_HOME="$HOME/.sdkman/candidates/gradle/current"',
-  home .. "/.sdkman/candidates/java/17.0.4-oracle/bin/java",
-  -- "-javaagent:" .. lombok_jar,
-  -- "-Xbootclasspath/a:" .. lombok_jar,
+  java_executable,
+  "-javaagent:" .. lombok_jar,
+  "-Xbootclasspath/a:" .. lombok_jar,
   "-Declipse.application=org.eclipse.jdt.ls.core.id1",
   "-Dosgi.bundles.defaultStartLevel=4",
   "-Declipse.product=org.eclipse.jdt.ls.core.product",

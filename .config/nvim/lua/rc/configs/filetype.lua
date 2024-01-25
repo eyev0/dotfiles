@@ -13,6 +13,7 @@ require("filetype").setup({
       c = "c",
       h = "c",
       env = "sh",
+      -- xml = "xml",
     },
     literal = {
       [".dap-config"] = "lua",
@@ -21,9 +22,10 @@ require("filetype").setup({
       [".zpath"] = "zsh",
     },
     complex = {
+      [".*pfp/config.json"] = "jsonc",
       [".*vscode/launch.json"] = "jsonc",
       [".*waybar/config"] = "jsonc",
-      [".*sway/config"] = "sh",
+      [".*sway/config"] = "swayconfig",
     },
     function_extensions = {
       lua = function()

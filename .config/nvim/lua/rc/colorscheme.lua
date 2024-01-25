@@ -23,6 +23,7 @@ vim.cmd([[
     " Search
     " autocmd ColorScheme * hi CurSearch ctermfg=235 ctermbg=167 guifg=#282828 guibg=#db4740
     " autocmd ColorScheme * hi Search ctermfg=235 ctermbg=142 guifg=#282828 guibg=#b0b846
+    autocmd ColorScheme * highlight! link LspInlayHint VirtualTextHint
   augroup END
   augroup QuickscopeColors
     autocmd!

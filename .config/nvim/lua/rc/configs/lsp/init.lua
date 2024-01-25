@@ -1,5 +1,7 @@
 Lsp = {}
 
+require("rc.configs.lsp.inlay_hints")
+require("rc.configs.lsp.on_attach")
 require("rc.configs.lsp.diagnostic")
 require("rc.configs.lsp.util")
 
@@ -17,6 +19,9 @@ require("rc.configs.lsp.ls.lua_ls")
 require("rc.configs.lsp.ls.solidity")
 require("rc.configs.lsp.ls.jdtls")
 require("rc.configs.lsp.ls.pyright")
+-- require("rc.configs.lsp.ls.pylsp")
+-- require("rc.configs.lsp.ls.jedi")
+-- require("rc.configs.lsp.ls.pylyzer")
 require("rc.configs.lsp.ls.jsonls")
 require("rc.configs.lsp.ls.bashls")
 require("rc.configs.lsp.ls.yamlls")

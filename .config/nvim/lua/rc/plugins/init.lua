@@ -1,23 +1,23 @@
 return {
   -- docs in neovim
-  -- { "paretje/nvim-man" },
+  { "paretje/nvim-man", enabled = false },
   -- dependency packages
   "nvim-lua/popup.nvim",
   "nvim-lua/plenary.nvim",
   "nvim-tree/nvim-web-devicons",
   "rktjmp/lush.nvim",
-  "MunifTanjim/nui.nvim",
-  "rcarriga/nvim-notify",
+  -- "MunifTanjim/nui.nvim",
+  -- "rcarriga/nvim-notify",
   -- neovim/lua development
   { "folke/neodev.nvim" },
   { "folke/neoconf.nvim" },
   { "jbyuki/one-small-step-for-vimkind" },
-  {
-    "miversen33/import.nvim",
-    config = function()
-      require("import")
-    end,
-  },
+  -- {
+  --   "miversen33/import.nvim",
+  --   config = function()
+  --     require("import")
+  --   end,
+  -- },
   {
     "rafcamlet/nvim-luapad",
     config = function()
@@ -41,12 +41,12 @@ return {
     end,
     event = "VeryLazy",
   },
-  {
-    "gbprod/yanky.nvim",
-    config = function()
-      require("rc.configs.yanky")
-    end,
-  },
+  -- {
+  --   "gbprod/yanky.nvim",
+  --   config = function()
+  --     require("rc.configs.yanky")
+  --   end,
+  -- },
   {
     "gbprod/substitute.nvim",
     config = function()
@@ -58,12 +58,10 @@ return {
     config = function()
       require("rc.configs.autopairs")
     end,
+    -- commit = "7b3eb9b5813a22188c4dbb248475fcbaf9f4d195",
+    branch = "local",
+    -- branch = "master",
     event = "VeryLazy",
-  },
-  { "sgur/vim-textobj-parameter", dependencies = { "kana/vim-textobj-user" } },
-  {
-    "lewis6991/spaceless.nvim",
-    config = true,
   },
   { "mbbill/undotree" },
   "lambdalisue/suda.vim",
@@ -74,8 +72,30 @@ return {
       require("rc.configs.filetype")
     end,
   },
-  "neoclide/jsonc.vim",
   { "gpanders/editorconfig.nvim" },
+  -- {
+  --   "epwalsh/obsidian.nvim",
+  --   dependencies = { "nvim-lua/plenary.nvim" },
+  --   opts = {
+  --     workspaces = {
+  --       {
+  --         name = "personal",
+  --         path = "~/dev/self/obsidian/personal",
+  --       },
+  --       {
+  --         name = "work",
+  --         path = "~/dev/self/obsidian/work",
+  --       },
+  --     },
+  --     daily_notes = {
+  --       folder = "notes/dailies",
+  --     },
+  --     -- disable_frontmatter = true,
+  --     note_frontmatter_func = function(note)
+  --       return { id = note.id, aliases = note.aliases, tags = note.tags }
+  --     end,
+  --   },
+  -- },
   { "chrisbra/csv.vim", ft = "csv" },
   {
     "toppair/peek.nvim", -- markdown preview
@@ -87,26 +107,19 @@ return {
     end,
     event = "VeryLazy",
   },
-  -- cloud
-  {
-    "aadv1k/gdoc.vim",
-    build = "./install.py",
-    init = function()
-      vim.g.path_to_creds = "~/.config/gdoc/credentials.json"
-      vim.g.gdoc_file_path = "~/.cache/gdoc/"
-      vim.g.token_directory = "~/.config/gdoc/"
-    end,
-  },
   -- ui/input
   {
     "folke/noice.nvim",
     config = function()
       require("rc.configs.noice")
     end,
-    dev = true,
-    dir = O.devpath .. "/noice.nvim",
-    -- TODO: pull request fix scrollbar
-    --
+    tag = "v2.0.0",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    },
+    -- dev = true,
+    -- dir = O.devpath .. "/noice.nvim",
     -- branch = "local",
     -- enabled = false,
   },
@@ -117,23 +130,25 @@ return {
     end,
     cond = not IS_FIRENVIM,
     event = "ColorScheme",
-    -- commit = "750a112",
   },
-  {
-    "petertriho/nvim-scrollbar",
-    config = function()
-      require("rc.configs.scrollbar")
-    end,
-  },
-  {
-    "stevearc/stickybuf.nvim",
-    config = function()
-      require("rc.configs.stickybuf")
-    end,
-  },
+  -- {
+  --   "petertriho/nvim-scrollbar",
+  --   config = function()
+  --     require("rc.configs.scrollbar")
+  --   end,
+  --   enabled = false,
+  -- },
+  -- {
+  --   "stevearc/stickybuf.nvim",
+  --   config = function()
+  --     require("rc.configs.stickybuf")
+  --   end,
+  --   enabled = false,
+  -- },
   "szw/vim-maximizer",
   {
     "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
     config = function()
       require("rc.configs.indent_blankline")
     end,
@@ -166,48 +181,6 @@ return {
       require("rc.configs.todo-comments")
     end,
   },
-  {
-    "shortcuts/no-neck-pain.nvim",
-    enabled = false,
-    config = function()
-      require("no-neck-pain").setup({
-        -- The width of the focused window that will be centered. When the terminal width is less than the `width` option, the side buffers won't be created.
-        --- @type integer|"textwidth"|"colorcolumn"
-        width = 170,
-        -- width = "textwidth",
-        autocmds = {
-          -- When `true`, enables the plugin when you start Neovim.
-          -- If the main window is  a side tree (e.g. NvimTree) or a dashboard, the command is delayed until it finds a valid window.
-          -- The command is cleaned once it has successfuly ran once.
-          --- @type boolean
-          enableOnVimEnter = true,
-          -- When `true`, enables the plugin when you enter a new Tab.
-          -- note: it does not trigger if you come back to an existing tab, to prevent unwanted interfer with user's decisions.
-          --- @type boolean
-          enableOnTabEnter = true,
-        },
-        --- Common options that are set to both side buffers.
-        --- See |NoNeckPain.bufferOptions| for option scoped to the `left` and/or `right` buffer.
-        --- @type table
-        buffers = {
-          -- When `true`, the side buffers will be named `no-neck-pain-left` and `no-neck-pain-right` respectively.
-          --- @type boolean
-          setNames = false,
-          -- Leverages the side buffers as notepads, which work like any Neovim buffer and automatically saves its content at the given `location`.
-          -- note: quitting an unsaved scratchpad buffer is non-blocking, and the content is still saved.
-          --- see |NoNeckPain.bufferOptionsScratchpad|
-          scratchPad = {
-            enabled = false,
-          },
-        },
-        -- integrations = {
-        --   NvimTree = {
-        --     reopen = false,
-        --   },
-        -- },
-      })
-    end,
-  },
   -- treesitter/editing based on treesitter
   {
     "nvim-treesitter/nvim-treesitter",
@@ -215,11 +188,16 @@ return {
     config = function()
       require("rc.configs.treesitter")
     end,
-    -- commit = "eedc5198a1b4bb1b08ae6d4f64f3d76e376957aa",
     event = "VeryLazy",
   },
-  { "mrjones2014/nvim-ts-rainbow", event = "VeryLazy" },
-  { "JoosepAlviste/nvim-ts-context-commentstring", event = "VeryLazy" },
+  {
+    "JoosepAlviste/nvim-ts-context-commentstring",
+    config = function()
+      require("ts_context_commentstring").setup({})
+      vim.g.skip_ts_context_commentstring_module = true
+    end,
+    event = "VeryLazy",
+  },
   { "theHamsta/nvim-treesitter-pairs", event = "VeryLazy" },
   { "windwp/nvim-ts-autotag", event = "VeryLazy" },
   { "nvim-treesitter/nvim-treesitter-textobjects", event = "VeryLazy" },
@@ -229,9 +207,8 @@ return {
     config = function()
       require("rc.configs.treesitter.context")
     end,
-    -- dev = true,
+    dev = true,
     -- branch = "local",
-    dir = O.devpath .. "/nvim-treesitter-context",
     event = "VeryLazy",
   },
   {
@@ -257,85 +234,9 @@ return {
   },
   { "jose-elias-alvarez/nvim-lsp-ts-utils" },
   {
-    "SmiteshP/nvim-navic",
-    config = function()
-      require("nvim-navic").setup({ highlight = true })
-    end,
-    enabled = false,
-    -- commit = "11e08391eeed00effa85ca24ff9d1e0472cbcd6a",
-  },
-  {
     "simrat39/rust-tools.nvim",
     config = function()
-      local rt = require("rust-tools")
-      local extension_path = vim.env.HOME .. "/.vscode/extensions/vadimcn.vscode-lldb-1.9.1"
-      local codelldb_path = extension_path .. "/adapter/codelldb"
-      local liblldb_path = extension_path .. "/lldb/lib/liblldb"
-      local this_os = vim.loop.os_uname().sysname
-      -- The liblldb extension is .so for linux and .dylib for macOS
-      liblldb_path = liblldb_path .. (this_os == "Linux" and ".so" or ".dylib")
-      rt.setup({
-        dap = {
-          adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
-        },
-        server = {
-          standalone = false,
-          settings = {
-            ["rust-analyzer"] = {
-              cargo = {
-                buildScripts = {
-                  enable = true,
-                },
-              },
-              procMacro = {
-                enable = true,
-              },
-              checkOnSave = {
-                allFeatures = true,
-                overrideCommand = {
-                  "cargo",
-                  "clippy",
-                  "--workspace",
-                  "--message-format=json",
-                  "--all-targets",
-                  "--all-features",
-                },
-              },
-            },
-          },
-          on_attach = function(_, bufnr)
-            -- Hover actions
-            -- vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
-            -- Code action groups
-            -- vim.keymap.set("n", "<leader>lac", rt.code_action_group.code_action_group, { buffer = bufnr })
-            vim.keymap.set(
-              "n",
-              "<leader>lro",
-              ":!cargo fix --offline --allow-dirty --broken-code --quiet<CR>",
-              { buffer = bufnr, desc = "cargo fix" }
-            )
-            vim.keymap.set("n", "<leader>lrb", function()
-              vim.cmd("wa")
-              require("noice").redirect(
-                "!cargo build",
-                { { filter = { event = "msg_show" }, view = "split" } }
-              )
-            end, { buffer = bufnr, desc = "cargo build" })
-            vim.keymap.set("n", "<leader>lrf", function()
-              vim.cmd("wa")
-              require("noice").redirect(
-                "!cargo fmt -- ./**/*.rs",
-                { { filter = { event = "msg_show" }, view = "split" } }
-              )
-            end, { buffer = bufnr, desc = "cargo fmt" })
-          end,
-        },
-        tools = {
-          inlay_hints = {
-            auto = false,
-          },
-        },
-      })
+      require("rc.configs.rust-tools")
     end,
     enabled = true,
     -- event = "VeryLazy",
@@ -354,7 +255,6 @@ return {
       require("rc.configs.fidget")
     end,
   },
-  { "lvimuser/lsp-inlayhints.nvim" },
   {
     "ThePrimeagen/refactoring.nvim",
     config = true,
@@ -375,39 +275,11 @@ return {
     event = "VeryLazy",
   },
   {
-    "ErichDonGubler/lsp_lines.nvim",
+    -- "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    name = "lsp_lines.nvim",
+    dir = O.devpath .. "/lsp_lines.nvim",
+    dev = true,
     config = true,
-  },
-  -- AI
-  {
-    "github/copilot.vim",
-    init = function()
-      vim.g.copilot_no_tab_map = true
-    end,
-    -- enabled = O.copilot,
-  },
-  {
-    "jackMort/ChatGPT.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("chatgpt").setup({
-        keymaps = {
-          close = "<C-c>",
-          submit = "<C-s>",
-          yank_last = "<C-y>",
-          yank_last_code = "<C-k>",
-          scroll_up = "<C-u>",
-          scroll_down = "<C-d>",
-          toggle_settings = "<C-o>",
-          new_session = "<C-n>",
-          cycle_windows = "<Tab>",
-          -- in the Sessions pane
-          select_session = "<C-x>",
-          rename_session = "r",
-          delete_session = "d",
-        },
-      })
-    end,
   },
   -- completion/snippets
   { "hrsh7th/cmp-nvim-lsp" },
@@ -418,10 +290,6 @@ return {
   { "hrsh7th/cmp-nvim-lsp-document-symbol" },
   { "hrsh7th/cmp-nvim-lua" },
   { "hrsh7th/cmp-nvim-lsp-signature-help" },
-  -- { "lukas-reineke/cmp-under-comparator" },
-  {
-    "hrsh7th/cmp-copilot",
-  },
   { "hrsh7th/cmp-vsnip" },
   { "hrsh7th/vim-vsnip" },
   { "rcarriga/cmp-dap" },
@@ -434,6 +302,7 @@ return {
   {
     "saecki/crates.nvim",
     tag = "v0.3.0",
+    event = "VeryLazy",
     config = function()
       require("crates").setup({
         null_ls = {
@@ -454,10 +323,16 @@ return {
     enabled = false,
   },
   -- navigation
-  "ThePrimeagen/harpoon",
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    config = function()
+      require("harpoon"):setup()
+    end,
+    dependencies = { "nvim-lua/plenary.nvim" },
+  },
   {
     "unblevable/quick-scope",
-    -- "edementyev/quick-scope",
     init = function()
       vim.g.qs_highlight_on_keys = { "f", "F", "t", "T" }
       vim.g.qs_max_chars = 150
@@ -553,7 +428,6 @@ return {
   },
   {
     "rmagatti/auto-session",
-    commit = "21033c6815f249a7839c3a85fc8a6b44d74925c9",
     config = function()
       require("auto-session").setup({
         log_level = "error",
@@ -581,8 +455,8 @@ return {
       require("rc.configs.dap.virtual-text")
     end,
   },
+  { "leoluz/nvim-dap-go", config = true },
   -- tests
-  -- TODO: replace with neotest
   {
     "David-Kunz/jester",
     config = function()
@@ -592,6 +466,7 @@ return {
   },
   {
     "nvim-neotest/neotest",
+    enabled = false,
     config = function()
       require("neotest").setup({
         adapters = {
@@ -633,7 +508,6 @@ return {
     enabled = false,
   },
   -- colorschemes
-  { "folke/lsp-colors.nvim", enabled = false },
   {
     "sainnhe/gruvbox-material",
     init = function()
@@ -741,23 +615,14 @@ return {
       require("rc.configs.rest")
     end,
   },
+  -- games
+  { "ThePrimeagen/vim-be-good" },
   -- plugins in dev
-  {
-    "edementyev/jumplist.nvim",
-    dev = true,
-    branch = "main",
-    config = function()
-      require("rc.configs.jumplist")
-    end,
-    dependencies = {
-      "edementyev/vlog.nvim",
-    },
-    enabled = false,
-  },
   {
     "edementyev/workspace_config.nvim",
     config = true,
     dev = true,
     cond = not IS_FIRENVIM,
+    -- enabled = false,
   },
 }

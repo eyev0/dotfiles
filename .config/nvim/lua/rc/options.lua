@@ -44,7 +44,7 @@ vim.opt.clipboard:prepend({ "unnamedplus" })
 vim.opt.shortmess:append("c")
 vim.opt.iskeyword:append("-")
 vim.o.termguicolors = true
--- vim.o.conceallevel = 0
+vim.o.conceallevel = 0
 vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 vim.o.softtabstop = 4
@@ -96,11 +96,22 @@ autocmd("BufEnter", {
 local function set_wo(window, name, value)
   local eventignore = vim.opt.eventignore:get()
   vim.opt.eventignore:append("OptionSet")
-  vim.api.nvim_win_set_option(window, name, value)
+  vim.api.nvim_set_option_value(name, value, { win = window })
   vim.opt.eventignore = eventignore
 end
---
--- cursorline
+
+-- terminal buffer/window options
+autocmd("BufEnter", {
+  callback = function()
+    if vim.bo.buftype == "terminal" then
+      vim.bo.scrollback = O.scrollback
+      vim.wo.scrolloff = O.scrolloff
+      vim.wo.number = true
+    end
+  end,
+})
+
+-- hide cursorline on WinLeave
 autocmd("WinLeave", {
   callback = function()
     set_wo(vim.api.nvim_get_current_win(), "cursorlineopt", "number")
@@ -109,6 +120,12 @@ autocmd("WinLeave", {
 autocmd("WinEnter", {
   callback = function()
     set_wo(vim.api.nvim_get_current_win(), "cursorlineopt", "screenline,number") -- "both"
+  end,
+})
+
+autocmd("TextYankPost", {
+  callback = function()
+    vim.highlight.on_yank({ higroup = "CurSearch", timeout = 200 })
   end,
 })
 

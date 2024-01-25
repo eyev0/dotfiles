@@ -4,10 +4,8 @@ local cmp = require("cmp")
 -- 	local a = { ... }
 -- 	return cmp_autopairs.on_confirm_done({ map_char = { tex = "" } })(...)
 -- end)
-cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({ map_char = { tex = "" } }))
--- cmp_autopairs.lisp[#cmp_autopairs.lisp + 1] = "racket"
-
+cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 require("nvim-autopairs").setup({
-	disable_filetype = { "TelescopePrompt", "vim" },
-	check_ts = true,
+  disable_filetype = { "TelescopePrompt", "vim" },
+  check_ts = true,
 })

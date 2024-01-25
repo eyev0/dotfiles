@@ -40,10 +40,18 @@ M.filter_sideview = {
   "Struct",
 }
 
+local map = vim.keymap.set
+local function set_aerial_buf_shortcuts(bufnr)
+  local opts = { noremap = true, silent = true, buffer = bufnr }
+  -- Jump forwards/backwards with '{' and '}'
+  map("n", "{", require("aerial").prev, opts)
+  map("n", "}", require("aerial").next, opts)
+end
+
 local default_config = {
   -- optionally use on_attach to set keymaps when aerial has attached to a buffer
   on_attach = function(bufnr)
-    Keymap.set_aerial_buf_shortcuts(bufnr)
+    set_aerial_buf_shortcuts(bufnr)
   end,
   backends = {
     ["_"] = { "lsp", "treesitter", "markdown", "man" },

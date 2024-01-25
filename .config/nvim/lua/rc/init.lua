@@ -12,29 +12,6 @@ vim.g.mapleader = " "
 
 ---@alias ColorschemeOption "gruvbox-material" | "catppuccin"
 
-local pluginspath = vim.fn.stdpath("data") .. "/lazy"
-
---- options
----@class Options
----@field scrolloff number
----@field sidescrolloff number
----@field colorscheme ColorschemeOption
-O = {
-  scrolloff = 9,
-  sidescrolloff = 3,
-  signcolumn = "yes:2",
-  colorscheme = "gruvbox-material",
-  background = "light",
-  lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim",
-  pluginspath = pluginspath,
-  devpath = vim.env.HOME .. "/dev/nvim/plugins",
-  -- copilot = true,
-}
-
-ENV = {
-  PYTHON_MODULE = "app",
-}
-
 vim.o.background = O.background
 
 _G.autocmd = vim.api.nvim_create_autocmd
@@ -85,7 +62,7 @@ local opts = {
         -- "gzip",
         -- "matchit",
         -- "matchparen",
-        "netrwPlugin",
+        -- "netrwPlugin",
         -- "tarPlugin",
         "tohtml",
         "tutor",

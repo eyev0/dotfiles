@@ -61,7 +61,7 @@ vim.api.nvim_create_autocmd("WinResized", {
 
 require("nvim-tree").setup({
 	disable_netrw = false,
-	hijack_netrw = true,
+	hijack_netrw = false,
 	hijack_cursor = true,
 	open_on_setup = false,
 	ignore_ft_on_setup = {},

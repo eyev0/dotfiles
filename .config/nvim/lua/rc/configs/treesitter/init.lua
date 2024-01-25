@@ -36,9 +36,6 @@ local config = {
   -- 	-- highlight_definitions = { enable = true },
   -- 	-- highlight_current_scope = { enable = false },
   -- },
-  context_commentstring = {
-    enable = true,
-  },
   pairs = {
     enable = true,
     disable = {},

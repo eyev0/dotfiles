@@ -4,32 +4,37 @@ local fn = vim.fn
 local qf = require("rc.utils.qf")
 local jumplist = require("rc.utils.jumplist")
 
-Lsp.on_attach = function(client, bufnr)
-  ---@diagnostic disable-next-line: redundant-parameter
-  vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-  Keymap.set_lsp_buf_shortcuts(client, bufnr)
-  -- if client.server_capabilities.documentSymbolProvider then
-    -- local ok, navic = pcall(require, "nvim-navic")
-    -- if ok then
-    --   vim.b[bufnr].navic_lazy_update_context = true
-    --   -- navic.attach(client, bufnr)
-    -- end
-    -- local navbuddy
-    -- ok, navbuddy = pcall(require, "nvim-navbuddy")
-    -- if ok then
-    --   navbuddy.attach(client, bufnr)
-    -- end
-  -- end
-  require("lsp-inlayhints").on_attach(client, bufnr)
-  -- pcall(function()
-  -- end)
-end
-
 -- LSP Snippet Support
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown", "plaintext" }
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+
+local on_init = function(client, _)
+  if client.config.settings then
+    client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+  end
+end
+
+function Lsp.make_config(config)
+  local defaults = {
+    flags = {
+      debounce_text_changes = 80,
+      allow_incremental_sync = true,
+    },
+    handlers = {},
+    capabilities = capabilities,
+    on_init = on_init,
+    on_attach = Lsp.on_attach,
+    init_options = {},
+    settings = {},
+  }
+  if config then
+    return vim.tbl_deep_extend("force", defaults, config)
+  else
+    return defaults
+  end
+end
 
 ---@param options table qf {what} table, see :h setqflist-what
 ---@param open boolean? Open quickfix? (default = true)
@@ -53,7 +58,6 @@ function Lsp.on_list(options, open, jump)
     -- if such window exists, open first item there (could be another tab),
     -- then open qf window and return to prev window position.
     -- If such window doesn't exist, use cfirst to jump
-    --
     local win
     while true do
       -- current window contains buffer containing first item?
@@ -95,31 +99,5 @@ function Lsp.on_list(options, open, jump)
     -- jumplist.mark()
   elseif open then
     qf.open(n_items, false, false, false)
-  end
-end
-
-local on_init = function(client, _)
-  if client.config.settings then
-    client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
-  end
-end
-
-function Lsp.make_config(config)
-  local defaults = {
-    flags = {
-      debounce_text_changes = 80,
-      allow_incremental_sync = true,
-    },
-    handlers = {},
-    capabilities = capabilities,
-    on_init = on_init,
-    on_attach = Lsp.on_attach,
-    init_options = {},
-    settings = {},
-  }
-  if config then
-    return vim.tbl_deep_extend("force", defaults, config)
-  else
-    return defaults
   end
 end

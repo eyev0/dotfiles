@@ -117,22 +117,65 @@ M.Snippets = {
   hl = { fg = "red", bold = true },
 }
 
+-- M.MacroRecording = {
+--   provider = function()
+--     return vim.F.if_nil(
+--       vim.F.npcall(function()
+--         return require("noice").api.status.mode.get() .. " "
+--       end),
+--       ""
+--     )
+--   end,
+--   condition = vim.F.npcall(function()
+--     return require("noice").api.status.mode.has()
+--   end),
+--   hl = { fg = "red", bold = true },
+-- }
+
 M.MacroRecording = {
-  provider = function()
-    return vim.F.if_nil(
-      vim.F.npcall(function()
-        return require("noice").api.status.mode.get() .. " "
-      end),
-      ""
-    )
+  condition = function()
+    return vim.fn.reg_recording() ~= "" and vim.o.cmdheight == 0
   end,
-  condition = vim.F.npcall(function()
-    return require("noice").api.status.mode.has()
-  end),
-  hl = { fg = "red", bold = true },
+  provider = " ",
+  hl = { fg = "orange", bold = true },
+  utils.surround({ "[", "]" }, nil, {
+    provider = function()
+      return vim.fn.reg_recording()
+    end,
+    hl = { fg = "green", bold = true },
+  }),
+  update = {
+    "RecordingEnter",
+    "RecordingLeave",
+  },
 }
 
-M.ViMode = {
+M.SearchCount = {
+  condition = function()
+    return vim.v.hlsearch ~= 0 and vim.o.cmdheight == 0
+  end,
+  init = function(self)
+    local ok, search = pcall(vim.fn.searchcount)
+    if ok and search.total then
+      self.search = search
+    end
+  end,
+  provider = function(self)
+    local search = self.search
+    return string.format(" [%d/%d] ", search.current, math.min(search.total, search.maxcount))
+  end,
+}
+
+vim.opt.showcmdloc = "statusline"
+
+M.ShowCmd = {
+  condition = function()
+    return vim.o.cmdheight == 0
+  end,
+  provider = ":%3.5(%S%)",
+}
+
+M.ModeBlock = {
   utils.surround({ "", "" }, "bright_fg", { M.ViMode, M.Snippets }),
   M.Space,
   M.MacroRecording,
@@ -172,11 +215,8 @@ M.FileIcon = {
   init = function(self)
     local filename = self.filename
     local extension = vim.fn.fnamemodify(filename, ":e")
-    self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(
-      filename,
-      extension,
-      { default = true }
-    )
+    self.icon, self.icon_color =
+      require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
   end,
   provider = function(self)
     return self.icon and (self.icon .. " ")

@@ -95,7 +95,7 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias zshconfig="nvim ~/.zshrc"
+alias zshconfig="nvim +'vsplit | edit ~/.zpath' -- ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

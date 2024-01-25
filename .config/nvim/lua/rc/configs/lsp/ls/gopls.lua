@@ -1,1 +1,7 @@
-require("lspconfig").gopls.setup(Lsp.make_config())
+require("lspconfig").gopls.setup(Lsp.make_config({
+  settings = {
+    gopls = {
+      gofumpt = true,
+    },
+  },
+}))

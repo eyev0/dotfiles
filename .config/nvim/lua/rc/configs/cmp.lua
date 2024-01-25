@@ -161,6 +161,7 @@ local function merge(a, b)
 end
 
 local sources = {
+  -- { name = "codeium", group_index = 1, priority = 17 },
   { name = "copilot", group_index = 1, priority = 20 },
   { name = "nvim_lsp", group_index = 1, priority = 15 },
   { name = "vsnip", group_index = 1, priority = 10 },
@@ -219,6 +220,7 @@ cmp.setup({
       preset = "codicons",
       symbol_map = {
         copilot = "",
+        Codeium = "",
       },
       maxwidth = 62, -- prevent the popup from showing more than provided characters
       ellipsis_char = "..",

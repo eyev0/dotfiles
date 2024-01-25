@@ -6,8 +6,6 @@ local fn = vim.fn
 local qf = require("rc.utils.qf")
 local jumplist = require("rc.utils.jumplist")
 
-Keymap = {}
-
 -- debug
 -- if DEBUG_CONFIG ~= nil then
 --   return
@@ -20,6 +18,7 @@ map({ "n", "i" }, "<C-s>", function()
     cmd("w")
   end
 end, { noremap = true, silent = true })
+-- save all
 map({ "n", "i" }, "<C-S-S>", function()
   if utils.is_ins_mode() then
     feedkeys("<C-o>:wa<CR>", "n")
@@ -32,18 +31,13 @@ map("n", "<leader>ps", [[:Lazy sync<CR>]], { noremap = true, silent = true })
 map("n", "<leader>pp", [[:Lazy profile<CR>]], { noremap = true, silent = true })
 -- silent dot
 map("n", ".", ".", { noremap = true, silent = true })
--- silent &
+-- silent & - repeat last substitution (:s/)
 map("n", "&", ":&&<CR>", { noremap = true, silent = true })
 -- handy to move around on the line
-map("", "H", [[^]], { noremap = true, silent = true })
-map("", "L", [[$]], { noremap = true, silent = true })
+-- map("", "H", [[^]], { noremap = true, silent = true })
+-- map("", "L", [[$]], { noremap = true, silent = true })
 -- 'whole buffer' operator
-map(
-  { "o", "v" },
-  "ie",
-  "<cmd>exec 'normal! ggVG'<cr>",
-  { noremap = true, silent = true, desc = "Whole buffer" }
-)
+map("o", "ie", "<cmd>execute 'normal! ggVG'<cr>", { noremap = true, silent = true, desc = "Whole buffer" })
 -- quit with <C-F12>
 map({ "n", "t" }, "<F36>", function()
   pcall(vim.cmd, "wa")
@@ -82,12 +76,6 @@ end, { noremap = true, silent = true })
 map({ "n", "t" }, "<C-w><C-l>", function()
   pcall(vim.cmd, "+tabmove")
 end, { noremap = true, silent = true })
-map({ "n", "t" }, "<C-S-PageUp>", function()
-  pcall(vim.cmd, "-tabmove")
-end, { noremap = true, silent = true })
-map({ "n", "t" }, "<C-S-PageDown>", function()
-  pcall(vim.cmd, "+tabmove")
-end, { noremap = true, silent = true })
 map("t", "<C-PageUp>", function()
   vim.cmd("tabprevious")
 end, { noremap = true, silent = true })
@@ -95,16 +83,16 @@ map("t", "<C-PageDown>", function()
   vim.cmd("tabnext")
 end, { noremap = true, silent = true })
 -- resize with C-arrows
-map({ "", "t" }, "<C-Up>", function()
+map({ "", "t" }, "<C-S-Up>", function()
   vim.cmd("resize -3")
 end, { noremap = true, silent = true })
-map({ "", "t" }, "<C-Down>", function()
+map({ "", "t" }, "<C-S-Down>", function()
   vim.cmd("resize +3")
 end, { noremap = true, silent = true })
-map({ "", "t" }, "<C-Left>", function()
+map({ "", "t" }, "<C-S-Left>", function()
   vim.cmd("vertical resize -4")
 end, { noremap = true, silent = true })
-map({ "", "t" }, "<C-Right>", function()
+map({ "", "t" }, "<C-S-Right>", function()
   vim.cmd("vertical resize +4")
 end, { noremap = true, silent = true })
 -- better indenting
@@ -146,23 +134,23 @@ map({ "n", "x" }, "x", [[d]], { noremap = true, silent = true })
 map("n", "xx", [[dd]], { noremap = true, silent = true })
 map("n", "X", [[D]], { noremap = true, silent = true })
 -- yank maps
-map({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
-map({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
-map({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
-map("n", "<PageUp>", [[<plug>(YankyCycleBackward)]], { silent = true })
-map("n", "<PageDown>", [[<plug>(YankyCycleForward)]], { silent = true })
-map({ "n", "x" }, "y", "<Plug>(YankyYank)")
+-- map({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
+-- map({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
+-- map({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
+-- map("n", "<PageUp>", [[<plug>(YankyCycleBackward)]], { silent = true })
+-- map("n", "<PageDown>", [[<plug>(YankyCycleForward)]], { silent = true })
+-- map({ "n", "x" }, "y", "<Plug>(YankyYank)")
 -- like unimpaired
-map("n", "]p", "<Plug>(YankyPutIndentAfterLinewise)")
-map("n", "[p", "<Plug>(YankyPutIndentBeforeLinewise)")
-map("n", "]P", "<Plug>(YankyPutIndentAfterLinewise)")
-map("n", "[P", "<Plug>(YankyPutIndentBeforeLinewise)")
-map("n", ">p", "<Plug>(YankyPutIndentAfterShiftRight)")
-map("n", "<p", "<Plug>(YankyPutIndentAfterShiftLeft)")
-map("n", ">P", "<Plug>(YankyPutIndentBeforeShiftRight)")
-map("n", "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
-map("n", "=p", "<Plug>(YankyPutAfterFilter)")
-map("n", "=P", "<Plug>(YankyPutBeforeFilter)")
+-- map("n", "]p", "<Plug>(YankyPutIndentAfterLinewise)")
+-- map("n", "[p", "<Plug>(YankyPutIndentBeforeLinewise)")
+-- map("n", "]P", "<Plug>(YankyPutIndentAfterLinewise)")
+-- map("n", "[P", "<Plug>(YankyPutIndentBeforeLinewise)")
+-- map("n", ">p", "<Plug>(YankyPutIndentAfterShiftRight)")
+-- map("n", "<p", "<Plug>(YankyPutIndentAfterShiftLeft)")
+-- map("n", ">P", "<Plug>(YankyPutIndentBeforeShiftRight)")
+-- map("n", "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
+-- map("n", "=p", "<Plug>(YankyPutAfterFilter)")
+-- map("n", "=P", "<Plug>(YankyPutBeforeFilter)")
 -- exchange
 local exchange = require("substitute.exchange")
 map("n", "cx", exchange.operator, { noremap = true, silent = true })
@@ -202,8 +190,6 @@ map("i", "<CR>", [[<CR><C-g>u]], { noremap = true, silent = true })
 -- hacking search with visual mode
 -- search within current selection (prompt)
 map("x", "/i", [[<Esc>/\%V]], { noremap = true, silent = true })
--- search for selected text
-map("v", "/a", [[y/\V<C-R>=escape(@",'/\')<CR><CR>]], { noremap = true, silent = true })
 -- jj to escape
 -- map("i", "jj", "<ESC>", { noremap = true, silent = true })
 map("t", "<C-]>", "<C-\\><C-n>", { noremap = true, silent = true })
@@ -258,13 +244,14 @@ map("n", "<C-q><C-p>", function()
   cmd("colder")
 end, { noremap = true, silent = true, desc = "Prev qf list" })
 -- TODO: C-S-O/I - previous/next window jump
-local win_list = {}
-local threshold = 100
+local w_win_list = {}
+local w_threshold = 100
+local w_current_pos = table.maxn(w_win_list)
 local function push_win(win)
-  if table.maxn(win_list) >= threshold then
-    table.remove(win_list, 0)
+  if table.maxn(w_win_list) >= w_threshold then
+    table.remove(w_win_list, 0)
   end
-  table.insert(win_list, win)
+  table.insert(w_win_list, win)
 end
 autocmd("BufWinEnter", {
   group = augroup("RecordVisitedWinIds", {}),
@@ -274,7 +261,6 @@ autocmd("BufWinEnter", {
     push_win(win)
   end,
 })
--- local current_pos = table.maxn(win_list)
 map("n", "<C-S-O>", function() end, { noremap = true, silent = true })
 map("n", "n", function()
   if fn.getreg("/") ~= "" then
@@ -354,19 +340,12 @@ end, { noremap = true, silent = true, desc = "Replace within quickfix entries" }
 -- 	feedkeys("<Esc>", "")
 -- 	cmd("cdo " .. c:gsub("%%s/", "s/") .. "gcI")
 -- end, { noremap = true, silent = true })
---
--- handy set filetype
-map("n", "<leader>vsft", [[:set ft=]], { noremap = true, silent = false })
-map("n", "<leader>vsbt", [[:set bt=]], { noremap = true, silent = false })
--- sometimes scrolloff gets messed up for no obvious reason
--- map("n", "<leader>vsso", function()
---   vim.o.scrolloff = O.scrolloff
---   vim.o.sidescrolloff = O.sidescrolloff
--- end, { noremap = true, silent = true, desc = "Reset scrolloff" })
-map("n", "<leader>vssc", function()
+map("n", "<leader>vso", function()
   vim.o.relativenumber = true
   vim.o.number = true
   vim.o.signcolumn = O.signcolumn
+  vim.o.scrolloff = O.scrolloff
+  vim.o.sidescrolloff = O.sidescrolloff
 end, { noremap = true, silent = true, desc = "Reset scrolloff" })
 -- noice scrolling through hover docs
 local has_noice = pcall(require, "noice")
@@ -385,14 +364,20 @@ end, { silent = true, expr = true })
 map(
   "n",
   "<F2>",
-  Lsp.toggle_diagnostic_virt_lines,
+  Lsp.diagnostic_toggle_virt_lines,
   { noremap = true, silent = true, desc = "Diagnostics: toggle virtual lines" }
 )
 map(
   "n",
   "<F26>",
-  Lsp.toggle_diagnostic_float,
+  Lsp.diagnostic_toggle_float,
   { noremap = true, silent = true, desc = "Diagnostics: toggle float" }
+)
+map(
+  "n",
+  "<F38>",
+  Lsp.inlay_hints_toggle,
+  { noremap = true, silent = true, desc = "Diagnostics: toggle inlay_hints" }
 )
 map("n", "<leader>le", function()
   vim.diagnostic.setqflist({ severity = { min = Lsp.diagnostic_min_severity, open = false } })
@@ -404,60 +389,24 @@ end, { noremap = true, silent = true, desc = "Go to previous diagnostic" })
 map("n", "<F3>", function()
   vim.diagnostic.goto_next({ severity = { min = Lsp.diagnostic_min_severity } })
 end, { noremap = true, silent = true, desc = "Go to next diagnostic" })
+-- map(
+--   "n",
+--   "<F4>",
+--   Lsp.diagnostic_shift_min_severity,
+--   { noremap = true, silent = true, desc = "Diagnostics: shift severity" }
+-- )
 map(
   "n",
-  "<F15>",
-  Lsp.shift_diagnostic_min_severity,
-  { noremap = true, silent = true, desc = "Diagnostics: shift severity" }
+  "<F28>",
+  Lsp.diagnostic_up_min_severity,
+  { noremap = true, silent = true, desc = "Diagnostics: up severity" }
 )
-local function set_lsp_buf_shortcuts(_, bufnr)
-  local function buf_map(mode, lhs, rhs, opts)
-    opts = opts or {}
-    opts.buffer = bufnr
-    return map(mode, lhs, rhs, opts)
-  end
-  buf_map("n", "gd", function()
-    vim.lsp.buf.definition({
-      reuse_win = true,
-      on_list = function(options)
-        Lsp.on_list(options, options.items and #options.items > 1, true)
-      end,
-    })
-  end, { noremap = true, silent = true, desc = "Goto Definition" })
-  buf_map("n", "gr", function()
-    vim.lsp.buf.references({ includeDeclaration = false }, { on_list = Lsp.on_list })
-  end, { noremap = true, silent = true, desc = "List References" })
-  buf_map("n", "gI", function()
-    vim.lsp.buf.implementation({ on_list = Lsp.on_list })
-  end, { noremap = true, silent = true, desc = "List Implementations" })
-  buf_map(
-    "n",
-    "gCi",
-    vim.lsp.buf.incoming_calls,
-    { noremap = true, silent = true, desc = "List Incoming Calls" }
-  )
-  buf_map(
-    "n",
-    "gCo",
-    vim.lsp.buf.outgoing_calls,
-    { noremap = true, silent = true, desc = "List Outgoing Calls" }
-  )
-  buf_map("n", "K", vim.lsp.buf.hover, { noremap = true, silent = true, desc = "Hover docs" })
-  buf_map(
-    { "n", "i" },
-    "<M-k>",
-    vim.lsp.buf.signature_help,
-    { noremap = true, silent = true, desc = "Signature help" }
-  )
-  buf_map("n", "<leader>lar", vim.lsp.buf.rename, { noremap = true, silent = true, desc = "Rename symbol" })
-  buf_map(
-    { "n", "v" },
-    "<leader>lac",
-    vim.lsp.buf.code_action,
-    { noremap = true, silent = true, desc = "Code action" }
-  )
-end
-Keymap.set_lsp_buf_shortcuts = set_lsp_buf_shortcuts
+map(
+  "n",
+  "<F40>",
+  Lsp.diagnostic_down_min_severity,
+  { noremap = true, silent = true, desc = "Diagnostics: down severity" }
+)
 -- formatting without calling on_attach (for null-ls)
 map("n", "<leader>laf", function()
   vim.lsp.buf.format({
@@ -507,14 +456,6 @@ api.nvim_create_autocmd("BufEnter", {
   group = api.nvim_create_augroup("RefactoringNvimShortcuts", {}),
   callback = set_refactor_shortcuts,
 })
--- aerial
-local function set_aerial_buf_shortcuts(bufnr)
-  local opts = { noremap = true, silent = true, buffer = bufnr }
-  -- Jump forwards/backwards with '{' and '}'
-  map("n", "{", require("aerial").prev, opts)
-  map("n", "}", require("aerial").next, opts)
-end
-Keymap.set_aerial_buf_shortcuts = set_aerial_buf_shortcuts
 -- local aerial_config = require("rc.configs.aerial")
 map("n", "<leader>ls", function()
   -- aerial_config.setup("sideview")
@@ -589,10 +530,8 @@ map({ "n", "i" }, "<C-g>", function()
     mode = default_mode
   end
   if mode == "git" then
-    local has_git = pcall(
-      telescope_builtin.git_files,
-      vim.tbl_extend("keep", find_files_opts, { show_untracked = true })
-    )
+    local has_git =
+      pcall(telescope_builtin.git_files, vim.tbl_extend("keep", find_files_opts, { show_untracked = true }))
     if not has_git then
       telescope_builtin.find_files(find_files_opts)
     end
@@ -626,7 +565,7 @@ end, { noremap = true, silent = true, desc = "Grep selected string" })
 map("n", "<C-f>", function()
   telescope_builtin.live_grep(with_default_opts())
 end, { noremap = true, silent = true, desc = "Live grep" })
-map("n", "<C-x>", function()
+map("n", "<C-S-x>", function()
   -- aerial_config.setup("telescope")
   telescope.extensions.aerial.aerial(with_default_opts({
     sorting_strategy = "descending",
@@ -841,7 +780,6 @@ map("n", "<leader>doc", [[:Telescope dap commands<CR>]], { noremap = true, silen
 map("n", "<leader>llf", [[:vsplit | e /tmp/scratch<CR>]], { noremap = true, silent = true })
 map("n", "<leader>llx", [[:Luapad<CR>]], { noremap = true, silent = true, desc = "Toggle Luapad" })
 map("n", "<leader>llr", [[:LuaRun<CR>]], { noremap = true, silent = true, desc = "Lua: run current file" })
-map("n", "<leader>c", [[:ChatGPT<CR>]], { noremap = true, silent = true, desc = "Ask ChatGPT" })
 map(
   "n",
   "<leader>llir",
@@ -865,45 +803,63 @@ map("n", "<leader>lldr", function()
 end, { noremap = true, silent = true, desc = "Lua: debug current file with logging" })
 -- git stuff
 -- status
-local parent_tabs = {}
-map("n", "<leader>gs", function()
-  local parenttabhandle = api.nvim_get_current_tabpage()
+local esc_tabclose_tabs = {}
+local prev_active_tabs = {}
+map("n", "<leader>gst", function()
+  local prevtabhandle = api.nvim_get_current_tabpage()
   cmd("DiffviewOpen HEAD")
-  cmd("Git")
+  local _, ok = pcall(cmd, "Git")
+  if not ok then
+    return
+  end
   cmd("resize -7")
-  parent_tabs[api.nvim_get_current_tabpage()] = parenttabhandle
-end, { noremap = true, silent = true, desc = "Git status" })
+  local current_tab = api.nvim_get_current_tabpage()
+  esc_tabclose_tabs[current_tab] = true
+  prev_active_tabs[current_tab] = prevtabhandle
+  cmd("wincmd k | wincmd l | wincmd l")
+end, { noremap = true, silent = true, desc = "Git status: working tree" })
+map("n", "<leader>gss", function()
+  local prevtabhandle = api.nvim_get_current_tabpage()
+  cmd("DiffviewOpen --staged")
+  local _, ok = pcall(cmd, "Git")
+  if not ok then
+    return
+  end
+  cmd("resize -7")
+  local current_tab = api.nvim_get_current_tabpage()
+  esc_tabclose_tabs[current_tab] = true
+  prev_active_tabs[current_tab] = prevtabhandle
+  cmd("wincmd k | wincmd l | wincmd l")
+end, { noremap = true, silent = true, desc = "Git status: index" })
+map("n", "<leader>gb", function()
+  cmd("G blame")
+end, { noremap = true, silent = true, desc = "Git blame" })
 -- log
-map(
-  "n",
-  "<leader>gla",
-  [[:DiffviewFileHistory<CR>]],
-  { noremap = true, silent = true, desc = "Git log - all files" }
-)
-map(
-  "n",
-  "<leader>glf",
-  [[:DiffviewFileHistory %<CR>]],
-  { noremap = true, silent = true, desc = "Git log - current file" }
-)
+map("n", "<leader>gla", function()
+  cmd("DiffviewFileHistory")
+  esc_tabclose_tabs[api.nvim_get_current_tabpage()] = true
+end, { noremap = true, silent = true, desc = "Git log - all files" })
+map("n", "<leader>glf", function()
+  cmd("DiffviewFileHistory %")
+  esc_tabclose_tabs[api.nvim_get_current_tabpage()] = true
+end, { noremap = true, silent = true, desc = "Git log - current file" })
 -- diff
-map(
-  "n",
-  "<leader>gdm",
-  [[:tabnew <bar> :b# <bar> :Gvdiffsplit!<CR>]],
-  { noremap = true, silent = true, desc = "Git merge 3-way diff" }
-)
-map(
-  "n",
-  "<leader>gdf",
-  [[:DiffviewOpen HEAD -- %:p<CR> <bar> <C-w>l<C-w>l]],
-  { noremap = true, silent = true, desc = "Git diff file against index" }
-)
+map("n", "<leader>gdm", function()
+  cmd("tabnew")
+  esc_tabclose_tabs[api.nvim_get_current_tabpage()] = true
+  cmd("b#")
+  cmd("Gvdiffsplit!")
+end, { noremap = true, silent = true, desc = "Git merge 3-way diff" })
+map("n", "<leader>gdf", function()
+  cmd("DiffviewOpen HEAD -- %:p<CR>")
+  esc_tabclose_tabs[api.nvim_get_current_tabpage()] = true
+  cmd("wincmd l | wincmd l")
+end, { noremap = true, silent = true, desc = "Git diff file against index" })
 map(
   "n",
   "<leader>gda",
   [[:DiffviewOpen HEAD]],
-  { noremap = true, silent = false, desc = "Git diff all (prompts for revision)" }
+  { noremap = true, silent = false, desc = "Git diff all against revision (prompts for revision)" }
 )
 -- git remote
 map("n", "<leader>grp", function()
@@ -920,110 +876,38 @@ end, { noremap = true, silent = true, desc = "Git pull" })
 map("n", "<leader>gtt", function()
   terms.lazygit:toggle()
 end, { noremap = true, silent = true, desc = "Lazygit" })
--- gitsigns
-local function set_gitsigns_buf_shortcuts(buf_map, gs)
-  -- Navigation
-  buf_map(
-    "n",
-    "<F4>",
-    "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'",
-    { noremap = true, silent = true, expr = true, desc = "git: Next hunk" }
-  )
-  buf_map(
-    "n",
-    "<F28>", --<C-F4>
-    "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'",
-    { noremap = true, silent = true, expr = true, desc = "git: Prev hunk" }
-  )
-  -- Actions
-  buf_map(
-    { "n", "v" },
-    "<leader>ghs",
-    gs.stage_hunk,
-    { noremap = true, silent = true, desc = "git: Stage hunk" }
-  )
-  buf_map(
-    { "n", "v" },
-    "<leader>ghr",
-    gs.reset_hunk,
-    { noremap = true, silent = true, desc = "git: Reset hunk" }
-  )
-  buf_map("n", "<leader>ghS", gs.stage_buffer, { noremap = true, silent = true, desc = "git: Stage buffer" })
-  buf_map(
-    "n",
-    "<leader>ghu",
-    gs.undo_stage_hunk,
-    { noremap = true, silent = true, desc = "git: Undo stage hunk" }
-  )
-  buf_map("n", "<leader>ghR", gs.reset_buffer, { noremap = true, silent = true, desc = "git: Reset buffer" })
-  buf_map("n", "<leader>ghp", gs.preview_hunk, { noremap = true, silent = true, desc = "git: Preview hunk" })
-  buf_map("n", "<leader>ghb", function()
-    gs.blame_line({ full = true })
-  end, { noremap = true, silent = true, desc = "git: Blame line" })
-  buf_map(
-    "n",
-    "<leader>gtb",
-    gs.toggle_current_line_blame,
-    { noremap = true, silent = true, desc = "git: Toggle current line blame" }
-  )
-  buf_map("n", "<leader>gdt", gs.diffthis, { noremap = true, silent = true, desc = "git: Diff to index" })
-  buf_map("n", "<leader>gdT", function()
-    gs.diffthis("HEAD~1")
-  end, { noremap = true, silent = true, desc = "git: Diff to previous commit" })
-  buf_map(
-    "n",
-    "<leader>gtd",
-    gs.toggle_deleted,
-    { noremap = true, silent = true, desc = "git: Toggle deleted" }
-  )
-  -- Text object
-  buf_map(
-    { "o", "x" },
-    "ih",
-    ":<C-U>Gitsigns select_hunk<CR>",
-    { noremap = true, silent = true, desc = "git: Select hunk" }
-  )
-end
-Keymap.set_gitsigns_buf_shortcuts = set_gitsigns_buf_shortcuts
 -- harpoon
-map("n", "<leader>ha", [[:lua require("harpoon.mark").add_file()<CR>]], { noremap = true, silent = true })
-map(
-  "n",
-  "<leader>hv",
-  [[:lua require("harpoon.ui").toggle_quick_menu()<CR>]],
-  { noremap = true, silent = true }
-)
-local function goto_harpooned(file)
-  cmd.m("'")
-  require("harpoon.ui").nav_file(file)
-end
+local harpoon = require("harpoon")
+map("n", "<leader>aa", function()
+  harpoon:list():append()
+end)
+map("n", "<leader>av", function()
+  harpoon.ui:toggle_quick_menu(harpoon:list())
+end)
 map("n", "<M-a>", function()
-  goto_harpooned(1)
-end, { noremap = true, silent = true, desc = "Harpoon file 1" })
+  harpoon:list():select(1)
+end)
 map("n", "<M-s>", function()
-  goto_harpooned(2)
-end, { noremap = true, silent = true, desc = "Harpoon file 2" })
+  harpoon:list():select(2)
+end)
 map("n", "<M-d>", function()
-  goto_harpooned(3)
-end, { noremap = true, silent = true, desc = "Harpoon file 3" })
+  harpoon:list():select(3)
+end)
 map("n", "<M-f>", function()
-  goto_harpooned(4)
-end, { noremap = true, silent = true, desc = "Harpoon file 4" })
+  harpoon:list():select(4)
+end)
 map("n", "<M-g>", function()
-  goto_harpooned(5)
-end, { noremap = true, silent = true, desc = "Harpoon file 5" })
+  harpoon:list():select(5)
+end)
 map("n", "<M-h>", function()
-  goto_harpooned(6)
-end, { noremap = true, silent = true, desc = "Harpoon file 6" })
+  harpoon:list():select(6)
+end)
 map("n", "<M-j>", function()
-  goto_harpooned(7)
-end, { noremap = true, silent = true, desc = "Harpoon file 6" })
-map("n", "<M-z>", function()
-  goto_harpooned(8)
-end, { noremap = true, silent = true, desc = "Harpoon file 6" })
-map("n", "<M-x>", function()
-  goto_harpooned(9)
-end, { noremap = true, silent = true, desc = "Harpoon file 6" })
+  harpoon:list():select(7)
+end)
+map("n", "<M-k>", function()
+  harpoon:list():select(8)
+end)
 -- rest
 map("n", "<leader>lhe", [[:RestSelectEnv ]], { noremap = true, silent = false })
 local function get_win_by_name(name)
@@ -1040,6 +924,7 @@ map("n", "<leader>lhr", function()
   -- print(win)
   if win ~= nil then
     -- api.nvim_win_hide(win)
+    -- TODO: get a preview here with require("noice").redirect("RestNvimPreview")
     local buf = api.nvim_win_get_buf(win)
     vim.bo[buf].modifiable = true
     api.nvim_buf_set_lines(buf, 0, -1, false, {})
@@ -1192,24 +1077,25 @@ map("n", "<Esc>", function()
 end, { noremap = true, silent = true })
 -- filetype-specific shortcuts
 local esc_quit_fts = { "help", "NvimTree", "notify", "aerial", "vista_kind", "httpResult", "man", "Trouble" }
-local esc_tabc_fts = { "fugitive", "DiffviewFiles", "DiffviewFileHistory" }
+local esc_tabclose_fts = { "fugitive", "DiffviewFiles", "DiffviewFileHistory" }
 local q_quit_fts = { "help", "notify", "man", "ImportManager", "qf" }
 autocmd("BufEnter", {
   group = augroup("CustomFiletypeSettings", {}),
   callback = function(opts)
     -- esc
     local ft = vim.bo[opts.buf].filetype
+    local current_tab = api.nvim_get_current_tabpage()
     if vim.tbl_contains(esc_quit_fts, ft) then
       -- close only current buffer with Esc
       map("n", "<Esc>", ":quit<CR>", { noremap = true, silent = true, nowait = true, buffer = opts.buf })
-    elseif vim.tbl_contains(esc_tabc_fts, ft) then
+    elseif vim.tbl_contains(esc_tabclose_fts, ft) or esc_tabclose_tabs[current_tab] then
       -- close current tab and focus "parent" tab
       map("n", "<Esc>", function()
         local tabnr_to_close = fn.tabpagenr()
-        local tabhandle = api.nvim_get_current_tabpage()
+        esc_tabclose_tabs[current_tab] = nil
         -- go to parent tabpage
-        if parent_tabs[tabhandle] ~= nil then
-          cmd(("normal! %sgt"):format(parent_tabs[tabhandle]))
+        if prev_active_tabs[current_tab] ~= nil then
+          cmd(("normal! %sgt"):format(prev_active_tabs[current_tab]))
         else
           cmd("tabprevious")
         end
@@ -1233,3 +1119,10 @@ autocmd("BufEnter", {
 if pcall(require, "langmapper") then
   require("langmapper").automapping({ global = true, buffer = false })
 end
+
+-- vim.api.nvim_set_keymap(
+--   "i",
+--   "<CR>",
+--   vim.api.nvim_replace_termcodes("<CR>}<CMD>normal ====<CR><up><end><CR>", true, true, true),
+--   { noremap = true, silent = true }
+-- )

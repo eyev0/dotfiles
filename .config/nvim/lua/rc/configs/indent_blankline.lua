@@ -1,36 +1,38 @@
-vim.g.indent_blankline_filetype_exclude = {
-  "lspinfo",
-  "packer",
-  "checkhealth",
-  "help",
-  "",
-  "floaterm",
-  "noice",
-  "notify",
-  "ImportManager",
-}
-vim.g.indent_blankline_buftype_exclude = { "terminal", "quickfix" }
-
 vim.g.indent_blankline_show_first_indent_level = false
-vim.g.indent_blankline_use_treesitter = true
 
-require("indent_blankline").setup({
-  -- for example, context is off by default, use this to turn it on
-  show_current_context = true,
-  show_current_context_start = false,
+require("ibl").setup({
+  exclude = {
+    filetypes = {
+      "lspinfo",
+      "packer",
+      "checkhealth",
+      "help",
+      "",
+      "floaterm",
+      "noice",
+      "notify",
+      "ImportManager",
+    },
+    buftypes = { "terminal", "quickfix" },
+  },
 })
 
 -- replace CursorMoved with CursorHold
-local id = augroup("IndentBlanklineContextAutogroup", { clear = true })
-autocmd("CursorHold", {
-  group = id,
-  callback = function()
-    vim.cmd("IndentBlanklineRefresh")
-  end,
-})
+-- local id = augroup("IndentBlanklineContextAutogroup", { clear = true })
+-- autocmd("CursorHold", {
+--   group = id,
+--   callback = function()
+--     vim.cmd("IndentBlanklineRefresh")
+--   end,
+-- })
+
+local hooks = require("ibl.hooks")
+hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_tab_indent_level)
+-- hooks.register(hooks.type.SKIP_LINE, hooks.builtin.skip_preproc_lines, { bufnr = 0 })
 
 local max_lines = 5000
-local aug_id = augroup("IndentBlanklineCheckThreshold", {})
+local aug_id = augroup("IBLDisableOnThreshold", {})
 
 local set_threshold_filetypes = {
   "json",
@@ -43,7 +45,12 @@ autocmd("BufEnter", {
     if
       vim.tbl_contains(set_threshold_filetypes, vim.bo[opts.buf].filetype) and vim.fn.line("$") > max_lines
     then
-      vim.b[opts.buf].indent_blankline_enabled = false
+      local ok, ibl = pcall(require, "ibl")
+      if ok then
+        ibl.setup_buffer(0, {
+          enabled = false,
+        })
+      end
     end
   end,
 })

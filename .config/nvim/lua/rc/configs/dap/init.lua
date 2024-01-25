@@ -2,7 +2,7 @@
 require("rc.configs.dap.node2")
 require("rc.configs.dap.java")
 require("rc.configs.dap.nlua")
-require("rc.configs.dap.go")
+-- require("rc.configs.dap.go")
 require("rc.configs.dap.python")
 
 local dap = require("dap")
