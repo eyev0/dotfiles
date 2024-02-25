@@ -1,0 +1,43 @@
+{
+  "sessions": [
+    {
+      "name": "neovim-dev",
+      "windows": ["$HOME/dev/nvim/neovim", "$HOME/.config/nvim"]
+    },
+    { "name": "work", "windows": ["$HOME/dev/sbl"] },
+    { "name": "pfp", "windows": ["$HOME/dev/rust/pfp", "$HOME/.config/pfp"] }
+  ],
+  "markers": [
+    ".git",
+    "Cargo.toml",
+    "package.json",
+    "go.mod"
+    // "pom.xml",
+    // "build.gradle",
+  ],
+  "include": [
+    {
+      "paths": [
+        "$HOME/dev",
+        "$HOME/dev/sbl/operator-catalogs/test",
+        "$HOME/dev/sbl/rest",
+        "$HOME/dev/rest",
+        "$HOME/bin",
+        "$HOME/.local/share/nvim/lazy"
+      ]
+    },
+    {
+      "paths": ["$HOME/.cache", "$HOME/.config", "$HOME/apps"],
+      "traverse_hidden": true,
+      "markers": ["*"],
+      "stop_on_match": false,
+      "depth": 1
+    },
+    {
+      "paths": ["$HOME/.local"],
+      "markers": ["*"],
+      "stop_on_match": false,
+      "depth": 2
+    }
+  ]
+}

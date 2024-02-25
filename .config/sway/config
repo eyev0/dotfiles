@@ -94,7 +94,7 @@ exec /usr/lib/geoclue-2.0/demos/agent
 exec gammastep -m wayland
 exec blueman-applet
 exec nm-applet --indicator
-exec $HOME/.config/sway/scripts/inactive-windows-transparency.py
+exec $HOME/.config/sway/scripts/inactive-windows-transparency.py -o 1
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec autotiling
 exec swaykbdd
@@ -107,6 +107,7 @@ exec_always {
 #
 # Basics:
 #
+
 
 # Start a terminal
 bindsym --to-code $mod+Return exec $term
@@ -149,7 +150,7 @@ bindsym --to-code XF86MonBrightnessUp exec brightnessctl -q set +5%
 
 bindsym --to-code Print exec $HOME/.config/sway/scripts/grimshot.sh copy output
 bindsym --to-code Shift+Print exec $HOME/.config/sway/scripts/grimshot.sh copy active
-bindsym --to-code Ctrl+Print exec $HOME/.config/sway/scripts/grimshot.sh copy area
+bindsym --to-code Ctrl+Shift+Print exec $HOME/.config/sway/scripts/grimshot.sh copy area
 
 #
 # Moving around:
